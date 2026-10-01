@@ -3,10 +3,7 @@
 # ==========================================
 
 # Pasta de notas e dados sensíveis dos alunos
-notas/
-**/notas/
-*.xlsx
-*.xls
+notas
 
 # Artefatos temporários e de compilação do LaTeX
 *.aux
