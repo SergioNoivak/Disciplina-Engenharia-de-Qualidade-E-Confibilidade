@@ -1,0 +1,39 @@
+\frametitle{Comparativo de Confiabilidade: C vs. Java}
+\begin{columns}[T] % [T] alinha as colunas pelo topo
+        % Coluna C
+        \begin{column}{0.48\textwidth}
+            \textbf{\textcolor{mRed}{Linguagem C}}
+            \begin{itemize}
+                \item Gestão Manual.
+                \item Ponteiros Diretos.
+                \item Verificação Fraca.
+            \end{itemize}
+            \begin{lstlisting}[language=C, basicstyle=\ttfamily\small, xleftmargin=-5pt]
+int arr[5];
+arr[10] = 100;
+// Defeito!
+// Acesso invalido.
+            \end{lstlisting}
+        \end{column}
+
+        % Coluna Java
+        \begin{column}{0.48\textwidth}
+            \textbf{\textcolor{mGreen}{Java}}
+            \begin{itemize}
+                \item Gestão Automática.
+                \item Sem Ponteiros.
+                \item Verificação Forte.
+            \end{itemize}
+            \begin{lstlisting}[language=Java, basicstyle=\ttfamily\small, xleftmargin=-5pt]
+int[] arr = new int[5];
+arr[10] = 100;
+// Excecao!
+// Erro detectado.
+            \end{lstlisting}
+        \end{column}
+    \end{columns}
+
+    \vspace{0.3cm}
+    \begin{block}{Conclusão}
+        O Java interrompe o erro antes que ele vire uma falha catastrófica, enquanto o C permite a execução em estado corrompido.
+    \end{block}

@@ -1,0 +1,188 @@
+\documentclass[12pt]{article}
+
+% Idioma e codificação
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Matemática e listas
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+
+% Layout e cores
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+% Cores institucionais
+\definecolor{maincolor}{RGB}{0,100,50}
+\definecolor{forestgreen}{RGB}{0,100,50}
+
+% Cabeçalho e rodapé
+\usepackage{fancyhdr}
+
+% Blocos
+\usepackage[most]{tcolorbox}
+\newtcolorbox{block}[1]{%
+  colback=green!5,
+  colframe=maincolor,
+  coltitle=white,
+  title=#1,
+  fonttitle=\bfseries,
+  boxrule=1.5pt,
+  arc=3mm,
+  left=6pt,
+  right=6pt,
+  top=6pt,
+  bottom=6pt
+}
+
+% Margens
+\geometry{margin=2.5cm}
+
+% Fancyhdr
+\pagestyle{fancy}
+\fancyhf{}
+
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\footrulewidth}{2pt}
+
+\renewcommand{\headrule}{\hbox to\headwidth{%
+  \color{forestgreen}\leaders\hrule height \headrulewidth\hfill}}
+
+\renewcommand{\footrule}{\hbox to\headwidth{%
+  \color{forestgreen}\leaders\hrule height \footrulewidth\hfill}}
+
+% Altura do cabeçalho (corrigida)
+\setlength{\headheight}{52pt}
+\addtolength{\topmargin}{-20pt}
+
+% Cabeçalho
+\fancyhead[L]{%
+  \includegraphics[height=1.2cm]{Universidade_de_Rio_Verde.jpg}
+}
+
+\fancyhead[R]{%
+  \raggedleft
+  \textcolor{forestgreen}{%
+    \small
+    \textbf{Lista de Exercícios}\\
+    Me.~Sergio Souza Novak\\
+    \textit{Engenharia da Qualidade e Confiabilidade}
+    }
+    }
+    
+    % Rodapé
+    \fancyfoot[C]{\textcolor{forestgreen}{\thepage}}
+    
+    % =========================
+    \begin{document}
+    % =========================
+    
+    \vspace*{0.2cm}
+    \begin{center}
+      {\Large \textbf{Atividade Avaliativa 1}}\\[0.2cm]
+      {\large Engenharia da Qualidade e Confiabilidade}\\[0.2cm]
+      Tema: Confiabilidade de Serviços, DevOps e SRE
+    \end{center}
+    
+    \vspace{0.5cm}
+    
+    % \noindent
+    % \textbf{Aluno(a):} \rule{10cm}{0.4pt} \hfill
+    % \textbf{Data:} \rule{3cm}{0.4pt}
+    
+    % \vspace{0.5cm}
+    
+    
+    \textbf{1.} Explique o que é \textbf{Engenharia da Qualidade} e qual é seu principal objetivo dentro das organizações modernas.\\[0.3cm]
+    \rule{\textwidth}{0.4pt}\\
+    \rule{\textwidth}{0.4pt}\\
+    \rule{\textwidth}{0.4pt}
+    
+    \vspace{0.3cm}
+    
+    
+    
+    \textbf{2.} Descreva o conflito estrutural entre as equipes de \textbf{Desenvolvimento (Dev)} e \textbf{Operações (Ops)} no modelo tradicional. Explique por que esse conflito motivou o surgimento de abordagens como DevOps e SRE.\\[0.3cm]
+    \rule{\textwidth}{0.4pt}\\
+    \rule{\textwidth}{0.4pt}\\
+    \rule{\textwidth}{0.4pt}\\
+    \rule{\textwidth}{0.4pt}
+    
+\vspace{2cm}
+    
+    
+    Assinale apenas \textbf{uma alternativa correta} em cada questão.
+    
+    \begin{enumerate}[label=\textbf{\arabic*.}]
+    \item O principal foco da equipe de \textbf{Operações (Ops)} é:
+    \begin{itemize}
+      \item ( \ ) Lançar novas funcionalidades rapidamente
+    \item ( \ ) Aumentar a complexidade do sistema
+    \item ( \ ) Manter a estabilidade e a confiabilidade do serviço
+    \item ( \ ) Desenvolver novas features para o produto
+\end{itemize}
+
+\item Segundo a definição do Google, \textbf{Site Reliability Engineering (SRE)} é:
+\begin{itemize}
+    \item ( \ ) Uma ferramenta de automação de deploy
+    \item ( \ ) Um modelo de terceirização de operações
+    \item ( \ ) O resultado de aplicar engenharia de software à operação de sistemas
+    \item ( \ ) Um sinônimo direto de DevOps
+\end{itemize}
+
+\item No modelo SRE do Google, nenhuma equipe deve gastar mais de 50\% do tempo em:
+\begin{itemize}
+    \item ( \ ) Reuniões de planejamento
+    \item ( \ ) Desenvolvimento de novas funcionalidades
+    \item ( \ ) Atividades operacionais manuais
+    \item ( \ ) Monitoramento automático
+\end{itemize}
+
+\item O uso excessivo de \textbf{feature flags} pode resultar em:
+\begin{itemize}
+    \item ( \ ) Redução completa da complexidade do sistema
+    \item ( \ ) Eliminação de falhas em produção
+    \item ( \ ) Aumento da complexidade lógica e de configuração
+    \item ( \ ) Fim da necessidade de testes
+\end{itemize}
+\end{enumerate}
+
+\vspace{0.3cm}
+
+
+Relacione corretamente os itens da \textbf{Coluna A} com a \textbf{Coluna B}.
+
+\vspace{0.3cm}
+
+\subsection*{5. Engenharia da Qualidade, Operação e SRE}
+
+\noindent
+\begin{tabular}{p{6cm} p{8cm}}
+\textbf{Coluna A} & \textbf{Coluna B} \\[0.2cm]
+( 1 ) Engenharia da Qualidade & ( \ \ ) Prática que busca confiabilidade por meio de automação e métricas \\
+( 2 ) Sysadmin tradicional & ( \ \ ) Foco em planejamento, controle e melhoria de processos \\
+( 3 ) SRE & ( \ \ ) Operação baseada em tarefas manuais e intervenção humana \\
+( 4 ) Postmortem & ( \ \ ) Análise de incidentes sem atribuição de culpa \\
+\end{tabular}
+
+\vspace{0.6cm}
+
+\subsection*{6. DevOps e SRE}
+
+\noindent
+\begin{tabular}{p{6cm} p{8cm}}
+\textbf{Coluna A} & \textbf{Coluna B} \\[0.2cm]
+( 1 ) DevOps & ( \ \ ) Uso formal de SLI, SLO e Error Budget \\
+( 2 ) SRE & ( \ \ ) Cultura de colaboração entre desenvolvimento e operações \\
+( 3 ) DevOps & ( \ \ ) Abordagem mais filosófica e menos prescritiva \\
+( 4 ) SRE & ( \ \ ) Disciplina de engenharia com limites claros de operação \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+
+% =========================
+\end{document}
+% =========================

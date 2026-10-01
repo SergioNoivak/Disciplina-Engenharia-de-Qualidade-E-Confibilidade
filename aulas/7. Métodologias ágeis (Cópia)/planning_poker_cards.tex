@@ -1,0 +1,67 @@
+\documentclass[a4paper]{article}
+
+\usepackage[margin=1cm]{geometry}
+\usepackage{tikz}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+\pagestyle{empty}
+
+
+\definecolor{cardblue}{RGB}{0,102,204}
+\definecolor{cardbg}{RGB}{230,240,255}
+% Comando para desenhar uma carta estilizada
+\newcommand{\card}[1]{
+\begin{tikzpicture}[rotate=0]
+
+    % Sombra
+    \fill[black!20, rounded corners=0.4cm] (0.2,-0.2) rectangle (6.2,8.2);
+
+    % Fundo da carta
+    \fill[cardbg, rounded corners=0.4cm] (0,0) rectangle (6,8);
+
+    % Borda
+    \draw[line width=3pt, color=cardblue, rounded corners=0.4cm] (0,0) rectangle (6,8);
+
+    % Logo no canto
+    \node[anchor=north east] at (5.7,7.7) 
+    {\includegraphics[width=1.2cm]{logo.png}};
+
+    % Texto superior (título)
+    \node[text=cardblue] at (3,7.3) 
+    {\small \textbf{Planning Poker}};
+
+    % Número grande
+    \node[text=cardblue] at (3,4) 
+    {\fontsize{42}{42}\selectfont \textbf{#1}};
+
+    % Número pequeno no canto
+    \node[anchor=north west, text=cardblue] at (0.4,7.6) 
+    {\fontsize{14}{14}\selectfont \textbf{#1}};
+
+    % Linha decorativa
+    \draw[cardblue, line width=2pt] (1,1) -- (5,1);
+
+    % Texto inferior (marca)
+    \node[text=cardblue!70] at (3,0.6) 
+    {\scriptsize UniRV};
+
+\end{tikzpicture}
+}
+
+\begin{document}
+
+\begin{center}
+\begin{tabular}{ccc}
+
+\card{1} & \card{2} & \card{3} \\
+\vspace{0.5cm} \\
+\card{5} & \card{8} & \card{13} \\
+\vspace{0.5cm} \\
+\card{21} & \card{?} & \card{\(\infty\)} \\
+
+\end{tabular}
+\end{center}
+
+\end{document} 

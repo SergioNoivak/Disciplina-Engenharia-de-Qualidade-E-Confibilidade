@@ -1,0 +1,293 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\usepackage{eso-pic}
+\usepackage[brazil]{babel}
+\shorthandoff{"}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+ 
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, fit, calc, backgrounds}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{meuazul}{RGB}{0, 79, 151}
+\setbeamercolor{structure}{fg=meuazul}
+
+\title[Metodologias Ágeis]{Metodologias Ágeis e Planning Poker}
+\subtitle{Engenharia da Qualidade e Confiabilidade}
+\author{Sergio — UniRV}
+\titlegraphic{\includegraphics[width=2cm]{logo.png}}
+
+\begin{document}
+
+% Slide de Título
+\frame[plain]{\titlepage}
+
+\AddToShipoutPictureFG{
+    \put(\LenToUnit{.92\paperwidth},\LenToUnit{.185\paperheight})
+    {\vtop{{\null}\makebox{\includegraphics[width=.8cm,keepaspectratio]{logo.png}}}}}
+
+% --- PARTE 1: METODOLOGIAS ÁGEIS (10 Slides) ---
+
+\begin{frame}{1) Contexto: Por que Ágil?}
+  O modelo tradicional (\textbf{Cascata}) apresenta desafios em projetos de software:
+  \begin{itemize}
+    \item Feedback tardio (somente ao final).
+    \item Dificuldade em lidar com mudanças de requisitos.
+    \item Risco de entregar algo que o cliente não precisa mais.
+  \end{itemize}
+  \vspace{0.4em}
+  A abordagem \textbf{Ágil} surge para focar em entregas rápidas e adaptabilidade.
+\end{frame}
+
+\begin{frame}{2) O Manifesto Ágil}
+  Lançado em 2001, foca em 4 valores fundamentais:
+  \begin{itemize}
+    \item \textbf{Indivíduos e interações} mais que processos e ferramentas.
+    \item \textbf{Software em funcionamento} mais que documentação abrangente.
+    \item \textbf{Colaboração com o cliente} mais que negociação de contratos.
+    \item \textbf{Responder a mudanças} mais que seguir um plano.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{3) Os 12 Princípios Ágeis}
+  Alguns pontos cruciais:
+  \begin{itemize}
+    \item Satisfação do cliente através de entrega contínua.
+    \item Aceitar mudanças de requisitos, mesmo no fim do desenvolvimento.
+    \item Entregar software funcionando com frequência (semanas ou meses).
+    \item Cooperação diária entre pessoas de negócio e desenvolvedores.
+    \item Atenção contínua à excelência técnica e bom design.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{4) Ciclo de Vida Iterativo e Incremental}
+  \centering
+  \begin{tikzpicture}[node distance=2cm, auto]
+    \node[draw, circle, meuazul, thick] (plan) {Planejar};
+    \node[draw, circle, meuazul, thick, right=of plan] (dev) {Desenvolver};
+    \node[draw, circle, meuazul, thick, below=of dev] (test) {Testar};
+    \node[draw, circle, meuazul, thick, below=of plan] (review) {Revisar};
+    
+    \draw[->, thick, meuazul] (plan) -- (dev);
+    \draw[->, thick, meuazul] (dev) -- (test);
+    \draw[->, thick, meuazul] (test) -- (review);
+    \draw[->, thick, meuazul] (review) -- (plan);
+    
+    \node[below=of review, yshift=1cm, text width=6cm, align=center] {Pequenas iterações que geram incrementos de software reais.};
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{5) Principais Frameworks Ágeis}
+  Existem diversas formas de aplicar a agilidade:
+  \begin{itemize}
+    \item \textbf{Scrum}: Focado em papéis, eventos e artefatos (o mais comum).
+    \item \textbf{Kanban}: Focado em fluxo visual e limitação de trabalho em progresso (WIP).
+    \item \textbf{XP (Extreme Programming)}: Focado em práticas de engenharia (TDD, Pair Programming).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{6) Visão Geral do Scrum}
+  O Scrum organiza o trabalho em:
+  \begin{itemize}
+    \item \textbf{Papéis}: Product Owner, Scrum Master, Developers.
+    \item \textbf{Artefatos}: Product Backlog, Sprint Backlog, Increment (Pronto!).
+    \item \textbf{Eventos}: Sprint, Sprint Planning, Daily Scrum, Review e Retrospective.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{7) A Sprint: O Pulsação do Scrum}
+
+\begin{itemize}
+    \item Períodos de tempo fixo (\textit{time-box}), geralmente de 1 a 4 semanas.
+    \item No início, planeja-se o que será feito (\textit{Planning}).
+    \item No final, demonstra-se o valor entregue (\textit{Review}).
+    \item O objetivo é sempre ter um incremento funcional ao final de cada Sprint.
+\end{itemize}
+
+\vspace{0.5cm}
+
+\centering
+\begin{tikzpicture}[node distance=2.5cm, every node/.style={font=\small}]
+
+% Estilos
+\tikzstyle{phase} = [rectangle, rounded corners, minimum width=2.5cm, minimum height=1cm, text centered, draw=blue!60, fill=blue!20]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+% Nós
+\node (planning) [phase] {Planning};
+\node (dev) [phase, right of=planning, xshift=1.5cm] {Desenvolvimento};
+\node (review) [phase, right of=dev, xshift=1.5cm] {Review};
+\node (retro) [phase, below of=dev, yshift=-0.5cm] {Retrospectiva};
+
+% Setas principais
+\draw [arrow] (planning) -- (dev);
+\draw [arrow] (dev) -- (review);
+
+% Retorno (ciclo)
+\draw [arrow] (review) |- (retro);
+\draw [arrow] (retro) -| (planning);
+
+\end{tikzpicture}
+
+\vspace{0.3cm}
+\small{Ciclo iterativo de uma Sprint no Scrum}
+
+\end{frame}
+
+\begin{frame}{8) Benefícios das Metodologias Ágeis}
+  \begin{itemize}
+    \item \textbf{Qualidade}: Testes frequentes e revisões constantes.
+    \item \textbf{Visibilidade}: Transparência sobre o progresso real do projeto.
+    \item \textbf{Mitigação de Risco}: Falhas são detectadas cedo.
+    \item \textbf{Time to Market}: Entrega de valor para o cliente de forma mais rápida.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{9) Mindset Ágil}
+  Não é apenas sobre ferramentas, é sobre \textbf{cultura}:
+  \begin{itemize}
+    \item Foco no valor para o usuário.
+    \item Transparência e Honestidade.
+    \item Inspeção e Adaptação constante.
+    \item Times auto-organizados e motivados.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{10) Resumo da Agilidade}
+  \begin{block}{Conclusão Parte 1}
+    Ser ágil significa ser capaz de se mover rapidamente e com facilidade. No software, significa abraçar a incerteza e evoluir através da colaboração constante e entregas frequentes.
+  \end{block}
+\end{frame}
+
+% --- PARTE 2: PLANNING POKER (5 Slides) ---
+
+\begin{frame}{11) O que é Planning Poker?}
+
+É uma técnica baseada em \textbf{consenso} para estimar o \textbf{esforço} ou tamanho relativo de tarefas (User Stories).
+
+\begin{itemize}
+    \item Evita o "efeito âncora".
+    \item Envolve todo o time técnico na estimativa.
+    \item Usa Story Points em vez de horas exatas.
+\end{itemize}
+
+\vspace{0.4cm}
+
+\centering
+\begin{tikzpicture}[every node/.style={font=\small}]
+
+% Estilos
+\tikzstyle{dev} = [circle, draw=blue!60, fill=blue!20, minimum size=1cm]
+\tikzstyle{card} = [rectangle, rounded corners, draw=red!60, fill=red!20, minimum width=1cm, minimum height=1.2cm]
+\tikzstyle{arrow} = [->, thick]
+
+% Nós (desenvolvedores)
+\node (d1) at (0,0) {Dev 1};
+\node (d2) [right=2cm of d1] {Dev 2};
+\node (d3) [right=2cm of d2] {Dev 3};
+
+% Cartas
+\node (c1) [card, below=0.8cm of d1] {3};
+\node (c2) [card, below=0.8cm of d2] {5};
+\node (c3) [card, below=0.8cm of d3] {8};
+
+% Consenso
+\node (consenso) [draw=green!60, fill=green!20, rounded corners, below=2.5cm of d2] {Discussão $\rightarrow$ Consenso};
+
+% Setas
+\draw[arrow] (c1) -- (consenso);
+\draw[arrow] (c2) -- (consenso);
+\draw[arrow] (c3) -- (consenso);
+
+\end{tikzpicture}
+
+\vspace{0.3cm}
+\small{Cada membro escolhe uma carta; diferenças levam à discussão até consenso}
+
+\end{frame}
+
+\begin{frame}{12) O Baralho de Cartas}
+
+As cartas geralmente seguem a \textbf{Sequência de Fibonacci} (modificada):
+
+\begin{center}
+\textbf{0, 1, 2, 3, 5, 8, 13, 21, 40, 100}
+\end{center}
+
+\begin{itemize}
+    \item \textbf{Por que Fibonacci?} Porque reflete a incerteza: quanto maior a tarefa, mais difícil é ser preciso.
+    \item \textbf{? (Interrogação)}: "Não entendi a tarefa".
+    \item \textbf{Xícara de Café}: "Preciso de um intervalo".
+\end{itemize}
+
+\vspace{0.4cm}
+
+\centering
+\begin{tikzpicture}[every node/.style={font=\small}]
+
+% Estilo das cartas
+\tikzstyle{card} = [rectangle, rounded corners=0.2cm, draw=blue!60, fill=blue!20, minimum width=0.9cm, minimum height=1.2cm]
+
+% Cartas Fibonacci
+\node[card] (c0) at (0,0) {0};
+\node[card] (c1) at (1.2,0) {1};
+\node[card] (c2) at (2.4,0) {2};
+\node[card] (c3) at (3.6,0) {3};
+\node[card] (c5) at (4.8,0) {5};
+\node[card] (c8) at (6.0,0) {8};
+\node[card] (c13) at (7.2,0) {13};
+\node[card] (c21) at (8.4,0) {21};
+\node[card] (c40) at (9.6,0) {40};
+\node[card] (c100) at (10.8,0) {100};
+
+% Cartas especiais
+\tikzstyle{special} = [rectangle, rounded corners=0.2cm, draw=red!60, fill=red!20, minimum width=1.2cm, minimum height=1.2cm]
+
+\node[special] (q) at (3,-2) {?};
+\node[special] (coffee) at (7,-2) {$\cup$};
+
+% Legendas
+\node at (3,-3) {\scriptsize Não entendi};
+\node at (7,-3) {\scriptsize Pausa};
+
+\end{tikzpicture}
+
+\vspace{0.3cm}
+\small{Cartas crescem em escala para representar maior incerteza e complexidade}
+
+\end{frame}
+
+ 
+
+\begin{frame}{14) Buscando o Consenso}
+  E se houver divergência (ex: um deu 2 e outro deu 13)?
+  \begin{itemize}
+    \item Os extremos explicam seus pontos de vista.
+    \item O time discute riscos ou complexidades que outros podem não ter visto.
+    \item Uma nova rodada de votação é feita até que o time chegue a um acordo.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{15) Vantagens do Planning Poker}
+  \begin{itemize}
+    \item \textbf{Engajamento}: Todo o time participa e compreende a tarefa.
+    \item \textbf{Descoberta}: Discussões revelam requisitos ocultos ou dificuldades técnicas.
+    \item \textbf{Precisão Relativa}: Estimar por comparação é mais natural do que estimar horas.
+    \item \textbf{Divertido}: Torna o planejamento menos cansativo.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \centering
+  \Huge Obrigado!\\
+  \vspace{1cm}
+  \large Dúvidas?
+\end{frame}
+
+\end{document}

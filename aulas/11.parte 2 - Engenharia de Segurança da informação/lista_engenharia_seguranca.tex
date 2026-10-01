@@ -1,0 +1,362 @@
+\documentclass[12pt]{article}
+
+% Idioma e codificação
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Matemática e listas
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+
+% Layout e cores
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+% Diagramas e Portas Lógicas
+\usepackage{tikz}
+\usetikzlibrary{shapes.gates.logic.US, positioning, arrows.meta}
+
+% Cores institucionais
+\definecolor{maincolor}{RGB}{0, 79, 151}
+\definecolor{meuazul}{RGB}{0, 79, 151}
+
+% Cabeçalho e rodapé
+\usepackage{fancyhdr}
+
+% Blocos
+\usepackage[most]{tcolorbox}
+\newtcolorbox{block}[1]{%
+  colback=blue!5,
+  colframe=maincolor,
+  coltitle=white,
+  title=#1,
+  fonttitle=\bfseries,
+  boxrule=1.5pt,
+  arc=3mm,
+  left=6pt,
+  right=6pt,
+  top=6pt,
+  bottom=6pt
+}
+
+\newtcolorbox{resposta}[1]{%
+  colback=white,
+  colframe=meuazul!30,
+  arc=1mm,
+  height=#1,
+  width=\textwidth,
+  boxrule=0.8pt
+}
+
+% Margens
+\geometry{margin=2.5cm}
+
+% Fancyhdr
+\pagestyle{fancy}
+\fancyhf{}
+
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\footrulewidth}{2pt}
+
+\renewcommand{\headrule}{\hbox to\headwidth{%
+  \color{meuazul}\leaders\hrule height \headrulewidth\hfill}}
+
+\renewcommand{\footrule}{\hbox to\headwidth{%
+  \color{meuazul}\leaders\hrule height \footrulewidth\hfill}}
+
+\setlength{\headheight}{52pt}
+\addtolength{\topmargin}{-20pt}
+
+\fancyhead[L]{%
+  \includegraphics[height=1.2cm]{logo.png}
+}
+
+\fancyhead[R]{%
+  \raggedleft
+  \textcolor{meuazul}{%
+    \small
+    \textbf{Lista de Exercícios — Engenharia de Segurança}\\
+    Me.~Sergio Souza Novak\\
+    \textit{Engenharia da Qualidade e Confiabilidade}
+  }
+}
+
+\fancyfoot[C]{\textcolor{meuazul}{\thepage}}
+
+% =========================
+\begin{document}
+% =========================
+
+\vspace*{0.2cm}
+
+\begin{center}
+  {\Large \textbf{Engenharia de Segurança}}\\[0.2cm]
+  \textit{Instruções: Justifique suas respostas de forma clara e objetiva.
+  Para questões discursivas, escreva na caixa de resposta abaixo de cada enunciado.}
+\end{center}
+
+\vspace{0.4cm}
+
+\begin{block}{Conceitos de Referência}
+  \small
+  \begin{itemize}
+    \item \textbf{Safety} (Segurança): Ausência de falhas catastróficas que causem morte, lesão ou dano ambiental.
+    \item \textbf{Hazard} (Perigo): Estado ou condição do sistema com potencial para causar um acidente.
+    \item \textbf{Risco}: Medida da probabilidade e da gravidade de um perigo causar um acidente.
+    \item \textbf{ALARP}: \textit{As Low As Reasonably Practical} (O mais baixo que for razoavelmente praticável).
+    \item \textbf{FTA} (\textit{Fault Tree Analysis}): Técnica top-down para identificar causas raízes de falhas críticas.
+  \end{itemize}
+\end{block}
+
+\vspace{0.5cm}
+
+% -------------------------------------------------------
+% QUESTÃO 1
+% -------------------------------------------------------
+\textbf{1.} Relembre o caso real do acidente aéreo no aeroporto de Varsóvia em 1993, envolvendo um Airbus e seu sistema de frenagem.
+
+\begin{enumerate}[label=\alph*)]
+  \item O inquérito do acidente revelou a existência de bugs (erros de codificação) no software? Explique a causa real da falha.
+  \item Por que esse caso é utilizado para ilustrar que a "boa engenharia" de software, por si só, não garante a segurança do sistema?
+\end{enumerate}
+\begin{resposta}{4.5cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% -------------------------------------------------------
+% QUESTÃO 2
+% -------------------------------------------------------
+\textbf{2.} Frequentemente, os conceitos de \textbf{Confiabilidade} e \textbf{Segurança (Safety)} são confundidos. 
+
+\begin{enumerate}[label=\alph*)]
+  \item Explique por que um sistema pode ser 100\% confiável (funcionar conforme a especificação) e ainda assim ser inseguro.
+  \item Segundo a literatura estudada (Lutz, 1993), qual é a causa principal dos erros de software relacionados à segurança que persistem até os testes finais?
+\end{enumerate}
+\begin{resposta}{4.5cm}
+\end{resposta}
+
+\vspace{0.5cm}
+% -------------------------------------------------------
+% QUESTÃO 3
+% -------------------------------------------------------
+\textbf{3.} Na engenharia de requisitos de segurança, utilizamos frequentemente os chamados requisitos do tipo \textbf{"Não Deve" (\textit{Shall Not})}.
+
+\begin{enumerate}[label=\alph*)]
+  \item O que diferencia um requisito "Não Deve" de um requisito funcional comum?
+  \item Dê um exemplo de requisito "Não Deve" para um sistema de controle de automóveis autônomos.
+  \item Por que esses requisitos não podem ser implementados diretamente e precisam ser decompostos?
+\end{enumerate}
+\begin{resposta}{5cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% -------------------------------------------------------
+% QUESTÃO 4
+% -------------------------------------------------------
+\textbf{4.} Sobre a \textbf{Identificação de Perigos}, analise o caso da Bomba de Insulina estudado em aula.
+
+\begin{enumerate}[label=\alph*)]
+  \item Cite dois perigos classificados como \textbf{Falha de Serviço}.
+  \item Cite um perigo classificado como \textbf{Biológico} e um como \textbf{Elétrico}.
+  \item Qual a importância legal de se manter um \textbf{Registro de Perigos} (\textit{Hazard Registry}) durante o desenvolvimento?
+\end{enumerate}
+\begin{resposta}{5cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% -------------------------------------------------------
+% QUESTÃO 5
+% -------------------------------------------------------
+\textbf{5.} A \textbf{Análise da Árvore de Defeitos (FTA)} é uma técnica dedutiva fundamental para a segurança.
+
+\begin{enumerate}[label=\alph*)]
+  \item Defina se a FTA é uma abordagem \textit{top-down} ou \textit{bottom-up} e justifique sua resposta.
+  \item Explique o princípio de que perigos que surgem de uma combinação de causas raízes são preferíveis a perigos com uma única causa principal.
+\end{enumerate}
+\begin{resposta}{4cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% -------------------------------------------------------
+% QUESTÃO 6
+% -------------------------------------------------------
+\textbf{6.} O Triângulo do Risco define regiões de aceitabilidade. Sobre a \textbf{Região ALARP}:
+
+\begin{enumerate}[label=\alph*)]
+  \item O que significa a sigla ALARP e qual a regra de decisão para riscos situados nessa região?
+  \item No caso da bomba de insulina, uma "sobrecarga de dosagem" seria classificada como risco ALARP ou Intolerável? Por quê?
+\end{enumerate}
+\begin{resposta}{4cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% -------------------------------------------------------
+% QUESTÃO 7
+% -------------------------------------------------------
+\textbf{7.} Existem três estratégias clássicas para a \textbf{Redução do Risco}: (1) Proteção, (2) Detecção/Remoção e (3) Limitação de Danos.
+
+\begin{itemize}
+  \item Explique como um sistema de extintores automáticos em um motor de avião se encaixa em uma dessas estratégias.
+  \item Como a estratégia de "Proteção contra Perigos" poderia ser aplicada a uma cortadora de papel industrial?
+\end{itemize}
+\begin{resposta}{4.5cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% -------------------------------------------------------
+% QUESTÃO 8
+% -------------------------------------------------------
+\textbf{8.} O sociólogo Charles Perrow (1984) cunhou o termo \textbf{"Acidentes Normais"}.
+
+\begin{enumerate}[label=\alph*)]
+  \item O que Perrow quer dizer com o termo "Acidentes Normais" em sistemas complexos?
+  \item Apesar da complexidade introduzida, por que o controle por software ainda é preferível a controladores de hardware simples em sistemas críticos atuais?
+\end{enumerate}
+\begin{resposta}{4.5cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% -------------------------------------------------------
+% QUESTÃO 9
+% -------------------------------------------------------
+\textbf{9.} Analise a \textbf{Árvore de Falhas (FTA)} abaixo, que representa a falha em um sistema de contenção de pressão industrial.
+
+\begin{center}
+\begin{tikzpicture}[
+    node distance=1.2cm,
+    box/.style={draw, fill=gray!5, text width=2.5cm, align=center, font=\scriptsize, minimum height=0.8cm},
+    gateOR/.style={or gate US, draw, thick, fill=blue!10, logic gate inputs=nn, rotate=90, scale=1.2},
+    gateAND/.style={and gate US, draw, thick, fill=red!10, logic gate inputs=nn, rotate=90, scale=1.2},
+    arrow/.style={-Stealth, thick}
+]
+    % Nós
+    \node[box] (top) {FALHA NA CONTENÇÃO DE PRESSÃO};
+    
+    \node[gateOR] (or1) [below=0.6cm of top] {};
+    
+    \node[box] (valvula) [below left=1.5cm and 0.5cm of or1] {Válvula de Alívio Presa (Fechada)};
+    \node[box] (resfriamento) [below right=1.5cm and 0.5cm of or1] {Falha no Sistema de Resfriamento};
+    
+    \node[gateAND] (and1) [below=0.6cm of resfriamento] {};
+    
+    \node[box] (bomba1) [below left=1.2cm and 0.1cm of and1] {Falha da Bomba Principal};
+    \node[box] (bomba2) [below right=1.2cm and 0.1cm of and1] {Falha da Bomba Reserva (Standby)};
+
+    % Conexões
+    \draw (top.south) -- (or1.output);
+    \draw (or1.input 1) -- ++(0,-0.5) -| (valvula.north);
+    \draw (or1.input 2) -- ++(0,-0.5) -| (resfriamento.north);
+    
+    \draw (resfriamento.south) -- (and1.output);
+    \draw (and1.input 1) -- ++(0,-0.4) -| (bomba1.north);
+    \draw (and1.input 2) -- ++(0,-0.4) -| (bomba2.north);
+
+\end{tikzpicture}
+\end{center}
+
+\begin{enumerate}[label=\alph*)]
+  \item Com base nas portas lógicas utilizadas, descreva as condições necessárias (em termos de falhas básicas) para que o evento \textbf{"FALHA NA CONTENÇÃO DE PRESSÃO"} ocorra.
+  \item Qual a vantagem, do ponto de vista de segurança, de se utilizar bombas em redundância (Principal + Reserva) conectadas por uma porta \textbf{AND}?
+\end{enumerate}
+\begin{resposta}{6cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% -------------------------------------------------------
+% QUESTÃO 10 (FORMATO ENEM)
+% -------------------------------------------------------
+\textbf{10.} \textit{Texto de Apoio: Seguran\c{c}a em Barragens de Rejeitos}
+
+E o que pode causar o rompimento de uma barragem de rejeitos? Em geral, estas falhas s\~ao o resultado tanto de problemas geot\'ecnicos da estrutura de conten\c{c}\~ao e como da gest\~ao dos rejeitos armazenados. Dentre as v\'arias causas, devemos destacar a falha no controle do balan\c{c}o h\'idrico e a aus\^encia de monitoramento. Analisando as imagens do rompimento em Brumadinho, \'e poss\'ivel ver que todo o dique escorrega para frente. Isto \'e t\'ipico de ruptura por \textit{piping}, onde ocorre uma eros\~ao regressiva devida \`a movimenta\c{c}\~ao descontrolada de \'agua no interior do dique. 
+
+Um conjunto m\'inimo de corte (\textit{minimal cut set}) \'e: ``Obstru\c{c}\~ao do Vertedouro Princ.'' E ``Falha na Abertura do Vertedouro Aux.'', levando \`a ``Falha Total do Sistema de Drenagem'', ``Transbordamento'' e ao rompimento. Isso significa que a seguran\c{c}a depende da redund\^ancia: falha isolada em um vertedouro n\~ao basta, mas ambas simult\^aneas criam vulnerabilidade cr\'itica.
+
+\small\raggedleft{Fonte: Adaptado de UFABC. \textit{O que \'e e para que serve uma barragem de rejeitos?}}
+
+\vspace{0.3cm}
+\begin{center}
+\begin{tikzpicture}[
+    node distance=2.0cm,
+    box/.style={draw, fill=gray!5, text width=2.4cm, align=center, font=\tiny, minimum height=0.7cm},
+    gateOR/.style={or gate US, draw, thick, fill=blue!10, logic gate inputs=nn, rotate=90, scale=1.0},
+    gateAND/.style={and gate US, draw, thick, fill=red!10, logic gate inputs=nn, rotate=90, scale=1.0},
+    arrow/.style={thick}
+]
+    % (Diagrama mantido conforme anterior)
+    \node[box, fill=yellow!20] (top) {\textbf{ROMPIMENTO DA BARRAGEM}};
+    \node[gateOR] (or1) [below=0.5cm of top] {};
+    \draw (top.south) -- (or1.output);
+
+    \node[box] (over) at (-3.5, -2.5) {Transbordamento (Galvamento)};
+    \node[box] (struc) at (3.5, -2.5) {Instabilidade Estrutural};
+    \draw (or1.input 1) -- ++(0,-0.6) -| (over.north);
+    \draw (or1.input 2) -- ++(0,-0.6) -| (struc.north);
+
+    \node[gateOR] (or2) [below=0.6cm of over] {};
+    \draw (over.south) -- (or2.output);
+    \node[box] (chuva) at (-5.8, -5.5) {Evento Pluviométrico Extremo};
+    \node[box] (drena) at (-2.2, -5.5) {Falha Total do Sistema de Drenagem};
+    \draw (or2.input 1) -- ++(0,-0.4) -| (chuva.north);
+    \draw (or2.input 2) -- ++(0,-0.4) -| (drena.north);
+
+    \node[gateAND] (and1) [below=0.4cm of drena] {};
+    \draw (drena.south) -- (and1.output);
+    \node[box] (obst) at (-6.2, -8.5) {Obstrução do\\Vertedouro Princ.};
+    \node[box] (aux) at (-1.2, -8.5) {Falha na Abertura do Vertedouro Aux.};
+    \draw (and1.input 1) -- ++(0,-0.2) -| (obst.north);
+    \draw (and1.input 2) -- ++(0,-0.2) -| (aux.north);
+
+    \node[gateOR] (or3) [below=0.7cm of struc] {};
+    \draw (struc.south) -- (or3.output);
+    \node[box] (liq) at (1.2, -6.5) {Liquefação Estática };
+    \node[box] (piping) at (4.8, -6.5) {Erosão Interna (Piping)};
+    \draw (or3.input 1) -- ++(0,-1.4) -| (liq.north);
+    \draw (or3.input 2) -- ++(0,-1.4) -| (piping.north);
+
+    \node[gateAND] (and2) [below=0.6cm of piping] {};
+    \draw (piping.south) -- (and2.output);
+    \node[box] (filtro) at (1.8, -8.5) {Falha ou Ausência do Filtro Granular};
+    \node[box] (grad) at (5.8, -8.5) {Gradiente Hidráulico Crítico};
+    \draw (and2.input 1) -- ++(0,-0.1) -| (filtro.north);
+    \draw (and2.input 2) -- ++(0,-0.1) -| (grad.north);
+\end{tikzpicture}
+\end{center}
+
+Com base na an\'alise l\'ogica da \textbf{A\'rvore de Falhas} e no texto de apoio, conclui-se que a seguran\c{c}a do sistema de barragem depende fundamentalmente da redund\^ancia e da integridade de m\'ultiplos componentes. Nesse contexto, o rompimento da barragem ocorrer\'a \textbf{unicamente} se:
+
+\begin{enumerate}[label=\Alph*)]
+  \item Ocorrer um "Evento Pluviom\'etrico Extremo", independentemente do estado do sistema de drenagem.
+  \item Houver um "Gradiente Hidr\'aulico Cr\'itico", mesmo que o "Filtro Granular" esteja operando corretamente.
+  \item Ocorrer a falha simult\^anea da "Obstru\c{c}\~ao do Vertedouro Princ." e da "Falha na Abertura do Auxiliar", ou houver liquefação ou piping.
+  \item O sistema de drenagem falhar completamente por obstrução de um \textbf{único} vertedouro (principal ou auxiliar).
+  \item A "Instabilidade Estrutural" for ativada pelo evento "Liquefa\c{c}\~ao Est\'atica" em conjunto com o "Transbordamento".
+\end{enumerate}
+
+\begin{resposta}{1.2cm}
+  \textbf{Resposta:}
+\end{resposta}
+
+\vspace{0.5cm}
+\vspace{0.5cm}
+
+
+
+\vspace{0.8cm}
+
+\begin{center}
+  \textit{``Boa atividade! Att. Me. Prof. Sergio Souza Novak.''}
+\end{center}
+
+% =========================
+\end{document}
+% =========================

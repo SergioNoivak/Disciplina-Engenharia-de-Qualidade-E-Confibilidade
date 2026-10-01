@@ -1,0 +1,1280 @@
+\documentclass[9pt]{beamer}
+\mode<presentation>
+
+% Theme choice:
+\usetheme{Madrid}%Darmstadt 
+\usepackage{xcolor}
+\definecolor{mGreen}{rgb}{0,0.6,0}
+\definecolor{mRed}{rgb}{0.6,0,0}
+\usecolortheme[RGB={0,100,50}]{structure}
+ \usefonttheme{structurebold} 
+\setbeamercovered{invisible}
+%\setbeamertemplate{navigation symbols}{}
+\usepackage{dynblocks}
+\usepackage{textpos}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\newtheorem{teorema}{Teorema}\usepackage{mathtools}
+\renewcommand{\proofname}{Prova}
+\usepackage[portuguese]{babel}
+
+\uselanguage{Portuguese}
+\languagepath{Portuguese}
+
+\deftranslation[to=Portuguese]{Theorem}{Teorema}
+\deftranslation[to=Portuguese]{Lemma}{Lema}
+\deftranslation[to=Portuguese]{Corollary}{Corolário}
+\deftranslation[to=Portuguese]{Proof}{Prova}
+
+\usepackage{dutchcal}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsthm}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning}
+
+\usepackage[affil-it]{authblk} 
+\usepackage{etoolbox}
+\usepackage{lmodern}
+
+\makeatletter
+\patchcmd{\@maketitle}{\LARGE \@title}{\fontsize{18}{19.2}\selectfont\@title}{}{}
+\makeatother
+
+\renewcommand\Authfont{\fontsize{12}{14.4}\selectfont}
+\renewcommand\Affilfont{\fontsize{9}{10.8}\itshape}
+
+% Title page details: 
+\title[Presentation]{ENGENHARIA DA QUALIDADE E CONFIABILIDADE} %add title
+
+
+\institute[UniRV]{\textbf{\large  \textcolor{structure}{\textbf{\large
+Métricas Google SRE
+}} %add name 
+% \hspace{0.5pt}
+\\ \qquad
+\\Professor: Me. Sergio Souza Novak 
+\\Faculdade de Engenharia de Software}
+} 
+% \titlegraphic{\includegraphics[width=5cm]{msu.eps}}
+\titlegraphic{\includegraphics[width=5cm]{Universidade_de_Rio_Verde.jpg}}
+\date{}
+
+% Logo only on title page
+%\logo{\includegraphics[width=1cm,keepaspectratio]{Logo.png}}
+\usepackage[pscoord]{eso-pic}
+
+
+\begin{document}
+
+% Title page frame
+%\begin{frame}
+    %\titlepage 
+%\end{frame}
+\frame[plain]{\titlepage}
+%logo
+\AddToShipoutPictureFG{
+    \put(\LenToUnit{.92\paperwidth},
+    \LenToUnit{.185\paperheight})
+    {\vtop{{\null}
+    \makebox{\includegraphics[width=.8cm,keepaspectratio]{Universidade_de_Rio_Verde.jpg}}}}}
+
+
+\begin{frame}{Sumário}
+  \tableofcontents
+\end{frame}
+
+% Slide 1
+\section{Introdução ás métricas}
+\begin{frame}{Mensurando os Riscos a um Serviço}
+
+\begin{block}{Prática-Padrão}
+Como prática-padrão no Google, busca-se definir uma \textbf{métrica objetiva}
+para representar a propriedade que queremos otimizar.
+\end{block}
+
+\begin{block}{Por que usar métricas?}
+\begin{itemize}
+    \item Avaliar o desempenho atual
+    \item Monitorar melhorias
+    \item Identificar degradações ao longo do tempo
+\end{itemize}
+\end{block}
+
+\begin{alertblock}{Desafio}
+Nem sempre é simples reduzir todos os riscos a uma única métrica.
+\end{alertblock}
+
+\end{frame}
+% Slide 2
+\begin{frame}{Impactos das Falhas de Serviço}
+
+\begin{block}{Consequências Potenciais}
+\begin{itemize}
+    \item Insatisfação dos usuários
+    \item Perda de confiança
+    \item Perda de receita
+    \item Impacto na marca
+    \item Cobertura negativa da imprensa
+\end{itemize}
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}[
+    node distance=1.8cm,
+    every node/.style={draw, rounded corners, align=center}
+]
+\node (falha) {Falha de\\ Serviço};
+\node (usuarios) [below left=of falha] {Usuários};
+\node (receita) [below=of falha] {Receita};
+\node (marca) [below right=of falha] {Marca};
+
+\draw[->] (falha) -- (usuarios);
+\draw[->] (falha) -- (receita);
+\draw[->] (falha) -- (marca);
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+% Slide 3
+\section{Downtime Não Planejado}
+
+\begin{frame}{Foco no Downtime Não Planejado}
+
+\begin{block}{Por que focar no Downtime?}
+Ao lidar com riscos em sistemas complexos, existem muitos impactos possíveis 
+(financeiros, reputacionais, operacionais). Para garantir \textbf{padronização} 
+e comparabilidade entre diferentes serviços, escolhe-se uma métrica comum:
+\textbf{o downtime não planejado}.
+\end{block}
+
+\begin{exampleblock}{Definição Formal}
+Downtime não planejado corresponde aos períodos em que o serviço
+fica indisponível sem que essa interrupção tenha sido previamente
+programada ou comunicada.
+\end{exampleblock}
+
+\begin{alertblock}{Importância}
+\begin{itemize}
+    \item Afeta diretamente a experiência do usuário
+    \item Impacta SLAs e contratos
+    \item Pode gerar perdas financeiras
+    \item Compromete a confiança no sistema
+\end{itemize}
+\end{alertblock}
+
+\begin{center}
+\begin{tikzpicture}
+\draw[->] (0,0) -- (8,0) node[right]{Tempo};
+
+\draw[thick] (0,0.5) -- (2,0.5);
+\draw[thick, red] (2,0.5) -- (3,0.5);
+\draw[thick] (3,0.5) -- (6,0.5);
+\draw[thick, red] (6,0.5) -- (7,0.5);
+\draw[thick] (7,0.5) -- (8,0.5);
+
+\node at (1,0.8) {\small Uptime};
+\node at (2.5,1) {\small Downtime};
+\node at (4.5,0.8) {\small Uptime};
+\node at (6.5,1) {\small Downtime};
+\node at (7.5,0.8) {\small Uptime};
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+\section{Disponibilidade do Serviço}
+
+\begin{frame}{Disponibilidade do Serviço}
+
+\begin{block}{Conceito de Disponibilidade}
+Disponibilidade representa a probabilidade de um sistema estar
+operacional e acessível quando requisitado pelo usuário.
+Em termos práticos, expressa o nível tolerável de downtime não planejado.
+\end{block}
+
+\begin{block}{Expressão em "Noves"}
+A disponibilidade é tradicionalmente representada pelo número de "noves":
+
+\begin{itemize}
+    \item 99,9\%  → até 8h45min de indisponibilidade por ano
+    \item 99,99\% → até 52min por ano
+    \item 99,999\% → cerca de 5min por ano
+\end{itemize}
+
+Cada nove adicional reduz o downtime em aproximadamente
+\textbf{uma ordem de magnitude}.
+\end{block}
+
+\begin{alertblock}{Interpretação}
+Pequenas diferenças percentuais representam grandes diferenças
+no tempo total de indisponibilidade anual.
+\end{alertblock}
+
+\begin{center}
+\begin{tikzpicture}
+\draw[->] (0,0) -- (6,0) node[right]{Disponibilidade};
+
+\draw (1,0.1) -- (1,-0.1);
+\draw (3,0.1) -- (3,-0.1);
+\draw (5,0.1) -- (5,-0.1);
+
+\node[below] at (1,-0.1) {99,9\%};
+\node[below] at (3,-0.1) {99,99\%};
+\node[below] at (5,-0.1) {99,999\%};
+
+\node[above] at (1,0.2) {\tiny ~8h/ano};
+\node[above] at (3,0.2) {\tiny ~52min/ano};
+\node[above] at (5,0.2) {\tiny ~5min/ano};
+\end{tikzpicture}
+\end{center}
+
+\end{frame} 
+% Slide 5
+\begin{frame}{Cálculo Tradicional da Disponibilidade}
+
+\begin{block}{Equação 3.1}
+\[
+\text{Disponibilidade} =
+\frac{\text{Tempo de Uptime}}{\text{Tempo Total}}
+\]
+\end{block}
+
+\begin{block}{Interpretação}
+\begin{itemize}
+    \item Mede proporção de tempo operacional
+    \item Base da engenharia de confiabilidade
+\end{itemize}
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}[node distance=2cm]
+\node (total) [draw, rounded corners] {Tempo Total};
+\node (uptime) [draw, rounded corners, below left=of total] {Uptime};
+\node (downtime) [draw, rounded corners, below right=of total] {Downtime};
+
+\draw[->] (total) -- (uptime);
+\draw[->] (total) -- (downtime);
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+% Slide 6
+\begin{frame}{Resumo}
+
+\begin{block}{Principais Pontos}
+\begin{itemize}
+    \item Riscos devem ser traduzidos em métricas
+    \item Foco no downtime não planejado
+    \item Disponibilidade expressa em “noves”
+    \item Métricas permitem melhoria contínua
+\end{itemize}
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm]
+\node (riscos) [draw, rounded corners] {Riscos};
+\node (metricas) [draw, rounded corners, below=of riscos] {Métricas};
+\node (melhoria) [draw, rounded corners, below=of metricas] {Melhoria Contínua};
+
+\draw[->] (riscos) -- (metricas);
+\draw[->] (metricas) -- (melhoria);
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+\begin{frame}{Por que Métricas Geram Melhoria Contínua?}
+
+\begin{block}{1. Tornam o desempenho observável}
+O que não é medido permanece no campo da percepção.
+Métricas transformam impressões subjetivas em dados objetivos,
+permitindo análise técnica e comparação temporal.
+\end{block}
+
+\begin{block}{2. Criam ciclos de feedback}
+A melhoria contínua depende de realimentação.
+Ao medir desempenho antes e depois de uma intervenção,
+é possível avaliar impacto, validar hipóteses e corrigir estratégias.
+\end{block}
+
+\begin{block}{3. Permitem definição de metas claras}
+Indicadores quantitativos viabilizam:
+\begin{itemize}
+    \item Estabelecimento de SLAs
+    \item Comparação com benchmarks
+    \item Priorização de investimentos
+\end{itemize}
+Sem métricas, decisões tendem a ser reativas.
+\end{block}
+
+\end{frame}
+\begin{frame}{O Mecanismo da Melhoria Contínua Baseada em Métricas}
+
+\begin{block}{Ciclo Estruturado de Aprendizado}
+A medição sistemática viabiliza ciclos iterativos como o PDCA:
+
+\begin{itemize}
+    \item \textbf{Plan} – definir metas (ex: reduzir MTTR)
+    \item \textbf{Do} – implementar melhorias
+    \item \textbf{Check} – medir resultados
+    \item \textbf{Act} – ajustar processos
+\end{itemize}
+
+Sem a etapa de medição, o ciclo se interrompe.
+\end{block}
+
+\begin{block}{Efeitos Organizacionais}
+Métricas adequadas:
+\begin{itemize}
+    \item Alinham incentivos e prioridades
+    \item Reduzem ambiguidade na tomada de decisão
+    \item Permitem identificar tendências (melhoria ou degradação)
+    \item Transformam incidentes em aprendizado cumulativo
+\end{itemize}
+\end{block}
+\end{frame}
+\section{Disponibilidade em sistemas distribuídos}
+
+\begin{frame}{Problema da Disponibilidade Baseada em Tempo em Sistemas Distribuídos}
+
+\begin{block}{Contexto em Sistemas Distribuídos Globais}
+
+\begin{itemize}
+    \item Múltiplos data centers geograficamente distribuídos
+    \item Isolamento regional de falhas
+    \item Impacto parcial de tráfego
+    \item Sistema quase nunca 100\% down
+\end{itemize}
+
+\end{block}
+
+\begin{alertblock}{Implicação}
+Medir disponibilidade apenas como “tempo totalmente fora do ar”
+torna-se pouco representativo, pois o sistema pode estar parcialmente
+operacional durante toda a falha.
+\end{alertblock}
+
+\begin{center}
+\begin{tikzpicture}[
+    node distance=1.8cm,
+    every node/.style={font=\small}
+]
+
+% Usuários
+\node (u1) at (0,2) {Usuários - América};
+\node (u2) at (0,1) {Usuários - Europa};
+\node (u3) at (0,0) {Usuários - Ásia};
+
+% Data centers
+\node[draw, rounded corners, minimum width=2.5cm] (dc1) at (6,2) {Data Center A};
+\node[draw, rounded corners, minimum width=2.5cm, fill=red!20] (dc2) at (6,1) {Data Center B (Falha)};
+\node[draw, rounded corners, minimum width=2.5cm] (dc3) at (6,0) {Data Center C};
+
+% Conexões funcionando
+\draw[->] (u1) -- (dc1);
+\draw[->] (u3) -- (dc3);
+
+% Conexão com falha
+\draw[->, dashed, red] (u2) -- (dc2);
+
+% Observação
+\node at (3,-0.8) {\footnotesize Sistema parcialmente operacional};
+
+\end{tikzpicture}
+\end{center}
+
+\end{frame} 
+\section{O que é uma API REST?}
+
+\begin{frame}{O que é uma API REST?}
+
+\begin{block}{Definição}
+API (Application Programming Interface) é um conjunto de regras
+que permite que sistemas se comuniquem entre si.
+
+REST (Representational State Transfer) é um estilo arquitetural
+baseado em recursos acessados via HTTP.
+\end{block}
+
+\begin{block}{Características Principais}
+\begin{itemize}
+    \item Comunicação cliente-servidor
+    \item Uso de métodos HTTP (GET, POST, PUT, DELETE)
+    \item Recursos identificados por URLs
+    \item Respostas normalmente em JSON
+\end{itemize}
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}
+
+\node[draw, rounded corners, minimum width=2.5cm, minimum height=1cm]
+(cliente) at (0,0) {Cliente};
+
+\node[draw, rounded corners, minimum width=3cm, minimum height=1cm]
+(api) at (8,0) {API REST};
+
+\draw[->] (cliente) -- node[above]{HTTP Request} (api);
+\draw[<-] (cliente) -- node[below]{HTTP Response (JSON)} (api);
+
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+\section{O que é uma requisição?}
+
+\begin{frame}{O que é uma Requisição?}
+
+\begin{block}{Definição}
+Uma requisição é uma mensagem enviada por um cliente
+a um servidor solicitando a execução de uma operação
+sobre um recurso.
+\end{block}
+
+\begin{block}{Componentes de uma Requisição HTTP}
+\begin{itemize}
+    \item Método (GET, POST, PUT, DELETE)
+    \item URL (recurso desejado)
+    \item Cabeçalhos (headers)
+    \item Corpo (body) — opcional
+\end{itemize}
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}
+
+\node[draw, rounded corners, align=left, minimum width=7cm]
+(req) at (0,0) {
+\texttt{POST /usuarios} \\
+Host: exemplo.com \\
+Content-Type: application/json \\
+\{ "nome": "Ana" \}
+};
+
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+% =========================
+% SLIDE GET
+% =========================
+\section{Métodos HTTP}
+\subsection{GET}
+
+\begin{frame}{Método HTTP: GET}
+
+\begin{block}{O que é?}
+Obtém dados de um recurso no servidor.
+Não altera estado. Seguro e idempotente.
+\end{block}
+
+\begin{block}{Exemplo de Requisição}
+\ttfamily\footnotesize
+GET /usuarios/10 HTTP/1.1 \\
+Host: api.exemplo.com \\
+Accept: application/json
+\end{block}
+
+\begin{block}{Exemplo de Resposta}
+\ttfamily\footnotesize
+HTTP/1.1 200 OK \\
+Content-Type: application/json \\
+
+\{ \\
+\quad "id": 10, \\
+\quad "nome": "Ana", \\
+\quad "email": "ana@email.com" \\
+\}
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}
+\node[draw, rounded corners] (c) at (0,0) {Cliente};
+\node[draw, rounded corners] (s) at (5,0) {Servidor};
+\draw[->] (c) -- node[above]{GET} (s);
+\draw[<-] (c) -- node[below]{200 OK} (s);
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+% =========================
+% SLIDE POST
+% =========================
+\subsection{POST}
+
+\begin{frame}{Método HTTP: POST}
+
+\begin{block}{O que é?}
+Cria um novo recurso no servidor.
+Não é idempotente.
+\end{block}
+
+\begin{block}{Exemplo de Requisição}
+\ttfamily\footnotesize
+POST /usuarios HTTP/1.1 \\
+Host: api.exemplo.com \\
+Content-Type: application/json \\
+
+\{ \\
+\quad "nome": "Carlos", \\
+\quad "email": "carlos@email.com" \\
+\}
+\end{block}
+
+\begin{block}{Exemplo de Resposta}
+\ttfamily\footnotesize
+HTTP/1.1 201 Created \\
+Location: /usuarios/11
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}
+\node[draw, rounded corners] (c) at (0,0) {Cliente};
+\node[draw, rounded corners] (s) at (5,0) {Servidor};
+\draw[->] (c) -- node[above]{POST} (s);
+\draw[<-] (c) -- node[below]{201 Created} (s);
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+% =========================
+% SLIDE PUT
+% =========================
+\subsection{PUT}
+
+\begin{frame}{Método HTTP: PUT}
+
+\begin{block}{O que é?}
+Atualiza completamente um recurso existente.
+É idempotente.
+\end{block}
+
+\begin{block}{Exemplo de Requisição}
+\ttfamily\footnotesize
+PUT /usuarios/10 HTTP/1.1 \\
+Host: api.exemplo.com \\
+Content-Type: application/json \\
+
+\{ \\
+\quad "nome": "Ana Souza", \\
+\quad "email": "ana@email.com" \\
+\}
+\end{block}
+
+\begin{block}{Exemplo de Resposta}
+\ttfamily\footnotesize
+HTTP/1.1 200 OK
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}
+\node[draw, rounded corners] (c) at (0,0) {Cliente};
+\node[draw, rounded corners] (s) at (5,0) {Servidor};
+\draw[->] (c) -- node[above]{PUT} (s);
+\draw[<-] (c) -- node[below]{200 OK} (s);
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+% =========================
+% SLIDE DELETE
+% =========================
+\subsection{DELETE}
+
+\begin{frame}{Método HTTP: DELETE}
+
+\begin{block}{O que é?}
+Remove um recurso do servidor.
+É idempotente.
+\end{block}
+
+\begin{block}{Exemplo de Requisição}
+\ttfamily\footnotesize
+DELETE /usuarios/10 HTTP/1.1 \\
+Host: api.exemplo.com
+\end{block}
+
+\begin{block}{Exemplo de Resposta}
+\ttfamily\footnotesize
+HTTP/1.1 204 No Content
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}
+\node[draw, rounded corners] (c) at (0,0) {Cliente};
+\node[draw, rounded corners] (s) at (5,0) {Servidor};
+\draw[->] (c) -- node[above]{DELETE} (s);
+\draw[<-] (c) -- node[below]{204 No Content} (s);
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\section{Disponibilidade Baseada em Requisições}
+
+\begin{frame}{Disponibilidade Baseada em Requisições}
+
+\begin{block}{Definição Utilizada pelo Google}
+Em sistemas distribuídos globais, a disponibilidade é definida como:
+
+\[
+Disponibilidade =
+\frac{\text{Requisições bem sucedidas}}
+{\text{Total de requisições}}
+\]
+
+A métrica é calculada em uma janela móvel
+(ex: 1 dia, 1 semana ou 1 trimestre).
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}
+
+% Total box
+\node[draw, rounded corners, minimum width=6cm, minimum height=1cm]
+(total) at (0,1.5) {Total de Requisições};
+
+% Success portion
+\node[draw, rounded corners, fill=green!20,
+minimum width=4.5cm, minimum height=1cm]
+(success) at (-0.75,0) {Requisições Bem Sucedidas};
+
+% Failed portion
+\node[draw, rounded corners, fill=red!20,
+minimum width=1.2cm, minimum height=1cm]
+(fail) at (2.7,0) {Erros};
+
+\draw[->] (total) -- (success);
+\draw[->] (total) -- (fail);
+
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+\begin{frame}{Exemplo de Cálculo Diário}
+
+\begin{block}{Cenário}
+\begin{itemize}
+    \item 2.500.000 requisições em um dia
+    \item Meta de disponibilidade: 99,99\%
+\end{itemize}
+\end{block}
+
+\begin{block}{Erro Máximo Permitido}
+\[
+0,01\% \times 2.500.000 = 250 \text{ erros}
+\]
+
+O sistema pode falhar até 250 requisições
+e ainda atingir a meta diária.
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}
+
+\draw[fill=green!20] (0,0) rectangle (6,0.6);
+\draw[fill=red!40] (6,0) rectangle (6.06,0.6);
+
+\node at (3,0.3) {\small 2.499.750 Sucessos};
+\node[above] at (6.03,0.6) {\tiny 250 Erros};
+
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+\begin{frame}{Por Que Medir por Requisições?}
+
+\begin{block}{Perspectiva do Usuário}
+Disponibilidade, na prática, significa:
+
+\begin{center}
+\textit{"Minha requisição funcionou ou não?"}
+\end{center}
+
+O usuário não percebe horas de uptime.
+Ele percebe sucesso ou falha da ação executada.
+\end{block}
+
+\begin{block}{Vantagens do Modelo}
+\begin{itemize}
+    \item Reflete experiência real do usuário
+    \item Funciona em sistemas parcialmente operacionais
+    \item É diretamente mensurável por engenharia
+    \item Permite metas quantitativas claras
+\end{itemize}
+\end{block}
+
+\begin{center}
+\begin{tikzpicture}
+
+\node[draw, rounded corners] (user) at (0,1) {Usuário};
+\node[draw, rounded corners] (req) at (3,1) {Requisição};
+\node[draw, rounded corners] (resp) at (6,1) {Resposta};
+
+\draw[->] (user) -- (req);
+\draw[->] (req) -- (resp);
+
+\node at (6,-0.2) {\small Sucesso ou Falha};
+
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+\begin{frame}[fragile]{Status 100 – Continue (Faixa 1xx – Informacional)}
+
+\begin{block}{O que significa a faixa 1xx?}
+A faixa 1xx representa respostas informativas.
+O servidor recebeu a requisição e está processando,
+mas ainda não concluiu a resposta final.
+\end{block}
+
+\begin{block}{Sobre o 100 Continue}
+O status 100 indica que o cliente pode continuar enviando
+o corpo da requisição. É comum em requisições POST grandes.
+\end{block}
+
+\textbf{Exemplo comum: envio de relatório grande}
+
+\begin{block}{Request}
+\begin{verbatim}
+POST /caldeira/relatorio HTTP/1.1
+Host: api.siderurgia.com
+Expect: 100-continue
+Content-Length: 500000
+\end{verbatim}
+\end{block}
+
+\begin{block}{Resposta intermediária}
+\begin{verbatim}
+HTTP/1.1 100 Continue
+\end{verbatim}
+\end{block}
+
+\begin{block}{Interpretação do QA}
+Não é erro.
+É apenas uma confirmação de que o servidor
+está pronto para receber o corpo da requisição.
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Status 200 – OK (Faixa 2xx – Sucesso)}
+
+\begin{block}{O que significa a faixa 2xx?}
+Indica que a requisição foi recebida,
+processada e concluída com sucesso.
+\end{block}
+
+\begin{block}{Sobre o 200 OK}
+É o código mais comum.
+Significa que a operação foi executada corretamente.
+\end{block}
+
+\textbf{Exemplo frequente: consulta de status}
+
+\begin{block}{Request}
+\begin{verbatim}
+GET /caldeira/status HTTP/1.1
+Host: api.siderurgia.com
+\end{verbatim}
+\end{block}
+
+\begin{block}{Response}
+\begin{verbatim}
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "temperatura": 850,
+  "pressao": 120,
+  "status": "OPERANDO_NORMAL"
+}
+\end{verbatim}
+\end{block}
+
+\begin{block}{Interpretação do QA}
+Fluxo feliz.
+A operação foi concluída corretamente
+e o sistema respondeu conforme esperado.
+\end{block}
+
+\end{frame}
+\begin{frame}[fragile]{Status 300 – Redirecionamento (Faixa 3xx)}
+
+\begin{block}{O que significa a faixa 3xx?}
+Indica que o recurso solicitado
+está disponível em outro local
+ou exige ação adicional do cliente.
+\end{block}
+
+\begin{block}{Exemplo: 301 Moved Permanently}
+O endpoint foi alterado permanentemente.
+\end{block}
+
+\begin{block}{Request}
+\begin{verbatim}
+GET /caldeira/dados HTTP/1.1
+Host: api.siderurgia.com
+\end{verbatim}
+\end{block}
+
+\begin{block}{Response}
+\begin{verbatim}
+HTTP/1.1 301 Moved Permanently
+Location: /caldeira/status
+\end{verbatim}
+\end{block}
+
+\begin{block}{Interpretação do QA}
+Não é erro.
+O cliente deve redirecionar automaticamente
+para o novo endpoint indicado.
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Status 404 – Not Found (Faixa 4xx – Erro do Cliente)}
+
+\begin{block}{O que significa a faixa 4xx?}
+Erros causados por requisições inválidas,
+malformadas ou com recurso inexistente.
+A responsabilidade é do cliente.
+\end{block}
+
+\begin{block}{Sobre o 404}
+Indica que o recurso solicitado não existe.
+\end{block}
+
+\begin{block}{Request}
+\begin{verbatim}
+GET /caldeira/manutencao/9999 HTTP/1.1
+Host: api.siderurgia.com
+\end{verbatim}
+\end{block}
+
+\begin{block}{Response}
+\begin{verbatim}
+HTTP/1.1 404 Not Found
+
+{
+  "erro": "Registro não encontrado"
+}
+\end{verbatim}
+\end{block}
+
+
+\end{frame}
+
+\begin{frame}[fragile]{Status 404 – Not Found (Faixa 4xx – Erro do Cliente)}
+
+
+\begin{block}{Request}
+\begin{verbatim}
+GET /caldeira/manutencao/9999 HTTP/1.1
+Host: api.siderurgia.com
+\end{verbatim}
+\end{block}
+
+\begin{block}{Response}
+\begin{verbatim}
+HTTP/1.1 404 Not Found
+
+{
+  "erro": "Registro não encontrado"
+}
+\end{verbatim}
+\end{block}
+
+\begin{block}{Interpretação do QA}
+Erro esperado.
+Sistema deve responder corretamente
+sem gerar falha interna.
+\end{block}
+
+\end{frame}
+\begin{frame}[fragile]{Status 500 – Internal Server Error (Faixa 5xx)}
+\begin{block}{O que significa a faixa 5xx?}
+Indica falha interna no servidor.
+O problema não está na requisição,
+mas no processamento.
+\end{block}
+\begin{block}{Request}
+\begin{verbatim}
+POST /caldeira/manutencao HTTP/1.1
+Content-Type: application/json
+
+{
+  "tecnico": "Carlos Silva"
+}
+\end{verbatim}
+\end{block}
+
+\begin{block}{Response}
+\begin{verbatim}
+HTTP/1.1 500 Internal Server Error
+
+{
+  "erro": "Falha interna no sistema"
+}
+\end{verbatim}
+\end{block}
+
+\begin{block}{Interpretação do QA}
+Erro crítico.
+Impacta disponibilidade.
+Deve gerar incidente ou alerta.
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Status 500 – Internal Server Error (Faixa 5xx)}
+
+\begin{block}{Request}
+\begin{verbatim}
+POST /caldeira/manutencao HTTP/1.1
+Content-Type: application/json
+
+{
+  "tecnico": "Carlos Silva"
+}
+\end{verbatim}
+\end{block}
+
+\begin{block}{Response}
+\begin{verbatim}
+HTTP/1.1 500 Internal Server Error
+
+{
+  "erro": "Falha interna no sistema"
+}
+\end{verbatim}
+\end{block}
+
+\begin{block}{Interpretação do QA}
+Erro crítico.
+Impacta disponibilidade.
+Deve gerar incidente ou alerta.
+\end{block}
+
+\end{frame}
+\begin{frame}
+\centering
+\vspace{1cm}
+
+{\Huge \textbf{Estudo de Caso}} \\[0.5cm]
+{\Large Teste de uso de sistema}
+
+\vspace{1cm}
+
+Sistema de Monitoramento de Caldeira Industrial \\
+Siderurgia
+
+\vfill
+\small Exercício de Teste Manual de QA
+\end{frame}
+
+
+\begin{frame}[fragile]{GET – Consulta de Status da Caldeira}
+
+\begin{block}{O que o QA fez}
+O QA acessou o endpoint de status para verificar se a caldeira
+está operando dentro dos limites.
+\end{block}
+
+\textbf{Método: GET}
+
+\begin{block}{Request}
+\begin{verbatim}
+GET /caldeira/status HTTP/1.1
+Host: api.siderurgia.com
+Accept: application/json
+\end{verbatim}
+\end{block}
+
+\begin{block}{Response}
+\begin{verbatim}
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "temperatura": 850,
+  "pressao": 120,
+  "status": "OPERANDO_NORMAL"
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}  
+\begin{frame}
+\centering
+\vspace{1cm}
+
+{\Huge \textbf{Estudo de Caso}} \\[0.5cm]
+{\Large Teste de uso de sistema}
+
+\vspace{1cm}
+
+Sistema de Monitoramento de Caldeira Industrial \\
+Siderurgia
+
+\vfill
+\small Exercício de Teste Manual de QA
+\end{frame}
+
+
+\begin{frame}[fragile]{GET – Consulta de Status da Caldeira}
+
+\begin{block}{O que o QA fez}
+O QA acessou o endpoint de status para verificar se a caldeira
+está operando dentro dos limites.
+\end{block}
+
+\textbf{Método: GET}
+
+\begin{block}{Request}
+\begin{verbatim}
+GET /caldeira/status HTTP/1.1
+Host: api.siderurgia.com
+Accept: application/json
+\end{verbatim}
+\end{block}
+
+\begin{block}{Response}
+\begin{verbatim}
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "temperatura": 850,
+  "pressao": 120,
+  "status": "OPERANDO_NORMAL"
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}  
+\begin{frame}[fragile]{POST – Tentativa com Dados Inválidos}
+
+\begin{block}{O que o QA fez}
+O QA tentou criar um registro de manutenção
+com dados incompletos para testar validação.
+\end{block}
+
+\textbf{Método: POST}
+
+\begin{block}{Request}
+\begin{verbatim}
+POST /caldeira/manutencao HTTP/1.1
+Content-Type: application/json
+
+{
+  "tecnico": "",
+  "prioridade": "ALTISSIMA"
+}
+\end{verbatim}
+\end{block}
+
+\begin{block}{Response}
+\begin{verbatim}
+HTTP/1.1 400 Bad Request
+
+{
+  "erro": "Prioridade inválida"
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+\begin{frame}[fragile]{POST – Criação de Manutenção Corretiva}
+
+\begin{block}{O que o QA fez}
+Após corrigir os dados, o QA criou corretamente
+um novo registro de manutenção.
+\end{block}
+
+\textbf{Método: POST}
+
+\begin{block}{Request}
+\begin{verbatim}
+POST /caldeira/manutencao HTTP/1.1
+Content-Type: application/json
+
+{
+  "tecnico": "Ana Souza",
+  "descricao": "Troca de sensor",
+  "prioridade": "ALTA"
+}
+\end{verbatim}
+\end{block}
+
+\begin{block}{Response}
+\begin{verbatim}
+HTTP/1.1 201 Created
+Location: /caldeira/manutencao/52
+\end{verbatim}
+\end{block}
+
+\end{frame}
+\begin{frame}[fragile]{GET – Consulta de Registro Inexistente}
+
+\begin{block}{O que o QA fez}
+O QA tentou consultar um registro inexistente
+para validar tratamento de erro 404.
+\end{block}
+
+\textbf{Método: GET}
+
+\begin{block}{Request}
+\begin{verbatim}
+GET /caldeira/manutencao/9999 HTTP/1.1
+Host: api.siderurgia.com
+\end{verbatim}
+\end{block}
+
+\begin{block}{Response}
+\begin{verbatim}
+HTTP/1.1 404 Not Found
+
+{
+  "erro": "Registro não encontrado"
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+\begin{frame}[fragile]{DELETE – Remoção de Registro Criado}
+
+\begin{block}{O que o QA fez}
+O QA removeu o registro recém-criado
+para validar exclusão correta do recurso.
+\end{block}
+
+\textbf{Método: DELETE}
+
+\begin{block}{Request}
+\begin{verbatim}
+DELETE /caldeira/manutencao/52 HTTP/1.1
+Host: api.siderurgia.com
+\end{verbatim}
+\end{block}
+
+\begin{block}{Response}
+\begin{verbatim}
+HTTP/1.1 204 No Content
+\end{verbatim}
+\end{block}
+
+\end{frame}
+\begin{frame}[fragile]{DELETE – Falha Interna no Servidor}
+
+\begin{block}{O que o QA fez}
+O QA tentou remover um registro durante
+uma falha simulada no banco de dados.
+\end{block}
+
+\textbf{Método: DELETE}
+
+\begin{block}{Request}
+\begin{verbatim}
+DELETE /caldeira/manutencao/60 HTTP/1.1
+Host: api.siderurgia.com
+\end{verbatim}
+\end{block}
+
+\begin{block}{Response}
+\begin{verbatim}
+HTTP/1.1 500 Internal Server Error
+
+{
+  "erro": "Falha ao acessar banco de dados"
+}
+\end{verbatim}
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Resposta – Classificação das Requisições}
+
+\begin{block}{Resumo das Execuções do QA}
+Durante o teste manual foram realizadas 6 requisições
+utilizando os métodos GET, POST e DELETE.
+\end{block} 
+
+\begin{itemize}
+    \item GET → 200 OK 
+    \item POST → 400 Bad Request 
+    \item POST → 201 Created 
+    \item GET → 404 Not Found 
+    \item DELETE → 204 No Content 
+    \item DELETE → 500 Internal Server Error 
+\end{itemize}
+
+\begin{block}{Totais}
+\begin{itemize}
+    \item Total de requisições: 6
+    \item Sucessos (2xx): 3
+    \item Erros (4xx e 5xx): 3
+\end{itemize}
+\end{block}
+
+\end{frame}
+\begin{frame}{Resposta – Cálculo da Disponibilidade}
+
+\begin{block}{Fórmula}
+\[
+Disponibilidade =
+\frac{Requisições\ bem\ sucedidas}
+{Total\ de\ requisições}
+\]
+\end{block}
+
+\textbf{Abordagem 1 – Apenas 2xx como sucesso}
+
+\[
+Disponibilidade = \frac{3}{6} = 50\%
+\]
+
+\begin{block}{Interpretação}
+Considerando somente códigos 2xx como sucesso,
+a disponibilidade observada no teste foi de 50\%.
+\end{block}
+
+\end{frame}
+\begin{frame}{Resposta – Interpretação Realista}
+
+\begin{block}{Análise por Classe de Erro}
+\begin{itemize}
+    \item 4xx → erro causado pelo cliente
+    \item 5xx → erro interno do servidor
+\end{itemize}
+\end{block}
+
+Durante o teste houve apenas 1 erro 5xx.
+
+\[
+Disponibilidade = \frac{5}{6}
+\]
+
+\[
+Disponibilidade \approx 83,33\%
+\]
+
+\begin{block}{Conclusão Técnica}
+Se considerarmos apenas falhas do servidor (5xx),
+a disponibilidade real do sistema foi de 83,33\%.
+
+Erros 4xx indicam que o sistema respondeu corretamente
+a uma requisição inválida.
+\end{block}
+
+\end{frame}
+\end{document}

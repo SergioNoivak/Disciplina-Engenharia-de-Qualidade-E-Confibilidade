@@ -1,0 +1,1457 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\usepackage{eso-pic}
+\usepackage[brazil]{babel}
+\shorthandoff{"}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, shapes.symbols, fit, calc, backgrounds}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{meuazul}{RGB}{0, 79, 151}
+\definecolor{meucinza}{RGB}{80, 80, 80}
+\definecolor{meuvermelhoescuro}{RGB}{180, 30, 30}
+\definecolor{meuverde}{RGB}{30, 130, 60}
+\setbeamercolor{structure}{fg=meuazul}
+
+% Configuração do Listings para Git
+\lstdefinelanguage{Git}{
+  morekeywords={git, commit, push, pull, branch, checkout, merge, flow, init, feature, start, finish, release, hotfix, add, tag},
+  sensitive=false,
+  morecomment=[l]{\#},
+}
+\lstset{
+  language=Git,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{meuazul}\bfseries,
+  commentstyle=\color{meucinza}\itshape,
+  backgroundcolor=\color{gray!10},
+  frame=single,
+  rulecolor=\color{gray!30},
+  breaklines=true,
+  showstringspaces=false
+}
+
+\title[Git,Github e Introdução ao GitFlow]{Git,Github e Introdução ao GitFlow}
+\subtitle{Engenharia de Qualidade e Confiabilidade}
+\author{Prof. Me. Sergio Souza Novak — UniRV}
+\titlegraphic{\includegraphics[width=2cm]{logo.png}}
+
+\begin{document}
+
+% Slide de Título
+\frame[plain]{\titlepage}
+
+% Slide de Sumário
+\begin{frame}{Sumário}
+    \begin{columns}[t]
+        \begin{column}{.5\textwidth}
+            \tableofcontents[sections={1-4}]
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \tableofcontents[sections={5-7}]
+        \end{column}
+    \end{columns}
+\end{frame}
+% -------------
+
+\section{Fundamentos: O que é o Git?}
+
+% Slide Git 1
+\begin{frame}{O que é o Git?}
+    \begin{itemize}
+        \item O Git é um \textbf{Sistema de Controle de Versão Distribuído} (DVCS).
+        \item Ferramenta essencial para o desenvolvimento de software moderno.
+        \item Permite rastrear mudanças em arquivos e coordenar o trabalho entre várias pessoas.
+        \item É de código aberto (\textit{Open Source}) e totalmente gratuito.
+    \end{itemize}
+\end{frame}
+
+% Slide Git 2
+\begin{frame}{Origem do Git}
+    \begin{itemize}
+        \item Criado em \textbf{2005} por \textbf{Linus Torvalds} (o mesmo criador do Linux).
+        \item Motivação: A comunidade de desenvolvimento do Kernel Linux precisava de uma ferramenta rápida, descentralizada e que suportasse fluxos de trabalho não lineares (milhares de desenvolvedores independentes).
+        \item "Git" é uma gíria britânica para "pessoa teimosa ou ignorante" (Linus brincou que sempre nomeia os projetos com seu próprio nome).
+    \end{itemize}
+\end{frame}
+
+% Slide Git 3
+\begin{frame}{Por que usar Controle de Versão?}
+    Sem controle de versão, lidamos com arquivos assim:
+    \begin{center}
+        \texttt{projeto\_final.doc} \\
+        \texttt{projeto\_final\_v2.doc} \\
+        \texttt{projeto\_final\_agora\_vai.doc} \\
+        \texttt{projeto\_final\_sergio\_revisado.doc}
+    \end{center}
+    \vspace{0.3cm}
+    \textbf{Com o Git:}
+    \begin{itemize}
+        \item Todo o histórico fica encapsulado na pasta do projeto.
+        \item Se o projeto quebrar, é possível voltar no tempo para qualquer versão anterior.
+        \item Fica registrado \textbf{quem} modificou o quê, \textbf{quando} e \textbf{por quê}.
+    \end{itemize}
+\end{frame}
+
+% Slide Git 4
+\begin{frame}{Centralizado vs Distribuído}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Sistemas Centralizados (SVN, CVS)}
+            \begin{itemize}
+                \item Existe apenas \textit{um} servidor central com o histórico.
+                \item Se o servidor cair, ninguém consegue versionar o código.
+                \item Operações dependem de internet.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \textbf{Sistemas Distribuídos (Git)}
+            \begin{itemize}
+                \item Cada desenvolvedor tem um "clone" completo do histórico na própria máquina.
+                \item Se o servidor explodir, qualquer máquina local serve como backup total.
+                \item Maioria das operações é local e instantânea.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide Git 5
+\begin{frame}{Como o Git pensa: Snapshots}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Outros sistemas (SVN) armazenam alterações baseadas em arquivo (\textbf{deltas}).
+                \item O Git pensa em seus dados como uma série de "fotografias" (\textbf{snapshots}).
+                \item Ao salvar o estado, o Git tira uma foto do sistema de arquivos e armazena uma referência.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+                \begin{tikzpicture}[x=1cm, y=0.8cm, every node/.style={font=\scriptsize}]
+                    \node[draw, rounded corners, fill=blue!10] (v1) at (0,2) {Versão 1};
+                    \node[draw, rounded corners, fill=blue!10] (v2) at (0,0) {Versão 2};
+                    \draw[->, thick, dashed] (v1) -- node[right] {\tiny $\Delta$ (delta)} (v2);
+                    \node[above=0.2cm of v1] {\textbf{SVN (Deltas)}};
+                    
+                    \node[draw, rounded corners, fill=green!10] (s1) at (3,2) {Snapshot A};
+                    \node[draw, rounded corners, fill=green!10] (s2) at (3,0) {Snapshot B};
+                    \draw[->, thick] (s1) -- (s2);
+                    \node[above=0.2cm of s1] {\textbf{Git (Snapshots)}};
+                \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide Git 6
+\begin{frame}{Os Três Estados do Git}
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            Arquivos no Git podem residir em três estados:
+            \vspace{0.3cm}
+            \begin{enumerate}
+                \item \textbf{Modificado:} O arquivo foi alterado, mas ainda não foi salvo.
+                \item \textbf{Preparado (\textit{Staged}):} Marcado para ir no próximo commit.
+                \item \textbf{Consolidado (\textit{Committed}):} Armazenado de forma segura.
+            \end{enumerate}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \begin{center}
+                \begin{tikzpicture}[node distance=1.5cm, every node/.style={draw, rounded corners, align=center, font=\scriptsize}]
+                    \node[fill=blue!10] (mod) {Modificado};
+                    \node[fill=orange!10, below of=mod] (stage) {Preparado};
+                    \node[fill=green!10, below of=stage] (com) {Consolidado};
+                    
+                    \draw[->, thick] (mod) -- node[right, draw=none, font=\tiny] {\texttt{git add}} (stage);
+                    \draw[->, thick] (stage) -- node[right, draw=none, font=\tiny] {\texttt{git commit}} (com);
+                    \draw[->, thick, dashed] (com) to[bend left=45] node[left, draw=none, font=\tiny] {edita} (mod);
+                \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide Git 7
+\begin{frame}{Áreas de Trabalho do Git}
+    \begin{center}
+        \begin{tikzpicture}[x=2.5cm, y=1cm, every node/.style={align=center}]
+            \node[draw, fill=blue!10, minimum height=2cm, minimum width=2.5cm, rounded corners] (wd) at (0,0) {\textbf{Working}\\\textbf{Directory}\\(Modificado)};
+            \node[draw, fill=orange!10, minimum height=2cm, minimum width=2.5cm, rounded corners] (sa) at (2,0) {\textbf{Staging}\\\textbf{Area}\\(Preparado)};
+            \node[draw, fill=green!10, minimum height=2cm, minimum width=2.5cm, rounded corners] (gd) at (4,0) {\textbf{Git Directory}\\\textbf{(Repositório)}\\(Consolidado)};
+            
+            \draw[->, thick] (wd.north) to[bend left] node[above, font=\scriptsize] {\texttt{git add}} (sa.north);
+            \draw[->, thick] (sa.south) to[bend right] node[below, font=\scriptsize] {\texttt{git commit}} (gd.south);
+            \draw[->, thick, dashed] (gd.north) to[bend right=45] node[above, font=\scriptsize] {\texttt{git checkout}} (wd.north);
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide Git 8
+\begin{frame}{Por que o Git dominou o mercado?}
+    \begin{itemize}
+        \item \textbf{Velocidade:} Operações locais não dependem de rede.
+        \item \textbf{Design simples:} Embora poderoso, a estrutura de dados interna é elegante.
+        \item \textbf{Suporte forte a branches:} Criar e mesclar branches no Git leva frações de segundos, o que encoraja fluxos de trabalho baseados em ramificações (como o próprio GitFlow).
+        \item \textbf{Integridade Criptográfica:} Tudo no Git gera um hash SHA-1. É impossível alterar um arquivo, data ou autor sem que o Git saiba.
+    \end{itemize}
+\end{frame}
+
+% Slide Git 9
+\begin{frame}{Conceitos Essenciais: Repositório e Commit}
+    \begin{columns}
+        \begin{column}{0.65\textwidth}
+            \begin{block}{Repositório (Repo)}
+                Pasta rastreada pelo Git. Contém o diretório oculto \texttt{.git}.
+            \end{block}
+            \vspace{0.1cm}
+            \begin{block}{Commit}
+                Uma versão do projeto (Snapshot). Contém:
+                \begin{itemize}
+                    \item Alterações (arquivos).
+                    \item Autor, data e mensagem.
+                    \item Referência ao commit \textbf{anterior} (corrente).
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.35\textwidth}
+            \begin{center}
+                \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+                    \node[draw, circle, fill=meuazul, text=white, minimum size=0.8cm] (c1) {C1};
+                    \node[draw, circle, fill=meuazul, text=white, minimum size=0.8cm, below=0.6cm of c1] (c2) {C2};
+                    \node[draw, circle, fill=meuazul, text=white, minimum size=0.8cm, below=0.6cm of c2] (c3) {C3};
+                    
+                    \draw[<-, thick] (c1) -- node[right, font=\tiny] {pai} (c2);
+                    \draw[<-, thick] (c2) -- node[right, font=\tiny] {pai} (c3);
+                    
+                    \node[left=0.2cm of c3, text=meuvermelhoescuro, font=\bfseries] {HEAD};
+                \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide Git 10
+\begin{frame}{Conceitos Essenciais: Branch e Merge}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Branch (Ramificação)}
+                Linha do tempo paralela e independente.
+            \end{block}
+            \vspace{0.2cm}
+            \begin{block}{Merge (Mesclagem)}
+                Processo de juntar o histórico bifurcado de volta.
+            \end{block}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+                \begin{tikzpicture}[x=1cm, y=1cm, every node/.style={font=\scriptsize}]
+                    % Branch main
+                    \node[draw, circle, fill=blue!50] (m1) at (0,0) {};
+                    \node[draw, circle, fill=blue!50] (m2) at (1,0) {};
+                    \node[draw, circle, fill=blue!50] (m3) at (3,0) {};
+                    \draw[->, thick] (m1) -- (m2);
+                    \draw[->, thick] (m2) -- (m3);
+                    \node[left=0.1cm of m1] {main};
+                    
+                    % Branch feature
+                    \node[draw, circle, fill=green!50] (f1) at (1.5, -1) {};
+                    \node[draw, circle, fill=green!50] (f2) at (2.5, -1) {};
+                    \draw[->, thick, green] (m2) to[bend right] (f1);
+                    \draw[->, thick, green] (f1) -- (f2);
+                    \draw[->, thick, green] (f2) to[bend right] (m3);
+                    \node[below=0.1cm of f1] {branch};
+                    
+                    \node[above=0.2cm of m3, font=\tiny\bfseries] {MERGE};
+                \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% --- Início dos Slides de Exemplo Prático ---
+
+% Slide Exemplo 1
+\begin{frame}[fragile]{Cenário Prático: Sistema de Lanchonete}
+    \begin{itemize}
+        \item Para entender os comandos na prática, vamos imaginar o desenvolvimento de um \textbf{Sistema de Lanchonete}.
+        \item Nosso projeto começa com dois arquivos principais em JavaScript:
+        \begin{itemize}
+            \item \texttt{cardapio.js}: Gerencia os itens à venda.
+            \item \texttt{pedidos.js}: Gerencia a fila de pedidos dos clientes.
+        \end{itemize}
+        \item Vamos acompanhar o fluxo de trabalho do Git passo a passo para evoluir essa lanchonete.
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{center}
+        \begin{tikzpicture}[every node/.style={draw, rounded corners, fill=yellow!10, font=\ttfamily, align=center}]
+            \node (f1) at (0,0) {cardapio.js\\{\scriptsize (vazio)}};
+            \node (f2) at (4,0) {pedidos.js\\{\scriptsize (vazio)}};
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide Exemplo 2
+\begin{frame}[fragile]{\texttt{git init} -- Inaugurando a Lanchonete}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item O comando \textbf{\texttt{git init}} transforma uma pasta comum em um repositório Git.
+                \item Ele cria a pasta oculta \texttt{.git}, onde todo o "cérebro" e histórico do projeto serão armazenados.
+            \end{itemize}
+\begin{lstlisting}
+$ git init
+Initialized empty Git repository in /lanchonete/.git/
+\end{lstlisting}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+                \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+                    \node[draw, minimum width=3cm, minimum height=2.5cm, rounded corners, fill=gray!10, align=center] (pasta) {};
+                    \node[above=0.1cm of pasta] {\textbf{Pasta: /lanchonete}};
+                    \node[draw, fill=yellow!10, rounded corners, font=\ttfamily] (f1) at (-0.5, 0.3) {cardapio.js};
+                    \node[draw, fill=yellow!10, rounded corners, font=\ttfamily] (f2) at (0.5, -0.3) {pedidos.js};
+                    
+                    \node[draw, dashed, fill=blue!10, rounded corners, font=\ttfamily, text=blue] (git) at (0, 1.5) {/.git (criado!)};
+                    \draw[->, thick, blue] (git) -- (0, 0.8);
+                \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide Exemplo 3
+\begin{frame}[fragile]{\texttt{git status} -- Inspecionando a Cozinha}
+    \begin{columns}
+        \begin{column}{0.55\textwidth}
+            \begin{itemize}
+                \item O comando \textbf{\texttt{git status}} mostra o estado atual da sua "cozinha".
+                \item Ele revela arquivos modificados que ainda não foram preparados (\textit{Untracked} ou \textit{Modified}).
+            \end{itemize}
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+$ git status
+On branch main
+Untracked files:
+  (use "git add <file>..." to include)
+        cardapio.js
+        pedidos.js
+\end{lstlisting}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \begin{center}
+                \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+                    \node[draw=red, fill=red!10, rounded corners, minimum height=1.5cm, align=center] (wd) at (0,0) {\textbf{Working Directory}\\\textcolor{red}{Arquivos soltos}};
+                    
+                    \node[draw, fill=white, rounded corners, font=\ttfamily\tiny] (f1) at (-0.8, -0.2) {cardapio.js};
+                    \node[draw, fill=white, rounded corners, font=\ttfamily\tiny] (f2) at (0.8, -0.2) {pedidos.js};
+                    
+                    \node[font=\bfseries, text=red] at (0, 1) {Untracked!};
+                \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide Exemplo 4
+\begin{frame}[fragile]{\texttt{git add} -- Preparando os Ingredientes}
+    \begin{columns}
+        \begin{column}{0.55\textwidth}
+            \begin{itemize}
+                \item O comando \textbf{\texttt{git add}} move os arquivos para a \textit{Staging Area} (Área de Preparação).
+                \item É como separar os ingredientes na bancada antes de finalizar o prato.
+            \end{itemize}
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+$ git add cardapio.js pedidos.js
+# ou git add . para adicionar tudo
+\end{lstlisting}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \begin{center}
+                \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+                    \node[draw=red, fill=red!10, minimum height=2cm, minimum width=1.5cm, rounded corners, align=center] (wd) at (0,0) {\textbf{Working}\\\textbf{Dir.}};
+                    \node[draw=orange, fill=orange!10, minimum height=2cm, minimum width=1.5cm, rounded corners, align=center] (st) at (3,0) {\textbf{Staging}\\\textbf{Area}};
+                    
+                    \node[draw, fill=white, rounded corners, font=\ttfamily\tiny] (f1) at (0, -0.3) {*.js};
+                    \node[draw, fill=white, rounded corners, font=\ttfamily\tiny] (f2) at (3, -0.3) {*.js};
+                    
+                    \draw[->, thick] (wd) -- node[above, font=\tiny\bfseries] {git add} (st);
+                \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide Exemplo 5
+\begin{frame}[fragile]{\texttt{git commit} -- Fechando o Pedido}
+    \begin{columns}
+        \begin{column}{0.55\textwidth}
+            \begin{itemize}
+                \item O comando \textbf{\texttt{git commit}} tira a "foto" (\textit{snapshot}) do que está na \textit{Staging Area} e salva no repositório.
+                \item Sempre acompanhado de uma mensagem clara (\texttt{-m}).
+            \end{itemize}
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+$ git commit -m "feat: cria estrutura inicial"
+[main (root-commit) a1b2c3d] feat: cria estrutura inicial
+ 2 files changed, 50 insertions(+)
+\end{lstlisting}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \begin{center}
+                \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+                    \node[draw=orange, fill=orange!10, minimum height=1.5cm, minimum width=1.2cm, rounded corners, align=center] (st) at (0,0) {\textbf{Staging}};
+                    \node[draw=green, fill=green!10, minimum height=1.5cm, minimum width=1.5cm, rounded corners, align=center] (repo) at (3,0) {\textbf{Repo.}};
+                    
+                    \node[draw, circle, fill=meuazul, text=white, font=\tiny\bfseries] (c1) at (3, -0.2) {C1};
+                    
+                    \draw[->, thick] (st) -- node[above, font=\tiny\bfseries] {git commit} (repo);
+                \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide Exemplo 6
+\begin{frame}[fragile]{\texttt{git log} -- Histórico de Operações}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item O comando \textbf{\texttt{git log}} exibe o diário da lanchonete: quem fez o quê e quando.
+                \item Mostra o autor, data, hash do commit e a mensagem.
+            \end{itemize}
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+$ git log --oneline
+a1b2c3d (HEAD -> main) feat: cria estrutura inicial
+\end{lstlisting}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+                \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+                    \node[draw, rounded corners, fill=white, align=left, text width=3.5cm] (log) {
+                        \textbf{Commit a1b2c3d...}\\
+                        \textcolor{gray}{Autor: Sergio <sergio@unirv.br>}\\
+                        \textcolor{gray}{Data: Hoje}\\
+                        feat: cria estrutura inicial
+                    };
+                    \node[draw, circle, fill=meuazul, text=white, right=0.3cm of log] (c1) {C1};
+                    \draw[->, thick, dashed] (log) -- (c1);
+                \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide Exemplo 7
+\begin{frame}[fragile]{\texttt{git branch} -- Criando um Menu Alternativo}
+    \begin{columns}
+        \begin{column}{0.55\textwidth}
+            \begin{itemize}
+                \item Queremos testar um novo hambúrguer sem estragar o cardápio oficial.
+                \item O comando \textbf{\texttt{git branch}} cria uma linha do tempo paralela.
+            \end{itemize}
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+$ git branch novo-hamburguer
+$ git branch
+* main
+  novo-hamburguer
+\end{lstlisting}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \begin{center}
+                \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+                    \node[draw, circle, fill=meuazul, text=white] (c1) at (0,0) {C1};
+                    
+                    \node[draw, rounded corners, fill=blue!20] (main) at (2, 0.5) {main};
+                    \node[draw, rounded corners, fill=green!20] (branch) at (2, -0.5) {novo-hamburguer};
+                    
+                    \draw[<-, thick] (c1) -- (main);
+                    \draw[<-, thick] (c1) -- (branch);
+                    
+                    \node[left=0.2cm of main, text=meuvermelhoescuro, font=\bfseries\tiny] {HEAD};
+                \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide Exemplo 8
+\begin{frame}[fragile]{\texttt{git checkout} -- Trocando de Bancada}
+    \begin{columns}
+        \begin{column}{0.55\textwidth}
+            \begin{itemize}
+                \item Criar a branch não muda para ela automaticamente. Usamos \textbf{\texttt{git checkout}} (ou \texttt{git switch}) para "pular" para a nova linha do tempo.
+            \end{itemize}
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+$ git checkout novo-hamburguer
+Switched to branch 'novo-hamburguer'
+
+# Adicionando o sanduiche no cardapio.js
+$ git add cardapio.js
+$ git commit -m "feat: lanca o x-bacon"
+\end{lstlisting}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \begin{center}
+                \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+                    \node[draw, circle, fill=meuazul, text=white] (c1) at (0,0) {C1};
+                    \node[draw, circle, fill=green!60, text=white] (c2) at (1.5,-1) {C2};
+                    
+                    \draw[->, thick] (c1) -- (c2);
+                    
+                    \node[draw, rounded corners, fill=blue!20] (main) at (1.5, 0) {main};
+                    \node[draw, rounded corners, fill=green!20] (branch) at (3, -1) {novo-hamburguer};
+                    
+                    \draw[<-, thick] (c1) -- (main);
+                    \draw[<-, thick] (c2) -- (branch);
+                    
+                    \node[right=0.2cm of branch, text=meuvermelhoescuro, font=\bfseries\tiny] {HEAD};
+                \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide Exemplo 9
+\begin{frame}[fragile]{\texttt{git merge} -- Incorporando ao Menu Oficial}
+    \begin{columns}
+        \begin{column}{0.55\textwidth}
+            \begin{itemize}
+                \item O X-Bacon foi um sucesso! Agora precisamos juntá-lo ao cardápio principal.
+                \item Voltamos para a \texttt{main} e usamos \textbf{\texttt{git merge}}.
+            \end{itemize}
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+$ git checkout main
+Switched to branch 'main'
+
+$ git merge novo-hamburguer
+Merge made by the 'ort' strategy.
+ cardapio.js | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+\end{lstlisting}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \begin{center}
+                \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+                    \node[draw, circle, fill=meuazul, text=white] (c1) at (0,0) {C1};
+                    \node[draw, circle, fill=green!60, text=white] (c2) at (1.5,-1) {C2};
+                    \node[draw, circle, fill=meuazul, text=white] (c3) at (3,0) {C3};
+                    
+                    \draw[->, thick] (c1) -- (c3);
+                    \draw[->, thick] (c1) -- (c2);
+                    \draw[->, thick] (c2) -- (c3);
+                    
+                    \node[above=0.2cm of c3, draw, rounded corners, fill=blue!20] (main) {main};
+                    \node[right=0.2cm of main, text=meuvermelhoescuro, font=\bfseries\tiny] {HEAD};
+                \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide Exemplo 10
+\begin{frame}[fragile]{Resumo Visual do Fluxo da Lanchonete}
+    \begin{center}
+        \begin{tikzpicture}[x=2.5cm, y=1.2cm, every node/.style={align=center, font=\scriptsize}]
+            \node[draw, fill=red!10, minimum height=1.5cm, minimum width=2.2cm, rounded corners] (wd) at (0,0) {\textbf{Working Directory}\\(Massa e recheio)};
+            \node[draw, fill=orange!10, minimum height=1.5cm, minimum width=2.2cm, rounded corners] (sa) at (2,0) {\textbf{Staging Area}\\(Forno)};
+            \node[draw, fill=green!10, minimum height=1.5cm, minimum width=2.2cm, rounded corners] (gd) at (4,0) {\textbf{Repositório}\\(Vitrine de entrega)};
+            
+            \draw[->, thick, shorten >=2pt, shorten <=2pt] (wd.north) to[bend left] node[above, font=\ttfamily\scriptsize] {git add} (sa.north);
+            \draw[->, thick, shorten >=2pt, shorten <=2pt] (sa.south) to[bend right] node[below, font=\ttfamily\scriptsize] {git commit} (gd.south);
+            
+            \node[draw, dashed, fill=blue!5, rounded corners, minimum height=1cm] (rem) at (2, -2) {\textbf{Nuvem (GitHub)}\\(Filiais da lanchonete)};
+            
+            \draw[->, thick, blue, shorten >=2pt, shorten <=2pt] (gd.east) to[bend left] node[right, font=\ttfamily\scriptsize] {git push} (rem.east);
+            \draw[->, thick, purple, shorten >=2pt, shorten <=2pt] (rem.west) to[bend left] node[left, font=\ttfamily\scriptsize] {git pull} (wd.west);
+        \end{tikzpicture}
+    \end{center}
+    \begin{itemize}
+        \item \textbf{\texttt{git push}}: Envia os commits locais para a nuvem.
+        \item \textbf{\texttt{git pull}}: Traz as novidades da nuvem para a sua lanchonete.
+    \end{itemize}
+\end{frame}
+
+% --- Fim dos Slides de Exemplo Prático ---
+
+\section{Git vs GitHub}
+
+% Slide 11
+\begin{frame}{O que é o GitHub?}
+    \begin{itemize}
+        \item O GitHub é uma \textbf{plataforma de hospedagem} de código-fonte em nuvem que utiliza o Git.
+        \item Adiciona funcionalidades de rede social ao desenvolvimento (seguir projetos, estrelas, issues, pull requests).
+        \item Foi comprado pela Microsoft em 2018 e é o maior repositório de código do planeta.
+        \item Existem alternativas concorrentes que também usam Git: \textbf{GitLab}, \textbf{Bitbucket}, \textbf{Gitea}.
+    \end{itemize}
+\end{frame}
+
+% Slide 12
+\begin{frame}{Diferença Fundamental: Git $\times$ GitHub}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+                \textbf{\Huge Git}
+            \end{center}
+            \vspace{0.2cm}
+            \begin{itemize}
+                \item É a \textbf{ferramenta}.
+                \item Software de linha de comando instalado no seu computador.
+                \item Trabalha localmente e \textit{offline}.
+                \item Não possui interface gráfica nativa (apenas terminal).
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+                \textbf{\Huge GitHub}
+            \end{center}
+            \vspace{0.2cm}
+            \begin{itemize}
+                \item É o \textbf{serviço} web.
+                \item Site na internet hospedando repositórios Git.
+                \item Trabalha na nuvem (\textit{online}).
+                \item Oferece interface gráfica rica, gestão de projetos, CI/CD.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% -------------
+
+\section{Introdução ao GitFlow e Problemas}
+
+% Slide 1
+\begin{frame}[fragile]{Problemas no Desenvolvimento Colaborativo (O Caos)}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            Antes de adotar um fluxo estruturado, as equipes sofrem com:
+            \vspace{0.2cm}
+            \begin{itemize}
+                \item \textbf{Código Quebrado:} Funcionalidades inacabadas vão parar no cliente acidentalmente.
+                \item \textbf{Conflitos Constantes:} Desenvolvedores alterando os mesmos arquivos na \texttt{main} ao mesmo tempo.
+                \item \textbf{Sem Rastreabilidade:} "Quem subiu esse código? Qual versão corrigiu aquele problema?"
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{onlyenv}
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+$ git push origin main
+To https://github.com/empresa/projeto.git
+ ! [rejected] main -> main (fetch first)
+error: failed to push some refs
+hint: Updates were rejected because the
+remote contains work that you do not have
+locally.
+
+$ git pull origin main
+Auto-merging index.html
+CONFLICT (content): Merge conflict in 
+index.html
+Automatic merge failed; fix conflicts and 
+then commit the result.
+\end{lstlisting}
+            \end{onlyenv}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 2
+\begin{frame}{A Solução: Organização de Versões de Software}
+    Para evitar o caos, precisamos adotar o \textbf{Isolamento} de ambientes (Dev, Teste, Produção) e \textbf{Padronização}.
+    
+    \vspace{0.3cm}
+    \begin{block}{Versionamento Semântico (SemVer)}
+        Padroniza como os números de versão são definidos para comunicar o nível de impacto das mudanças.
+    \end{block}
+    
+    \vspace{0.3cm}
+    \begin{center}
+        \begin{tikzpicture}[node distance=0.5cm, every node/.style={font=\small, align=center}]
+            \node[draw=meuazul, fill=meuazul!10, rounded corners, minimum height=1.2cm, minimum width=2.5cm] (major) {\textbf{MAJOR} (2)\\Mudança\\Incompatível};
+            \node[right=of major, font=\huge] (dot1) {.};
+            \node[draw=meuverde, fill=meuverde!10, rounded corners, minimum height=1.2cm, minimum width=2.5cm, right=of dot1] (minor) {\textbf{MINOR} (1)\\Nova Função\\(Compatível)};
+            \node[right=of minor, font=\huge] (dot2) {.};
+            \node[draw=orange, fill=orange!10, rounded corners, minimum height=1.2cm, minimum width=2.5cm, right=of dot2] (patch) {\textbf{PATCH} (4)\\Correção de Bug\\(Compatível)};
+            
+            \node[above=0.3cm of minor, font=\Large\bfseries] {Exemplo: v2.1.4};
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\section{Conceito de Git Flow}
+
+% Slide 3
+\begin{frame}{Conceito de Git Flow}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Criado por \textbf{Vincent Driessen} (2010).
+                \item Não é um comando nativo ou plugin obrigatório, mas sim um \textbf{conjunto estrito de regras} e convenções.
+                \item \textbf{Objetivo:} Fornecer um modelo de ramificação rigoroso para organizar projetos em larga escala.
+                \item Excelente para produtos de software tradicionais com \textbf{cronogramas de lançamento} definidos.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+                \begin{tikzpicture}[every node/.style={font=\scriptsize, align=center}]
+                    % Círculo base (Git)
+                    \node[circle, draw=gray, fill=gray!20, minimum size=3cm] (git) {\textbf{Motor Git}\\(Branches, Merges,\\Commits)};
+                    
+                    % Anel em volta (GitFlow)
+                    \draw[ultra thick, meuazul, dashed] (0,0) circle (2.2cm);
+                    \node[text=meuazul, font=\bfseries] at (0, 2.4) {Metodologia Git Flow};
+                    
+                    % Caixas acopladas
+                    \node[draw=orange, fill=orange!10, rounded corners] at (-2, 1.5) {Regras Restritas};
+                    \node[draw=meuverde, fill=meuverde!10, rounded corners] at (2, 1.5) {Nomes de Branches};
+                    \node[draw=purple, fill=purple!10, rounded corners] at (0, -2.5) {Lançamentos Seguros};
+                \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 4.1
+\begin{frame}[fragile]{Visão Geral do Fluxo (1. Branches Principais)}
+    \begin{itemize}
+        \item \textbf{\texttt{main}:} Armazena o código de produção estável.
+        \item \textbf{\texttt{develop}:} Base para a próxima versão, onde o código em desenvolvimento é integrado.
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{center}
+    \resizebox{0.9\textwidth}{!}{
+    \begin{tikzpicture}[x=1.5cm, y=1cm, every node/.style={font=\small}]
+        \draw[thick, gray!50] (0, 0) -- (8, 0) node[right, text=black] {\texttt{main} (Produção)};
+        \draw[thick, gray!50] (0, -2) -- (8, -2) node[right, text=black] {\texttt{develop} (Integração)};
+        
+        \node[circle, fill=blue!50, inner sep=2pt] (m1) at (1, 0) {};
+        \node[circle, fill=blue!50, inner sep=2pt] (m2) at (7, 0) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d1) at (1, -2) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d4) at (6, -2) {};
+        
+        \draw[->, thick, blue!50] (m1) -- (d1);
+        \draw[->, thick, orange!50] (d1) -- (d4);
+        \draw[->, thick, blue!50] (m1) -- (m2);
+        
+        \node[above=2pt of m1] {v1.0};
+        \node[above=2pt of m2] {v1.1};
+    \end{tikzpicture}
+    }
+    \end{center}
+\end{frame}
+
+% Slide 4.2
+\begin{frame}[fragile]{Visão Geral do Fluxo (2. Feature Branches)}
+    \begin{itemize}
+        \item \textbf{\texttt{feature}:} Ramificações criadas a partir da \texttt{develop} para implementar novas funcionalidades. Retornam para a \texttt{develop}.
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{center}
+    \resizebox{0.9\textwidth}{!}{
+    \begin{tikzpicture}[x=1.5cm, y=1cm, every node/.style={font=\small}]
+        \draw[thick, gray!50] (0, 0) -- (8, 0) node[right, text=black] {\texttt{main} (Produção)};
+        \draw[thick, gray!50] (0, -2) -- (8, -2) node[right, text=black] {\texttt{develop} (Integração)};
+        \draw[thick, gray!50] (0, -4) -- (4, -4) node[right, text=black] {\texttt{feature} (Novidades)};
+        
+        \node[circle, fill=blue!50, inner sep=2pt] (m1) at (1, 0) {};
+        \node[circle, fill=blue!50, inner sep=2pt] (m2) at (7, 0) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d1) at (1, -2) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d2) at (2, -2) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d3) at (4, -2) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d4) at (6, -2) {};
+        
+        \node[circle, fill=green!50, inner sep=2pt] (f1) at (2.5, -4) {};
+        \node[circle, fill=green!50, inner sep=2pt] (f2) at (3.5, -4) {};
+        
+        \draw[->, thick, blue!50] (m1) -- (d1);
+        \draw[->, thick, orange!50] (d1) -- (d2);
+        \draw[->, thick, orange!50] (d2) to[bend right] (f1);
+        \draw[->, thick, green!50] (f1) -- (f2);
+        \draw[->, thick, green!50] (f2) to[bend right] (d3);
+        \draw[->, thick, orange!50] (d3) -- (d4);
+        
+        \node[above=2pt of m1] {v1.0};
+        \node[above=2pt of m2] {v1.1};
+    \end{tikzpicture}
+    }
+    \end{center}
+\end{frame}
+
+% Slide 4.3
+\begin{frame}[fragile]{Visão Geral do Fluxo (3. Release e Hotfix)}
+    \begin{itemize}
+        \item \textbf{\texttt{release}:} Prepara o lançamento. Ao finalizar, vai para \texttt{main} e \texttt{develop}.
+        \item \textbf{\texttt{hotfix}:} Corrige erros críticos direto em produção (a partir da \texttt{main}).
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{center}
+    \resizebox{0.9\textwidth}{!}{
+    \begin{tikzpicture}[x=1.5cm, y=1cm, every node/.style={font=\small}]
+        \draw[thick, gray!50] (0, 0) -- (8, 0) node[right, text=black] {\texttt{main} (Produção)};
+        \draw[thick, gray!50] (0, -2) -- (8, -2) node[right, text=black] {\texttt{develop} (Integração)};
+        \draw[thick, gray!50] (0, -4) -- (4, -4) node[right, text=black] {\texttt{feature} (Novidades)};
+        
+        \node[circle, fill=blue!50, inner sep=2pt] (m1) at (1, 0) {};
+        \node[circle, fill=blue!50, inner sep=2pt] (m2) at (7, 0) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d1) at (1, -2) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d2) at (2, -2) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d3) at (4, -2) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d4) at (6, -2) {};
+        \node[circle, fill=green!50, inner sep=2pt] (f1) at (2.5, -4) {};
+        \node[circle, fill=green!50, inner sep=2pt] (f2) at (3.5, -4) {};
+        \node[circle, fill=red!50, inner sep=2pt] (h1) at (3, -1) {};
+        \node[right, text=red] at (3.2, -1) {\texttt{hotfix}};
+        \node[circle, fill=purple!50, inner sep=2pt] (r1) at (5, -1) {};
+        \node[right, text=purple] at (5.2, -1) {\texttt{release}};
+        
+        \draw[->, thick, blue!50] (m1) -- (d1);
+        \draw[->, thick, orange!50] (d2) to[bend right] (f1);
+        \draw[->, thick, green!50] (f1) -- (f2);
+        \draw[->, thick, green!50] (f2) to[bend right] (d3);
+        
+        \draw[->, thick, blue!50] (m1) to[bend right=20] (h1);
+        \draw[->, thick, red!50] (h1) to[bend right=20] (m2);
+        \draw[->, thick, red!50] (h1) -- (d3);
+        
+        \draw[->, thick, orange!50] (d3) to[bend left=20] (r1);
+        \draw[->, thick, purple!50] (r1) to[bend left=20] (m2);
+        \draw[->, thick, purple!50] (r1) -- (d4);
+        
+        \node[above=2pt of m1] {v1.0};
+        \node[above=2pt of m2] {v1.1};
+    \end{tikzpicture}
+    }
+    \end{center}
+\end{frame}
+
+% Slide 4.4
+\begin{frame}[fragile]{Visão com Staging (1. Estrutura Base)}
+    \begin{itemize}
+        \item Adicionamos a branch \textbf{\texttt{staging}} entre \texttt{main} e \texttt{develop}.
+        \item Usada para homologação (QA) em um ambiente idêntico à produção.
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{center}
+    \resizebox{0.9\textwidth}{!}{
+    \begin{tikzpicture}[x=1.5cm, y=1cm, every node/.style={font=\small}]
+        \draw[thick, gray!50] (0, 0) -- (8, 0) node[right, text=black] {\texttt{main} (Produção)};
+        \draw[thick, gray!50] (0, -1.5) -- (8, -1.5) node[right, text=black] {\texttt{staging} (Homologação)};
+        \draw[thick, gray!50] (0, -3) -- (8, -3) node[right, text=black] {\texttt{develop} (Integração)};
+        
+        \node[circle, fill=blue!50, inner sep=2pt] (m1) at (1, 0) {};
+        \node[circle, fill=blue!50, inner sep=2pt] (m2) at (7, 0) {};
+        \node[circle, fill=teal!50, inner sep=2pt] (s1) at (1, -1.5) {};
+        \node[circle, fill=teal!50, inner sep=2pt] (s2) at (7, -1.5) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d1) at (1, -3) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d2) at (7, -3) {};
+        
+        \draw[->, thick, blue!50] (m1) -- (s1);
+        \draw[->, thick, teal!50] (s1) -- (d1);
+        \draw[->, thick, blue!50] (m1) -- (m2);
+        \draw[->, thick, teal!50] (s1) -- (s2);
+        \draw[->, thick, orange!50] (d1) -- (d2);
+        
+        \node[above=2pt of m1] {v1.0};
+        \node[above=2pt of m2] {v1.1};
+    \end{tikzpicture}
+    }
+    \end{center}
+\end{frame}
+
+% Slide 4.5
+\begin{frame}[fragile]{Visão com Staging (2. Desenvolvimento Local)}
+    \begin{itemize}
+        \item O ciclo de desenvolvimento (\texttt{feature}) continua o mesmo: surge da \texttt{develop} e retorna para ela.
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{center}
+    \resizebox{0.9\textwidth}{!}{
+    \begin{tikzpicture}[x=1.5cm, y=1cm, every node/.style={font=\small}]
+        \draw[thick, gray!50] (0, 0) -- (8, 0) node[right, text=black] {\texttt{main}};
+        \draw[thick, gray!50] (0, -1.5) -- (8, -1.5) node[right, text=black] {\texttt{staging}};
+        \draw[thick, gray!50] (0, -3) -- (8, -3) node[right, text=black] {\texttt{develop}};
+        \draw[thick, gray!50] (0, -4.5) -- (5, -4.5) node[right, text=black] {\texttt{feature}};
+        
+        \node[circle, fill=blue!50, inner sep=2pt] (m1) at (1, 0) {};
+        \node[circle, fill=teal!50, inner sep=2pt] (s1) at (1, -1.5) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d1) at (1, -3) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d2) at (2, -3) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d3) at (4, -3) {};
+        \node[circle, fill=green!50, inner sep=2pt] (f1) at (2.5, -4.5) {};
+        \node[circle, fill=green!50, inner sep=2pt] (f2) at (3.5, -4.5) {};
+        
+        \draw[->, thick, blue!50] (m1) -- (s1);
+        \draw[->, thick, teal!50] (s1) -- (d1);
+        \draw[->, thick, orange!50] (d1) -- (d2);
+        \draw[->, thick, orange!50] (d2) to[bend right] (f1);
+        \draw[->, thick, green!50] (f1) -- (f2);
+        \draw[->, thick, green!50] (f2) to[bend right] (d3);
+        
+        \node[above=2pt of m1] {v1.0};
+    \end{tikzpicture}
+    }
+    \end{center}
+\end{frame}
+
+% Slide 4.6
+\begin{frame}[fragile]{Visão com Staging (3. Promovendo para Homologação)}
+    \begin{itemize}
+        \item Quando as funcionalidades estão maduras, a \texttt{develop} é enviada para a \texttt{staging}.
+        \item Na \texttt{staging}, a equipe de Qualidade (QA) realiza testes exaustivos.
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{center}
+    \resizebox{0.9\textwidth}{!}{
+    \begin{tikzpicture}[x=1.5cm, y=1cm, every node/.style={font=\small}]
+        \draw[thick, gray!50] (0, 0) -- (8, 0) node[right, text=black] {\texttt{main}};
+        \draw[thick, gray!50] (0, -1.5) -- (8, -1.5) node[right, text=black] {\texttt{staging}};
+        \draw[thick, gray!50] (0, -3) -- (8, -3) node[right, text=black] {\texttt{develop}};
+        \draw[thick, gray!50] (0, -4.5) -- (5, -4.5) node[right, text=black] {\texttt{feature}};
+        
+        \node[circle, fill=blue!50, inner sep=2pt] (m1) at (1, 0) {};
+        \node[circle, fill=teal!50, inner sep=2pt] (s1) at (1, -1.5) {};
+        \node[circle, fill=teal!50, inner sep=2pt] (s2) at (5, -1.5) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d1) at (1, -3) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d2) at (2, -3) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d3) at (4, -3) {};
+        \node[circle, fill=green!50, inner sep=2pt] (f1) at (2.5, -4.5) {};
+        \node[circle, fill=green!50, inner sep=2pt] (f2) at (3.5, -4.5) {};
+        
+        \draw[->, thick, blue!50] (m1) -- (s1);
+        \draw[->, thick, teal!50] (s1) -- (d1);
+        \draw[->, thick, teal!50] (s1) -- (s2);
+        \draw[->, thick, orange!50] (d1) -- (d2);
+        \draw[->, thick, orange!50] (d2) to[bend right] (f1);
+        \draw[->, thick, green!50] (f1) -- (f2);
+        \draw[->, thick, green!50] (f2) to[bend right] (d3);
+        \draw[->, thick, orange!50] (d3) to[bend left] (s2);
+        
+        \node[above=2pt of s2, font=\tiny, text=meuverde] {Testes QA};
+    \end{tikzpicture}
+    }
+    \end{center}
+\end{frame}
+
+% Slide 4.7
+\begin{frame}[fragile]{Visão com Staging (4. Lançamento em Produção)}
+    \begin{itemize}
+        \item Após aprovada na \texttt{staging}, essa mesma versão é mesclada na \texttt{main} e tagueada.
+        \item Isso garante que exatamente o código que foi homologado irá para produção.
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{center}
+    \resizebox{0.9\textwidth}{!}{
+    \begin{tikzpicture}[x=1.5cm, y=1cm, every node/.style={font=\small}]
+        \draw[thick, gray!50] (0, 0) -- (8, 0) node[right, text=black] {\texttt{main}};
+        \draw[thick, gray!50] (0, -1.5) -- (8, -1.5) node[right, text=black] {\texttt{staging}};
+        \draw[thick, gray!50] (0, -3) -- (8, -3) node[right, text=black] {\texttt{develop}};
+        \draw[thick, gray!50] (0, -4.5) -- (5, -4.5) node[right, text=black] {\texttt{feature}};
+        
+        \node[circle, fill=blue!50, inner sep=2pt] (m1) at (1, 0) {};
+        \node[circle, fill=blue!50, inner sep=2pt] (m2) at (7, 0) {};
+        \node[circle, fill=teal!50, inner sep=2pt] (s1) at (1, -1.5) {};
+        \node[circle, fill=teal!50, inner sep=2pt] (s2) at (5, -1.5) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d1) at (1, -3) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d2) at (2, -3) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d3) at (4, -3) {};
+        \node[circle, fill=green!50, inner sep=2pt] (f1) at (2.5, -4.5) {};
+        \node[circle, fill=green!50, inner sep=2pt] (f2) at (3.5, -4.5) {};
+        
+        \draw[->, thick, blue!50] (m1) -- (s1);
+        \draw[->, thick, teal!50] (s1) -- (d1);
+        \draw[->, thick, blue!50] (m1) -- (m2);
+        \draw[->, thick, teal!50] (s1) -- (s2);
+        \draw[->, thick, orange!50] (d1) -- (d2);
+        \draw[->, thick, orange!50] (d2) to[bend right] (f1);
+        \draw[->, thick, green!50] (f1) -- (f2);
+        \draw[->, thick, green!50] (f2) to[bend right] (d3);
+        \draw[->, thick, orange!50] (d3) to[bend left] (s2);
+        \draw[->, thick, teal!50] (s2) to[bend left] (m2);
+        
+        \node[above=2pt of m1] {v1.0};
+        \node[above=2pt of m2] {v1.1};
+    \end{tikzpicture}
+    }
+    \end{center}
+\end{frame}
+
+% Slide 4.8
+\begin{frame}[fragile]{Visão com Staging (5. Tratando Hotfixes)}
+    \begin{itemize}
+        \item O \texttt{hotfix} nasce da \texttt{main} para corrigir bugs críticos em produção.
+        \item Ao finalizar, ele deve ser mesclado na \texttt{main}, e também na \texttt{staging} e na \texttt{develop}.
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{center}
+    \resizebox{0.9\textwidth}{!}{
+    \begin{tikzpicture}[x=1.5cm, y=1cm, every node/.style={font=\small}]
+        \draw[thick, gray!50] (0, 0) -- (9, 0) node[right, text=black] {\texttt{main}};
+        \draw[thick, gray!50] (0, -1.5) -- (9, -1.5) node[right, text=black] {\texttt{staging}};
+        \draw[thick, gray!50] (0, -3) -- (9, -3) node[right, text=black] {\texttt{develop}};
+        
+        \node[circle, fill=blue!50, inner sep=2pt] (m1) at (1, 0) {};
+        \node[circle, fill=blue!50, inner sep=2pt] (m2) at (5, 0) {};
+        \node[circle, fill=blue!50, inner sep=2pt] (m3) at (8, 0) {};
+        \node[circle, fill=teal!50, inner sep=2pt] (s1) at (1, -1.5) {};
+        \node[circle, fill=teal!50, inner sep=2pt] (s2) at (8, -1.5) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d1) at (1, -3) {};
+        \node[circle, fill=orange!50, inner sep=2pt] (d2) at (8, -3) {};
+        
+        \node[circle, fill=red!50, inner sep=2pt] (h1) at (6.5, -0.75) {};
+        \node[right, text=red] at (6.7, -0.75) {\texttt{hotfix}};
+        
+        \draw[->, thick, blue!50] (m1) -- (m2);
+        \draw[->, thick, blue!50] (m2) to[bend right=20] (h1);
+        \draw[->, thick, red!50] (h1) to[bend right=20] (m3);
+        \draw[->, thick, red!50] (h1) -- (s2);
+        \draw[->, thick, teal!50] (s2) -- (d2);
+        
+        \node[above=2pt of m2] {v1.1};
+        \node[above=2pt of m3] {v1.1.1};
+    \end{tikzpicture}
+    }
+    \end{center}
+\end{frame}
+
+\section{Vantagens e Desvantagens}
+
+% Slide 5
+\begin{frame}{Vantagens e Desvantagens}
+    \begin{columns}[T]
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Vantagens \textcolor{meuverde}{\textbf{(+)}}}
+                \begin{itemize}
+                    \item Histórico de projeto limpo e rastreável.
+                    \item Separação clara entre desenvolvimento, testes e produção.
+                    \item Facilita o trabalho paralelo em grandes equipes.
+                    \item Suporta múltiplas versões ativas do software simultaneamente.
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Desvantagens \textcolor{meuvermelhoescuro}{\textbf{(-)}}}
+                \begin{itemize}
+                    \item Histórico denso com muitos \textit{merge commits}.
+                    \item Curva de aprendizado moderada para novos desenvolvedores.
+                    \item Complexidade desnecessária para projetos pequenos ou startups.
+                    \item Pode conflitar com estratégias de Entrega Contínua (Continuous Deployment).
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\section{Unidade 2 -- Estrutura do Git Flow}
+
+% Slide 6
+\begin{frame}{Unidade 2 -- Estrutura do Git Flow}
+    A estrutura do Git Flow categoriza os branches com base em seu \textbf{tempo de vida} e \textbf{propósito}.
+    
+    \vspace{0.5cm}
+    \begin{itemize}
+        \item \textbf{Branches Principais (Longa duração):}
+        \begin{itemize}
+            \item \texttt{main} (ou \texttt{master}): Código em produção, altamente estável.
+            \item \texttt{develop}: Base para o próximo release, onde o código é integrado.
+            \item \texttt{staging}: (Opcional, mas comum) Ambiente de homologação/pré-produção.
+        \end{itemize}
+        \vspace{0.3cm}
+        \item \textbf{Branches Auxiliares (Curta duração):}
+        \begin{itemize}
+            \item \texttt{feature/*}: Desenvolvimento de novas funcionalidades.
+            \item \texttt{release/*}: Preparação de uma versão para lançamento.
+            \item \texttt{hotfix/*}: Correções de emergência em produção.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+% Slide 7
+\begin{frame}[fragile]{Branches Principais: \texttt{main} e \texttt{develop}}
+    \begin{itemize}
+        \item A \texttt{main} só recebe merges de \texttt{release} ou \texttt{hotfix}. Cada commit na \texttt{main} geralmente recebe uma Tag (ex: \texttt{v1.2.0}).
+        \item A \texttt{develop} contém as últimas alterações entregues para a próxima versão.
+    \end{itemize}
+    \vspace{0.3cm}
+    \textbf{Exemplo de inicialização:}
+\begin{lstlisting}
+# Inicializa o repositorio
+git init
+
+# O primeiro commit vai para a main
+git commit --allow-empty -m "Commit inicial"
+
+# Criando a branch develop a partir da main
+git branch develop
+git checkout develop
+\end{lstlisting}
+\end{frame}
+
+% Slide 7.5
+\begin{frame}[fragile]{Iniciando o GitFlow automaticamente (\texttt{git flow init})}
+    \begin{itemize}
+        \item O comando \textbf{\texttt{git flow init}} inicializa um repositório Git em uma pasta e configura toda a estrutura de ramificações automaticamente.
+        \item Ele fará uma série de perguntas sobre como nomear as ramificações. O padrão é pressionar \texttt{Enter} para todas.
+    \end{itemize}
+    \vspace{0.3cm}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+$ git flow init
+No branches exist yet. Base branches must be created now.
+Branch name for production releases: [main] 
+Branch name for "next release" development: [develop] 
+
+How to name your supporting branch prefixes?
+Feature branches? [feature/] 
+Release branches? [release/] 
+Hotfix branches? [hotfix/] 
+\end{lstlisting}
+\end{frame}
+
+% Slide 8
+\begin{frame}[fragile]{A Branch \texttt{staging} (Homologação)}
+    \begin{itemize}
+        \item Embora o modelo original de Vincent Driessen não a cite explicitamente, a branch \texttt{staging} é amplamente usada em cenários corporativos reais.
+        \item Atua como uma ponte entre a \texttt{develop}/\texttt{release} e a \texttt{main}.
+        \item \textbf{Propósito:} Implantar o código em um ambiente espelho da produção para testes finais de QA (Quality Assurance) e aceite do cliente.
+    \end{itemize}
+    \vspace{0.3cm}
+\begin{lstlisting}
+# Levando o codigo da develop para staging para testes
+git checkout staging
+git merge develop --no-ff
+git push origin staging
+\end{lstlisting}
+\end{frame}
+
+% Slide 9
+\begin{frame}[fragile]{Branches Auxiliares: \texttt{feature}}
+    \begin{itemize}
+        \item \textbf{Origem:} \texttt{develop} \quad | \quad \textbf{Destino:} \texttt{develop}
+        \item Usadas para desenvolver novas funcionalidades.
+    \end{itemize}
+    
+    \begin{columns}
+        \begin{column}{0.65\textwidth}
+\begin{lstlisting}
+# Criando a feature
+git checkout -b feature/login develop
+
+# Trabalhando e "commitando"
+git commit -am "Adiciona tela de login"
+
+# Finalizando a feature (merge em develop)
+git checkout develop
+git merge --no-ff feature/login
+git branch -d feature/login
+\end{lstlisting}
+        \end{column}
+        \begin{column}{0.35\textwidth}
+            \begin{center}
+            \begin{tikzpicture}[node distance=1cm]
+                \node[circle, fill=orange!50, inner sep=2pt] (d1) {};
+                \node[circle, fill=green!50, inner sep=2pt, above right=0.3cm and 0.5cm of d1] (f1) {};
+                \node[circle, fill=orange!50, inner sep=2pt, below right=0.3cm and 0.5cm of f1] (d2) {};
+                \draw[->, thick, orange] (d1) -- (d2);
+                \draw[->, thick, green] (d1) to[bend left] (f1);
+                \draw[->, thick, green] (f1) to[bend left] (d2);
+                \node[below=0.1cm of d1, font=\tiny] {\texttt{develop}};
+                \node[above=0.1cm of f1, font=\tiny] {\texttt{feature/X}};
+            \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 10
+\begin{frame}[fragile]{Branches Auxiliares: \texttt{release} e \texttt{hotfix}}
+    \begin{itemize}
+        \item \textbf{\texttt{release/*}:} (Origem: \texttt{develop}) Para estabilizar a próxima versão (apenas \textit{bugfixes}). Finaliza em \texttt{main} e \texttt{develop}.
+        \item \textbf{\texttt{hotfix/*}:} (Origem: \texttt{main}) Correção de emergência em produção. Finaliza em \texttt{main} e \texttt{develop}.
+    \end{itemize}
+    \vspace{0.2cm}
+\begin{lstlisting}
+# Criando um hotfix a partir da main
+git checkout -b hotfix/v1.0.1 main
+git commit -am "Corrige bug critico"
+
+# Finalizando (merge em main e develop)
+git checkout main
+git merge --no-ff hotfix/v1.0.1
+git tag -a v1.0.1 -m "Versao 1.0.1"
+
+git checkout develop
+git merge --no-ff hotfix/v1.0.1
+\end{lstlisting}
+\end{frame}
+
+\section{Fluxo de Trabalho Detalhado}
+
+% Slide 11 (Slide 1 do Fluxo)
+\begin{frame}{1. Ciclo de Vida no GitFlow}
+    O \textbf{fluxo de trabalho} do GitFlow descreve o ciclo de vida de uma alteração no código, desde a concepção até a chegada em produção.
+    \vspace{0.3cm}
+    \begin{enumerate}
+        \item \textbf{Desenvolvimento de funcionalidades} (\textit{features}).
+        \item \textbf{Integração do código} (\textit{merge} na \texttt{develop}).
+        \item \textbf{Preparação de versões} (\textit{releases}).
+        \item \textbf{Correções emergenciais} (\textit{hotfixes}).
+        \item \textbf{Versionamento} (\textit{tags} semânticas).
+    \end{enumerate}
+\end{frame}
+
+% Slide 12 (Slide 2 do Fluxo)
+\begin{frame}{2. Desenvolvimento de Funcionalidades}
+    \begin{itemize}
+        \item Toda nova ideia, requisito ou alteração técnica começa com uma nova branch de \textbf{feature}.
+        \item \textbf{Regra de ouro:} \textbf{NUNCA} desenvolva ou comite diretamente na \texttt{develop} ou na \texttt{main}.
+        \item O isolamento permite que dezenas de desenvolvedores trabalhem em tarefas diferentes sem gerar conflitos diários ou quebrar o código dos colegas.
+    \end{itemize}
+\end{frame}
+
+% Slide 13 (Slide 3 do Fluxo)
+\begin{frame}[fragile]{3. Criando uma Feature Localmente}
+    A branch de feature \textbf{sempre} nasce a partir da \texttt{develop}.
+    \vspace{0.3cm}
+\begin{lstlisting}
+# 1. Garanta que voce esta na develop
+git checkout develop
+
+# 2. Puxe as ultimas alteracoes do servidor (boa pratica)
+git pull origin develop
+
+# 3. Crie e mude para a nova branch de feature
+# O prefixo 'feature/' ajuda na organizacao visual
+git checkout -b feature/relatorio-vendas
+\end{lstlisting}
+\end{frame}
+
+% Slide 14 (Slide 4 do Fluxo)
+\begin{frame}{4. Trabalhando na Feature}
+    \textbf{Boas Práticas durante o desenvolvimento da Feature:}
+    \vspace{0.2cm}
+    \begin{itemize}
+        \item \textbf{Commits pequenos e atômicos:} Faça commits lógicos (ex: "Cria botão X", "Adiciona rota Y") em vez de um gigantesco no final do dia.
+        \item \textbf{Mensagens claras:} A mensagem do commit deve explicar o \textit{porquê} da mudança.
+        \item \textbf{Sincronização:} Se o projeto for muito ativo e a \texttt{develop} mudar muito enquanto você desenvolve, faça \textit{merge} (ou \textit{rebase}) da \texttt{develop} para dentro da sua feature frequentemente.
+    \end{itemize}
+\end{frame}
+
+% Slide 15 (Slide 5 do Fluxo)
+\begin{frame}{5. O Ciclo da Feature (Diagrama)}
+    \begin{center}
+        \begin{tikzpicture}[x=1.6cm, y=1.2cm]
+            % develop linha
+            \draw[thick, orange!80] (0, 0) -- (6, 0) node[right, text=black] {\texttt{develop}};
+            \node[circle, fill=orange!80, inner sep=2.5pt] (d1) at (1, 0) {};
+            \node[circle, fill=orange!80, inner sep=2.5pt] (d2) at (5, 0) {};
+            
+            % feature linha
+            \draw[thick, green!60] (1, -1.5) -- (5, -1.5) node[right, text=black] {\texttt{feature/relatorio}};
+            \node[circle, fill=green!60, inner sep=2.5pt] (f1) at (2, -1.5) {};
+            \node[circle, fill=green!60, inner sep=2.5pt] (f2) at (3, -1.5) {};
+            \node[circle, fill=green!60, inner sep=2.5pt] (f3) at (4, -1.5) {};
+            
+            \draw[->, thick, orange!80] (d1) to[bend right] (1.5, -1.5) -- (f1);
+            \draw[->, thick, green!60] (f1) -- (f2);
+            \draw[->, thick, green!60] (f2) -- (f3);
+            \draw[->, thick, green!60] (f3) to[bend right] (d2);
+            
+            \node[above=0.2cm of f2] {\textbf{Isolamento total}};
+            \node[below=0.1cm of f1, font=\scriptsize] {add UI};
+            \node[below=0.1cm of f2, font=\scriptsize] {add logica};
+            \node[below=0.1cm of f3, font=\scriptsize] {fix layout};
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 16 (Slide 6 do Fluxo)
+\begin{frame}{6. Integração na Branch \texttt{develop}}
+    \begin{itemize}
+        \item Quando a feature está pronta, testada e completa, ela precisa voltar para o código comum (\texttt{develop}).
+        \item Essa integração (\textit{merge}) precisa ser feita com cuidado para evitar quebrar a compilação global do projeto.
+        \item A abordagem de integração depende se a equipe usa revisão de código centralizada ou trabalho local puramente colaborativo.
+    \end{itemize}
+\end{frame}
+
+% Slide 17 (Slide 7 do Fluxo)
+\begin{frame}{7. Pull Requests (PR) vs Merge Local}
+    \begin{columns}[T]
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Pull Request (Github/Gitlab)}
+                \begin{itemize}
+                    \item A feature é empurrada (\textit{push}) para o servidor remoto.
+                    \item O desenvolvedor abre uma "Solicitação de Integração".
+                    \item Outros membros revisam o código (\textit{Code Review}).
+                    \item A plataforma realiza o merge automaticamente.
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Merge Local (CLI)}
+                \begin{itemize}
+                    \item Usado em equipes pequenas ou repositórios locais.
+                    \item O próprio desenvolvedor faz o \textit{merge} na sua máquina.
+                    \item A equipe confia totalmente nos testes e na palavra do desenvolvedor que está integrando.
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 18 (Slide 8 do Fluxo)
+\begin{frame}[fragile]{8. Merge Local da Feature}
+    Se a equipe optar pelo merge via terminal local:
+    \vspace{0.3cm}
+\begin{lstlisting}
+# 1. Volte para a develop
+git checkout develop
+
+# 2. Atualize com o servidor (evita conflitos pre-merge)
+git pull origin develop
+
+# 3. Faca o merge usando a flag --no-ff obrigatoriamente
+git merge --no-ff feature/relatorio-vendas
+
+# 4. Apague a branch de feature (limpeza do historico)
+git branch -d feature/relatorio-vendas
+\end{lstlisting}
+\end{frame}
+
+% Slide 19 (Slide 9 do Fluxo)
+\begin{frame}{9. Por que usar \texttt{--no-ff}?}
+    A flag \texttt{--no-ff} (\textit{No Fast-Forward}) força a criação de um \textbf{commit de merge}. Sem ela, o Git pode aplicar um \textit{Fast-Forward}, fazendo a feature parecer que foi desenvolvida direto na \texttt{develop}.
+    \vspace{0.2cm}
+    \begin{columns}[T]
+        \begin{column}{0.5\textwidth}
+            \textbf{Fast-Forward (\texttt{-ff})}\\
+            \vspace{0.2cm}
+            \begin{tikzpicture}
+                \node[circle, fill=orange!80, inner sep=2pt] (n1) at (0,0) {};
+                \node[circle, fill=green!60, inner sep=2pt] (n2) at (1,0) {};
+                \node[circle, fill=green!60, inner sep=2pt] (n3) at (2,0) {};
+                \node[circle, fill=green!60, inner sep=2pt] (n4) at (3,0) {};
+                \draw[->, thick, gray] (n1)--(n2);
+                \draw[->, thick, gray] (n2)--(n3);
+                \draw[->, thick, gray] (n3)--(n4);
+                \node[below=0.1cm of n1, font=\tiny] {\texttt{develop}};
+                \node[above=0.1cm of n4, font=\tiny, text=meuvermelhoescuro] {Histórico perdido};
+            \end{tikzpicture}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \textbf{No Fast-Forward (\texttt{--no-ff})}\\
+            \vspace{0.2cm}
+            \begin{tikzpicture}
+                \node[circle, fill=orange!80, inner sep=2pt] (n1) at (0,0) {};
+                \node[circle, fill=orange!80, inner sep=2pt] (n4) at (3,0) {};
+                
+                \node[circle, fill=green!60, inner sep=2pt] (n2) at (1, -1) {};
+                \node[circle, fill=green!60, inner sep=2pt] (n3) at (2, -1) {};
+                
+                \draw[->, thick, orange] (n1)--(n4);
+                \draw[->, thick, green] (n1) to[bend right] (n2);
+                \draw[->, thick, green] (n2)--(n3);
+                \draw[->, thick, green] (n3) to[bend right] (n4);
+                \node[above=0.1cm of n4, font=\tiny, text=meuverde] {Nó de integração visível};
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 20 (Slide 10 do Fluxo)
+\begin{frame}{10. Preparação de Releases}
+    \begin{itemize}
+        \item Quando a \texttt{develop} atinge um estado estável contendo as features planejadas, cria-se uma branch de \textbf{release}.
+        \item \textbf{Congelamento de Features:} A branch de \texttt{release} sofre um congelamento parcial. \textbf{Não são mais aceitas novas funcionalidades!}
+        \item O que é permitido na branch \texttt{release}?
+        \begin{itemize}
+            \item Correção de pequenos bugs encontrados pela equipe de QA.
+            \item Geração de documentação (\textit{Changelogs}).
+            \item Atualização dos números de versão do sistema.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+% Slide 21 (Slide 11 do Fluxo)
+\begin{frame}[fragile]{11. Criando a Release}
+    A branch de release nasce a partir da \texttt{develop}.
+    \vspace{0.3cm}
+\begin{lstlisting}
+# 1. Crie a release a partir da develop
+git checkout -b release/1.2.0 develop
+
+# 2. Ajustes de meta-dados (ex: mudanca de versao)
+git commit -am "Bump version to 1.2.0"
+
+# 3. Arrumando bugs de ultima hora durante homologacao
+git commit -am "Corrige responsividade no mobile"
+\end{lstlisting}
+\end{frame}
+
+% Slide 22 (Slide 12 do Fluxo)
+\begin{frame}[fragile]{12. Finalizando a Release}
+    A finalização da \texttt{release} é um \textbf{processo duplo}. Ela deve ir para produção (\texttt{main}) e voltar para a \texttt{develop} (para que as correções de bugs não sejam perdidas).
+    \vspace{0.2cm}
+\begin{lstlisting}
+# 1. Merge na main e criacao da TAG
+git checkout main
+git merge --no-ff release/1.2.0
+git tag -a v1.2.0 -m "Versao Estavel 1.2.0"
+
+# 2. Merge de volta na develop
+git checkout develop
+git merge --no-ff release/1.2.0
+
+# 3. Apagar a branch de release
+git branch -d release/1.2.0
+\end{lstlisting}
+\end{frame}
+
+% Slide 23 (Slide 13 do Fluxo)
+\begin{frame}{13. Correções Emergenciais (\texttt{hotfix})}
+    \begin{itemize}
+        \item E se um bug catastrófico for descoberto na produção? O sistema de pagamentos caiu!
+        \item Não podemos usar a \texttt{develop}, pois ela já possui recursos pela metade que não podem ir para a produção.
+        \item O \textbf{\texttt{hotfix}} existe exatamente para isso: atuar de forma semelhante à release, mas iniciando \textbf{DIRETAMENTE} da \texttt{main} para isolar a correção.
+    \end{itemize}
+\end{frame}
+
+% Slide 24 (Slide 14 do Fluxo)
+\begin{frame}[fragile]{14. O Fluxo do Hotfix}
+    Nasce na \texttt{main}, e retorna para \texttt{main} e \texttt{develop}.
+    \vspace{0.2cm}
+\begin{lstlisting}
+# Nasce do estado exato da producao (main)
+git checkout -b hotfix/1.2.1 main
+
+# Commitando a correcao do bug
+git commit -am "Corrige API de pagamentos (Emergencia)"
+
+# Fechando e mandando para main (com nova TAG minor)
+git checkout main
+git merge --no-ff hotfix/1.2.1
+git tag -a v1.2.1 -m "Hotfix Pagamento"
+
+# Garantindo que a correcao exista na develop
+git checkout develop
+git merge --no-ff hotfix/1.2.1
+\end{lstlisting}
+\end{frame}
+
+% Slide 25 (Slide 15 do Fluxo)
+\begin{frame}{15. Versionamento com Tags}
+    \begin{itemize}
+        \item Tags funcionam como fotografias inalteráveis (snapshots) do projeto.
+        \item \textbf{Automação:} Ferramentas de \textit{Continuous Deployment} (CD) modernas frequentemente monitoram o repositório. Se uma \texttt{Tag} chamada \texttt{v2.0.1} for criada, o sistema envia o código automaticamente para produção.
+        \item \textbf{Semântica:} 
+        \begin{itemize}
+            \item Lançamentos regulares aumentam o dígito intermediário (\texttt{v1.3.0}).
+            \item Correções de \texttt{hotfix} aumentam o último dígito (\texttt{v1.3.1}).
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\end{document}

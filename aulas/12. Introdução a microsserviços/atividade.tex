@@ -1,0 +1,54 @@
+\documentclass[12pt]{article}
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+% Definições de Cores
+\definecolor{meuazul}{RGB}{0, 79, 151}
+
+\geometry{margin=2.5cm}
+
+\begin{document}
+
+\begin{center}
+    \textcolor{meuazul}{\Large \textbf{Lista de Exercícios 02: Segurança da Informação (Parte 2)}}
+\end{center}
+
+\vspace{0.8cm}
+
+\begin{enumerate}[label=\textbf{Questão \arabic*:}, leftmargin=2.2cm, labelsep=0.5cm]
+
+    \item \textbf{Definição e Objetivos da Criptografia} \\
+    A criptografia é uma ferramenta fundamental na engenharia de segurança. Explique, com suas palavras, o que é o processo de criptografia e quais são seus principais objetivos no contexto da proteção de dados.
+
+    \item \textbf{Componentes do Processo Criptográfico} \\
+    Diferencie os seguintes termos fundamentais:
+    \begin{enumerate}[label=\alph*)]
+        \item Texto Simples (\textit{Plaintext});
+        \item Algoritmo Criptográfico;
+        \item Texto Cifrado (\textit{Ciphertext});
+        \item Chave (\textit{Key}).
+    \end{enumerate}
+
+    \item \textbf{Criptografia Simétrica} \\
+    A criptografia simétrica, ou de chave privada, é amplamente utilizada devido à sua eficiência.
+    \begin{enumerate}[label=\alph*)]
+        \item Qual é a principal característica do uso de chaves nesse método?
+        \item Cite uma vantagem e a principal desvantagem (desafio) da criptografia simétrica.
+    \end{enumerate}
+
+    \item \textbf{Criptografia Assimétrica} \\
+    Diferente da simétrica, a criptografia assimétrica utiliza um par de chaves (pública e privada).
+    \begin{enumerate}[label=\alph*)]
+        \item Explique a função de cada uma das chaves no processo de envio de uma mensagem segura.
+        \item Por que a criptografia assimétrica costuma ser combinada com a simétrica em aplicações reais (como no protocolo HTTPS)?
+    \end{enumerate}
+
+\end{enumerate}
+
+\end{document}

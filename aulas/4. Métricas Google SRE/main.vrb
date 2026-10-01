@@ -1,0 +1,26 @@
+\frametitle{DELETE – Falha Interna no Servidor}
+
+\begin{block}{O que o QA fez}
+O QA tentou remover um registro durante
+uma falha simulada no banco de dados.
+\end{block}
+
+\textbf{Método: DELETE}
+
+\begin{block}{Request}
+\begin{verbatim}
+DELETE /caldeira/manutencao/60 HTTP/1.1
+Host: api.siderurgia.com
+\end{verbatim}
+\end{block}
+
+\begin{block}{Response}
+\begin{verbatim}
+HTTP/1.1 500 Internal Server Error
+
+{
+  "erro": "Falha ao acessar banco de dados"
+}
+\end{verbatim}
+\end{block}
+

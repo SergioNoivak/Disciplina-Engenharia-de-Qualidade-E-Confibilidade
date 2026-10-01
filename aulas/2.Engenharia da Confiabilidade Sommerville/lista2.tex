@@ -1,0 +1,165 @@
+\documentclass[12pt]{article}
+
+% Idioma e codificação
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Matemática e listas
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+
+% Layout e cores
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+% Cores institucionais
+\definecolor{maincolor}{RGB}{0,100,50}
+\definecolor{forestgreen}{RGB}{0,100,50}
+
+% Cabeçalho e rodapé
+\usepackage{fancyhdr}
+
+% Blocos
+\usepackage[most]{tcolorbox}
+\newtcolorbox{block}[1]{%
+  colback=green!5,
+  colframe=maincolor,
+  coltitle=white,
+  title=#1,
+  fonttitle=\bfseries,
+  boxrule=1.5pt,
+  arc=3mm,
+  left=6pt,
+  right=6pt,
+  top=6pt,
+  bottom=6pt
+}
+
+\newtcolorbox{resposta}[1]{%
+  colback=yellow!5, % Fundo levemente amarelado para indicar gabarito
+  colframe=forestgreen!50,
+  arc=1mm,
+  height=#1,
+  width=\textwidth,
+  boxrule=1pt,
+  valign=center
+}
+
+% Margens
+\geometry{margin=2.5cm}
+
+% Fancyhdr
+\pagestyle{fancy}
+\fancyhf{}
+
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\footrulewidth}{2pt}
+
+\renewcommand{\headrule}{\hbox to\headwidth{%
+  \color{forestgreen}\leaders\hrule height \headrulewidth\hfill}}
+
+\renewcommand{\footrule}{\hbox to\headwidth{%
+  \color{forestgreen}\leaders\hrule height \footrulewidth\hfill}}
+
+\setlength{\headheight}{52pt}
+\addtolength{\topmargin}{-20pt}
+
+\fancyhead[L]{%
+  \includegraphics[height=1.2cm]{Universidade_de_Rio_Verde.jpg}
+}
+
+\fancyhead[R]{%
+  \raggedleft
+  \textcolor{forestgreen}{%
+    \small
+    \textbf{GABARITO COMENTADO}\\
+    Me.~Sergio Souza Novak\\
+    \textit{Engenharia da Qualidade e Confiabilidade}
+    }
+}
+    
+\fancyfoot[C]{\textcolor{forestgreen}{\thepage}}
+    
+\begin{document}
+    
+\begin{center}
+  {\Large \textbf{Gabarito: Métricas Quantitativas de Confiabilidade}}\\[0.2cm]
+  \textit{Resoluções detalhadas das atividades propostas.}
+\end{center}
+
+\vspace{0.4cm}
+
+\textbf{1.} Um sistema de frenagem ferroviária realizou 2.500 testes e falhou em 5 deles.
+\begin{resposta}{3.5cm}
+    a) $POFOD = \frac{\text{Falhas}}{\text{Testes}} = \frac{5}{2500} = \mathbf{0,002}$ \\
+    b) Não. O sistema está \textbf{inapto}, pois $0,002 > 0,001$. A probabilidade de falha observada é o dobro do limite máximo permitido.
+\end{resposta}
+
+\vspace{0.4cm}
+
+\textbf{2.} Um servidor operou 720h com 6 interrupções. Determine a \textbf{ROCOF} e o \textbf{MTTF}.
+\begin{resposta}{3.5cm}
+    $ROCOF = \frac{\text{Falhas}}{\text{Tempo}} = \frac{6}{720} = \mathbf{0,00833 \text{ falhas/hora}}$ \\
+    $MTTF = \frac{1}{ROCOF} = \frac{720}{6} = \mathbf{120 \text{ horas}}$
+\end{resposta}
+
+\vspace{0.4cm}
+
+\textbf{3.} Compare a Disponibilidade (\textbf{AVAIL}) dos sistemas A e B.
+\begin{resposta}{4.5cm}
+    $AVAIL_A = \frac{1000}{1000 + 10} = \frac{1000}{1010} \approx \mathbf{0,9901 \text{ (99,01\%)}} $ \\
+    $AVAIL_B = \frac{200}{200 + 1} = \frac{200}{201} \approx \mathbf{0,9950 \text{ (99,50\%)}} $ \\
+    O \textbf{Sistema B} possui maior disponibilidade, apesar de falhar com mais frequência, devido ao seu baixo tempo de reparo.
+\end{resposta}
+
+\vspace{0.4cm}
+
+\textbf{4.} Para atingir 99,99\% com $MTTF = 4.000h$, qual deve ser o \textbf{MTTR} (em minutos)?
+\begin{resposta}{4cm}
+    $0,9999 = \frac{4000}{4000 + MTTR} \implies 3999,6 + 0,9999 \cdot MTTR = 4000$ \\
+    $0,9999 \cdot MTTR = 0,4 \implies MTTR \approx 0,40004 \text{ horas}$ \\
+    $0,40004 \times 60 \approx \mathbf{24 \text{ minutos}}$
+\end{resposta}
+
+\newpage
+
+\textbf{5.} Trimestre (2.160 horas), $MTTF = 500$ horas. Calcule o número de falhas.
+\begin{resposta}{3.5cm}
+    $MTTF = \frac{\text{Tempo Total}}{\text{Nº de Falhas}} \implies 500 = \frac{2160}{n}$ \\
+    $n = \frac{2160}{500} = 4,32$. \\
+    \textbf{Resposta:} Aproximadamente \textbf{4 falhas} (ou entre 4 e 5 falhas).
+\end{resposta}
+
+\vspace{0.5cm}
+
+\textbf{6.} Incidentes: 15 min, 45 min e 30 min. Calcule o \textbf{MTTR} médio.
+\begin{resposta}{3.5cm}
+    $MTTR = \frac{\sum \text{Tempos de Reparo}}{\text{Nº de Incidentes}} = \frac{15 + 45 + 30}{3} = \frac{90}{3} = \mathbf{30 \text{ minutos}}$
+\end{resposta}
+
+\vspace{0.5cm}
+
+\textbf{7.} $AVAIL = 0,995$. Em um ano (8.760h), quantas horas de indisponibilidade?
+\begin{resposta}{3.5cm}
+    $\text{Indisponibilidade} = (1 - AVAIL) \times \text{Tempo Total}$ \\
+    $\text{Indisponibilidade} = (1 - 0,995) \times 8760 = 0,005 \times 8760$ \\
+    $\text{Indisponibilidade} = \mathbf{43,8 \text{ horas/ano}}$
+\end{resposta}
+
+\vspace{0.5cm}
+
+\textbf{8.} Diferença prática entre utilizar \textbf{POFOD} e \textbf{ROCOF}.
+\begin{resposta}{4.5cm}
+    \textbf{POFOD:} Mede a probabilidade de falha em uma chamada específica. Ideal para sistemas de proteção sob demanda (ex: airbags, freios ABS, geradores de emergência).\\
+    \textbf{ROCOF:} Mede a frequência de falhas no tempo. Ideal para sistemas de operação contínua onde a disponibilidade ao longo do tempo é crítica (ex: servidores web, sistemas de monitoramento).
+\end{resposta}
+
+\vspace{0.8cm}
+
+\begin{center}
+    \textit{“A métrica correta permite a melhoria contínua. Att. Me. Prof. Sergio Souza Novak.”}
+\end{center}
+
+\end{document} 

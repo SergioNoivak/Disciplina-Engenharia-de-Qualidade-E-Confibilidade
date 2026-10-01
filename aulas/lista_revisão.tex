@@ -1,0 +1,206 @@
+\documentclass[12pt]{article}
+
+% Idioma e codificação
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Matemática e listas
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+
+% Layout e cores
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta}
+
+% Cores institucionais
+\definecolor{maincolor}{RGB}{0,102,51} % Verde UniRV
+\definecolor{meuazul}{RGB}{0, 79, 151}
+
+% Cabeçalho e rodapé
+\usepackage{fancyhdr}
+
+% Blocos
+\usepackage[most]{tcolorbox}
+\newtcolorbox{block}[1]{%
+  colback=green!5,
+  colframe=maincolor,
+  coltitle=white,
+  title=#1,
+  fonttitle=\bfseries,
+  boxrule=1.5pt,
+  arc=3mm,
+  left=6pt,
+  right=6pt,
+  top=6pt,
+  bottom=6pt
+}
+
+\newtcolorbox{resposta}[1]{%
+  colback=white,
+  colframe=maincolor!30,
+  arc=1mm,
+  height=#1,
+  width=\textwidth,
+  boxrule=0.8pt,
+  breakable
+}
+
+% Margens
+\geometry{margin=2.5cm}
+
+% Fancyhdr
+\pagestyle{fancy}
+\fancyhf{}
+
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\footrulewidth}{2pt}
+
+\renewcommand{\headrule}{\hbox to\headwidth{%
+  \color{maincolor}\leaders\hrule height \headrulewidth\hfill}}
+
+\renewcommand{\footrule}{\hbox to\headwidth{%
+  \color{maincolor}\leaders\hrule height \footrulewidth\hfill}}
+
+\setlength{\headheight}{52pt}
+\addtolength{\topmargin}{-20pt}
+
+\fancyhead[L]{%
+  \textbf{UniRV} \\ \small Universidade de Rio Verde
+}
+
+\fancyhead[R]{%
+  \raggedleft
+  \textcolor{maincolor}{%
+    \small
+    \textbf{Lista de Revisão (Aulas 1 a 11)}\\
+    Prof. Me.~Sergio Souza Novak\\
+    \textit{Engenharia da Qualidade e Confiabilidade}
+  }
+}
+
+\fancyfoot[C]{\textcolor{maincolor}{\thepage}}
+
+% =========================
+\begin{document}
+% =========================
+
+\begin{center}
+  {\Large \textbf{Lista de Revisão Geral: Engenharia da Qualidade e Confiabilidade}}\\[0.2cm]
+  \textit{Conteúdo abrangendo os fundamentos, métricas, monitoração e segurança.}
+\end{center}
+
+\vspace{0.4cm}
+
+\begin{block}{Resumo de Fórmulas e Conceitos Chave}
+  \small
+  \begin{itemize}
+    \item \textbf{POFOD}: $P(\text{falha na demanda}) = \frac{\text{Nº de Falhas}}{\text{Nº de Solicitações}}$
+    \item \textbf{ROCOF}: $\text{Taxa de Ocorrência de Falhas} = \frac{\text{Nº de Falhas}}{\text{Tempo Total}}$
+    \item \textbf{MTTF}: $1 / \text{ROCOF}$ (Tempo Médio para Falhas)
+    \item \textbf{MTTR}: $\frac{\text{Tempo Total de Reparo}}{\text{Nº de Falhas}}$ (Tempo Médio para Reparo)
+    \item \textbf{Disponibilidade (A)}: $\frac{\text{MTTF}}{\text{MTTF} + \text{MTTR}}$
+    \item \textbf{4 Sinais de Ouro}: Latência, Tráfego, Erros e Saturação.
+    \item \textbf{CIA Triad}: Confidencialidade, Integridade e Disponibilidade.
+  \end{itemize}
+\end{block}
+
+
+
+
+\textbf{1.} Explique a principal diferença entre \textbf{Qualidade} (foco na entrega) e \textbf{Confiabilidade} (foco no tempo). Por que um sistema pode ser considerado de "alta qualidade" no dia do lançamento e apresentar "baixa confiabilidade" no mês seguinte?
+\begin{resposta}{3.5cm}
+\end{resposta}
+
+\textbf{2.} Sobre o programa Apollo e o trabalho de \textbf{Margaret Hamilton}:
+\begin{enumerate}[label=\alph*)]
+    \item O que Hamilton defendia em relação ao "erro humano" no design de sistemas?
+    \item Explique como o incidente do programa \textbf{P01} na Apollo 8 demonstrou a necessidade de sistemas resilientes (tolerância a falhas).
+\end{enumerate}
+\begin{resposta}{4.5cm}
+\end{resposta}
+
+\textbf{3.} Diferencie o modelo tradicional de \textbf{Sysadmin} (Administrador de Sistemas) do modelo de \textbf{SRE} (Site Reliability Engineering). Qual o impacto do crescimento do serviço no tamanho da equipe em cada modelo?
+\begin{resposta}{4cm}
+\end{resposta}
+
+
+
+
+\textbf{4.} Um servidor de banco de dados operou por um período de 30 dias ($720$ horas). Durante este tempo, ocorreram $4$ interrupções. O tempo total para restaurar o serviço em todas as interrupções somadas foi de $3$ horas.
+\begin{enumerate}[label=\alph*)]
+    \item Calcule o \textbf{MTTF} e o \textbf{MTTR}.
+    \item Determine a \textbf{Disponibilidade} percentual do sistema.
+    \item Se o requisito do cliente é "três noves" ($99,9\%$), o sistema está em conformidade?
+\end{enumerate}
+\begin{resposta}{6cm}
+\end{resposta}
+
+\textbf{5.} Compare os dois sistemas abaixo:
+\begin{itemize}
+    \item \textbf{Sistema X}: Falha a cada 1.000h, mas leva 10h para ser reparado manualmente.
+    \item \textbf{Sistema Y}: Falha a cada 100h, mas possui recuperação automática que leva apenas 30 segundos (0,0083h).
+\end{itemize}
+Calcule a disponibilidade de ambos e discuta por que, em SRE, muitas vezes prefere-se o sistema que falha mais, porém recupera-se muito mais rápido.
+\begin{resposta}{5.5cm}
+\end{resposta}
+
+
+
+
+\textbf{6.} O Google define os \textbf{"4 Sinais de Ouro"} da monitoração. Liste-os e explique brevemente como cada um ajuda a diagnosticar a saúde de um sistema web.
+\begin{resposta}{4.5cm}
+\end{resposta}
+
+\textbf{7.} Defina os conceitos de \textbf{SLI}, \textbf{SLO} e \textbf{Error Budget}. Como o Error Budget (Orçamento de Erro) ajuda a resolver o conflito entre o time de Desenvolvimento (que quer velocidade) e o time de Operações (que quer estabilidade)?
+\begin{resposta}{4.5cm}
+\end{resposta}
+
+\textbf{8.} Por que a \textbf{média aritmética} de latência pode ser uma métrica perigosa em sistemas distribuídos? Qual a vantagem de utilizar \textbf{Percentis} (ex: P95, P99) para medir a experiência do usuário?
+\begin{resposta}{4cm}
+\end{resposta}
+
+
+
+
+\textbf{9.} O que é um \textbf{Postmortem "Sem Culpa"} (\textit{Blameless Postmortem})? Por que o Google e outras empresas de tecnologia evitam punir indivíduos por falhas sistêmicas?
+\begin{resposta}{4cm}
+\end{resposta}
+
+\textbf{10.} Explique os conceitos de:
+\begin{enumerate}[label=\alph*)]
+    \item \textbf{Runbook}: Qual sua utilidade durante um incidente às 3h da manhã?
+    \item \textbf{Canary Deployment}: Como essa estratégia reduz o "raio de explosão" de um bug em produção?
+\end{enumerate}
+\begin{resposta}{5cm}
+\end{resposta}
+
+
+
+
+\textbf{11.} Explique a tríade \textbf{CIA} (Confidencialidade, Integridade e Disponibilidade). Dê um exemplo de um ataque que viole cada um desses pilares.
+\begin{resposta}{4.5cm}
+\end{resposta}
+
+\textbf{12.} Sobre Criptografia:
+\begin{enumerate}[label=\alph*)]
+    \item Diferencie Criptografia \textbf{Simétrica} de \textbf{Assimétrica}.
+    \item Por que usamos Criptografia de Chave Pública (Assimétrica) para trocar chaves de sessão, mas usamos Criptografia Simétrica (como AES) para o tráfego de dados volumosos?
+\end{enumerate}
+\begin{resposta}{5cm}
+\end{resposta}
+
+\textbf{13.} O que é o \textbf{Não-Repúdio} na segurança da informação e como as Assinaturas Digitais garantem esse atributo?
+\begin{resposta}{3.5cm}
+\end{resposta}
+
+\vspace{1cm}
+\begin{center}
+    \textit{“A sorte favorece a mente preparada. Boa revisão!”} \\
+    \textbf{Prof. Me. Sergio Souza Novak}
+\end{center}
+
+\end{document}

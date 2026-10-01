@@ -1,0 +1,145 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, shapes.geometric}
+
+% Definição da cor azul do título (aproximada da imagem)
+\definecolor{meuazul}{RGB}{31, 108, 173}
+
+% Configurações de margem
+\geometry{a4paper, margin=2.5cm}
+
+\begin{document}
+
+\begin{center}
+    \textcolor{meuazul}{\huge \textbf{Lista de Exercícios 02: Segurança da Informação (Parte 2)}}
+\end{center}
+
+\vspace{1cm}
+
+% Configuração da lista principal (Questões)
+\begin{enumerate}[
+    label=\textbf{Questão \arabic*:},
+    leftmargin=2.8cm, % Recuo para o texto alinhar sob o título da questão
+    labelsep=0.3cm,   % Espaço entre "Questão X:" e o título
+    align=left,
+    labelwidth=2.5cm  % Largura fixa para o rótulo
+]
+
+    % Questão 1
+    \item \textbf{Definição e Objetivos da Criptografia} \\
+    A criptografia é uma ferramenta fundamental na engenharia de segurança. Explique, com suas palavras, o que é o processo de criptografia e quais são seus principais objetivos no contexto da proteção de dados.
+
+    \vspace{0.4cm}
+
+    % Questão 2
+    \item \textbf{Componentes do Processo Criptográfico} \\
+    Diferencie os seguintes termos fundamentais:
+    \begin{enumerate}[label=\alph*), leftmargin=0.8cm, topsep=2pt]
+        \item Texto Simples (\textit{Plaintext});
+        \item Algoritmo Criptográfico;
+        \item Texto Cifrado (\textit{Ciphertext});
+        \item Chave (\textit{Key}).
+    \end{enumerate}
+
+    \vspace{0.4cm}
+
+    % Questão 3
+    \item \textbf{Criptografia Simétrica} \\
+    A criptografia simétrica, ou de chave privada, é amplamente utilizada devido à sua eficiência.
+    \begin{enumerate}[label=\alph*), leftmargin=0.8cm, topsep=2pt]
+        \item Qual é a principal característica do uso de chaves nesse método?
+        \item Cite uma vantagem e a principal desvantagem (desafio) da criptografia simétrica.
+    \end{enumerate}
+
+    \vspace{0.4cm}
+
+    % Questão 4
+    \item \textbf{Criptografia Assimétrica} \\
+    Diferente da simétrica, a criptografia assimétrica utiliza um par de chaves (pública e privada).
+    \begin{enumerate}[label=\alph*), leftmargin=0.8cm, topsep=2pt]
+        \item Explique a função de cada uma das chaves no processo de envio de uma mensagem segura.
+        \item Por que a criptografia assimétrica costuma ser combinada com a simétrica em aplicações reais (como no protocolo HTTPS)?
+    \end{enumerate}
+
+\end{enumerate}
+
+\vspace{1cm}
+\hrule
+\vspace{0.5cm}
+
+\begin{center}
+    \textcolor{meuazul}{\Large \textbf{Respostas Sergio Novak}}
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{description}[style=nextline, font=\bfseries\color{meuazul}]
+    
+    \item[Resposta 1:] A criptografia, no contexto da engenharia de segurança, é um mecanismo de defesa essencial para proteger os \textbf{ativos do sistema}. Seu objetivo não é apenas o segredo, mas a garantia de atributos de dependabilidade como a \textbf{Confidencialidade} (impedir acesso não autorizado) e a \textbf{Integridade} (garantir que os dados não foram corrompidos).
+
+    \begin{center}
+        \begin{tikzpicture}[node distance=1cm, auto, >=Stealth, thick]
+            \node (P1) [draw, rounded corners, fill=white] {Texto Simples};
+            \node (E) [draw, fill=meuazul!15, right=of P1] {Cifragem};
+            \node (C) [draw, fill=gray!10, right=of E] {Texto Cifrado};
+            \node (D) [draw, fill=meuazul!15, right=of C] {Decifragem};
+            \node (P2) [draw, rounded corners, fill=white, right=of D] {Texto Simples};
+            
+            \draw [->] (P1) -- (E);
+            \draw [->] (E) -- (C);
+            \draw [->] (C) -- (D);
+            \draw [->] (D) -- (P2);
+            
+            \node (K) [above=0.5cm of E] {Chave};
+            \draw [->, dashed] (K) -- (E);
+            \node (K2) [above=0.5cm of D] {Chave};
+            \draw [->, dashed] (K2) -- (D);
+        \end{tikzpicture}
+    \end{center}
+
+    \item[Resposta 2:] Para sistemas resilientes, distinguimos: 
+    \begin{itemize}[label=--]
+        \item \textit{Plaintext}: O dado vulnerável original.
+        \item \textit{Algoritmo}: A lógica de transformação (deve ser pública e robusta).
+        \item \textit{Ciphertext}: O dado protegido para trânsito em meios inseguros.
+        \item \textit{Chave}: O parâmetro crítico de segurança que deve ser gerido com rigor.
+    \end{itemize}
+
+    \item[Resposta 3:] A característica principal da criptografia simétrica é o compartilhamento de uma \textbf{única chave secreta}. 
+    \begin{itemize}[label=--]
+        \item \textit{Vantagem}: Alta eficiência computacional, ideal para grandes volumes de dados.
+        \item \textit{Desafio}: O problema socio-técnico do gerenciamento e distribuição segura das chaves entre as partes.
+    \end{itemize}
+
+    \begin{center}
+        \begin{tikzpicture}[>=Stealth, thick, node distance=2cm]
+            \node (UserA) [draw, circle, fill=meuazul!10] {A};
+            \node (UserB) [draw, circle, fill=meuazul!10, right=4cm of UserA] {B};
+            \draw [<->] (UserA) -- node[above] {Mesma Chave (K)} (UserB);
+            \node at (3,0.5) {\textbf{Simétrica}};
+        \end{tikzpicture}
+    \end{center}
+
+    \item[Resposta 4:] A criptografia assimétrica utiliza pares de chaves: a pública para cifragem/verificação e a privada para decifragem/assinatura. 
+    Em aplicações como o \textbf{HTTPS}, utilizamos um modelo híbrido: a criptografia assimétrica resolve o problema da troca segura de chaves (gerenciamento), e a criptografia simétrica assume a sessão para manter a performance do sistema.
+
+    \begin{center}
+        \begin{tikzpicture}[>=Stealth, thick]
+            \node (Client) [draw, rectangle, fill=white] {Cliente};
+            \node (Server) [draw, rectangle, fill=white, right=5cm of Client] {Servidor};
+            
+            \draw [->] (Client) -- node[above, font=\tiny] {1. Solicita conexão} (Server);
+            \draw [<-] (Client) -- node[below, font=\tiny, pos=0.5, yshift=-0.2cm] {2. Envia Chave Pública} (Server);
+            \draw [->] (Client) -- node[above, font=\tiny, sloped] {3. Cifra Chave de Sessão} (Server);
+            \draw [<->, color=meuazul, line width=1pt] (Client) to[bend left=20] node[above, font=\bfseries\tiny] {Canal Seguro (Simétrico)} (Server);
+        \end{tikzpicture}
+    \end{center}
+\end{description}
+
+\end{document}

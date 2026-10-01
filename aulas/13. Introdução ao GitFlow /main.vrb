@@ -1,0 +1,19 @@
+\frametitle{14. O Fluxo do Hotfix}
+Nasce na \texttt{main}, e retorna para \texttt{main} e \texttt{develop}.
+    \vspace{0.2cm}
+\begin{lstlisting}
+# Nasce do estado exato da producao (main)
+git checkout -b hotfix/1.2.1 main
+
+# Commitando a correcao do bug
+git commit -am "Corrige API de pagamentos (Emergencia)"
+
+# Fechando e mandando para main (com nova TAG minor)
+git checkout main
+git merge --no-ff hotfix/1.2.1
+git tag -a v1.2.1 -m "Hotfix Pagamento"
+
+# Garantindo que a correcao exista na develop
+git checkout develop
+git merge --no-ff hotfix/1.2.1
+\end{lstlisting}

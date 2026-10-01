@@ -1,0 +1,414 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nyt/global//global/global}
+    \entry{beyer2016sre}{book}{}
+      \name{author}{4}{ul=2}{%
+        {{un=0,uniquepart=base,hash=804009dd6ea3185359156e228afc3f35}{%
+           family={Beyer},
+           familyi={B\bibinitperiod},
+           given={Betsy},
+           giveni={B\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=f5e3bc5ee6025ef3a58750c6498c5553}{%
+           family={Jones},
+           familyi={J\bibinitperiod},
+           given={Chris},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=1e5b9f6a7c8eeb221b19889433ae21a3}{%
+           family={Petoff},
+           familyi={P\bibinitperiod},
+           given={Jennifer},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=a07a7a3144d96f35e13fdc8d88a76f72}{%
+           family={Murphy},
+           familyi={M\bibinitperiod},
+           given={Niall\bibnamedelima Richard},
+           giveni={N\bibinitperiod\bibinitdelim R\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{location}{1}{%
+        {Sebastopol, CA}%
+      }
+      \list{publisher}{1}{%
+        {O'Reilly Media}%
+      }
+      \strng{namehash}{2ac3794f4c6bb73c62814062722dd85f}
+      \strng{fullhash}{8b6ad8d483b2b55b622328efa5b8dca7}
+      \strng{bibnamehash}{2ac3794f4c6bb73c62814062722dd85f}
+      \strng{authorbibnamehash}{2ac3794f4c6bb73c62814062722dd85f}
+      \strng{authornamehash}{2ac3794f4c6bb73c62814062722dd85f}
+      \strng{authorfullhash}{8b6ad8d483b2b55b622328efa5b8dca7}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{978-1-491-92912-4}
+      \field{title}{Site Reliability Engineering: How Google Runs Production Systems}
+      \field{year}{2016}
+      \verb{urlraw}
+      \verb https://sre.book.google.com/
+      \endverb
+      \verb{url}
+      \verb https://sre.book.google.com/
+      \endverb
+    \endentry
+    \entry{beyer2018workbook}{book}{}
+      \name{author}{5}{ul=2}{%
+        {{un=0,uniquepart=base,hash=804009dd6ea3185359156e228afc3f35}{%
+           family={Beyer},
+           familyi={B\bibinitperiod},
+           given={Betsy},
+           giveni={B\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=a07a7a3144d96f35e13fdc8d88a76f72}{%
+           family={Murphy},
+           familyi={M\bibinitperiod},
+           given={Niall\bibnamedelima Richard},
+           giveni={N\bibinitperiod\bibinitdelim R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=68e1f539865ece1454614190fc6cb96b}{%
+           family={Rensin},
+           familyi={R\bibinitperiod},
+           given={David\bibnamedelima K.},
+           giveni={D\bibinitperiod\bibinitdelim K\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=859eaf844d06ef7e836d1308c534838e}{%
+           family={Kawahara},
+           familyi={K\bibinitperiod},
+           given={Kent},
+           giveni={K\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=8359d5c5f7462b94cad9aeb6cb31a61b}{%
+           family={Thorne},
+           familyi={T\bibinitperiod},
+           given={Stephen},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{location}{1}{%
+        {Sebastopol, CA}%
+      }
+      \list{publisher}{1}{%
+        {O'Reilly Media}%
+      }
+      \strng{namehash}{555d784beea2d01753f1c01cfd47b54d}
+      \strng{fullhash}{3c9680438a3679502234ea41007adb24}
+      \strng{bibnamehash}{555d784beea2d01753f1c01cfd47b54d}
+      \strng{authorbibnamehash}{555d784beea2d01753f1c01cfd47b54d}
+      \strng{authornamehash}{555d784beea2d01753f1c01cfd47b54d}
+      \strng{authorfullhash}{3c9680438a3679502234ea41007adb24}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{978-1-492-02953-4}
+      \field{title}{The Site Reliability Workbook: Practical Ways to Implement SRE}
+      \field{year}{2018}
+    \endentry
+    \entry{fisher2019moon}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=4a912a49e9449bf533ac7bbe9d8cf849}{%
+           family={Fisher},
+           familyi={F\bibinitperiod},
+           given={Nate},
+           giveni={N\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{location}{1}{%
+        {Cambridge, MA}%
+      }
+      \list{publisher}{1}{%
+        {MIT Press}%
+      }
+      \strng{namehash}{4a912a49e9449bf533ac7bbe9d8cf849}
+      \strng{fullhash}{4a912a49e9449bf533ac7bbe9d8cf849}
+      \strng{bibnamehash}{4a912a49e9449bf533ac7bbe9d8cf849}
+      \strng{authorbibnamehash}{4a912a49e9449bf533ac7bbe9d8cf849}
+      \strng{authornamehash}{4a912a49e9449bf533ac7bbe9d8cf849}
+      \strng{authorfullhash}{4a912a49e9449bf533ac7bbe9d8cf849}
+      \field{sortinit}{F}
+      \field{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{To the Moon and Back: The Margaret Hamilton Story}
+      \field{year}{2019}
+    \endentry
+    \entry{garman2011apollo}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=5d9e5a8a4561cb862f2476bc464d12cd}{%
+           family={Garman},
+           familyi={G\bibinitperiod},
+           given={John\bibnamedelima R.},
+           giveni={J\bibinitperiod\bibinitdelim R\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{5d9e5a8a4561cb862f2476bc464d12cd}
+      \strng{fullhash}{5d9e5a8a4561cb862f2476bc464d12cd}
+      \strng{bibnamehash}{5d9e5a8a4561cb862f2476bc464d12cd}
+      \strng{authorbibnamehash}{5d9e5a8a4561cb862f2476bc464d12cd}
+      \strng{authornamehash}{5d9e5a8a4561cb862f2476bc464d12cd}
+      \strng{authorfullhash}{5d9e5a8a4561cb862f2476bc464d12cd}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{ACM SIGSOFT Software Engineering Notes}
+      \field{number}{5}
+      \field{title}{The ``Bug'' Heard 'Round the World}
+      \field{volume}{6}
+      \field{year}{1981}
+      \field{pages}{3\bibrangedash 10}
+      \range{pages}{8}
+    \endentry
+    \entry{googlesre2024}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=aca5e4bc2c593382171c6ae44b950dbd}{%
+           family={{Google SRE Team}},
+           familyi={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{aca5e4bc2c593382171c6ae44b950dbd}
+      \strng{fullhash}{aca5e4bc2c593382171c6ae44b950dbd}
+      \strng{bibnamehash}{aca5e4bc2c593382171c6ae44b950dbd}
+      \strng{authorbibnamehash}{aca5e4bc2c593382171c6ae44b950dbd}
+      \strng{authornamehash}{aca5e4bc2c593382171c6ae44b950dbd}
+      \strng{authorfullhash}{aca5e4bc2c593382171c6ae44b950dbd}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Google Site Reliability Engineering}
+      \field{urlday}{1}
+      \field{urlmonth}{3}
+      \field{urlyear}{2024}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://sre.google/
+      \endverb
+      \verb{url}
+      \verb https://sre.google/
+      \endverb
+    \endentry
+    \entry{hamilton1976apollo}{book}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=596fefb544ed97a82b4ff5d161516210}{%
+           family={Hamilton},
+           familyi={H\bibinitperiod},
+           given={Margaret\bibnamedelima H.},
+           giveni={M\bibinitperiod\bibinitdelim H\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=50bf012bd517b36db2b4ca3e86e019e7}{%
+           family={Zeldin},
+           familyi={Z\bibinitperiod},
+           given={Saydean},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{bf0481f0a8b0b3f3554ef32065880adf}
+      \strng{fullhash}{bf0481f0a8b0b3f3554ef32065880adf}
+      \strng{bibnamehash}{bf0481f0a8b0b3f3554ef32065880adf}
+      \strng{authorbibnamehash}{bf0481f0a8b0b3f3554ef32065880adf}
+      \strng{authornamehash}{bf0481f0a8b0b3f3554ef32065880adf}
+      \strng{authorfullhash}{bf0481f0a8b0b3f3554ef32065880adf}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Transactions on Software Engineering}
+      \field{number}{1}
+      \field{title}{Higher Order Software -- A Methodology for Defining Software}
+      \field{volume}{SE-2}
+      \field{year}{1976}
+      \field{pages}{9\bibrangedash 32}
+      \range{pages}{24}
+    \endentry
+    \entry{humble2010}{book}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=9e89d796d06f74d6551850b1c3bff900}{%
+           family={Humble},
+           familyi={H\bibinitperiod},
+           given={Jez},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=e88f486e16133b897ffb346a75f56d96}{%
+           family={Farley},
+           familyi={F\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{location}{1}{%
+        {Upper Saddle River, NJ}%
+      }
+      \list{publisher}{1}{%
+        {Addison-Wesley}%
+      }
+      \strng{namehash}{06b8a2e32b3cda03592e143a7f761e36}
+      \strng{fullhash}{06b8a2e32b3cda03592e143a7f761e36}
+      \strng{bibnamehash}{06b8a2e32b3cda03592e143a7f761e36}
+      \strng{authorbibnamehash}{06b8a2e32b3cda03592e143a7f761e36}
+      \strng{authornamehash}{06b8a2e32b3cda03592e143a7f761e36}
+      \strng{authorfullhash}{06b8a2e32b3cda03592e143a7f761e36}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{978-0-321-60191-9}
+      \field{title}{Continuous Delivery: Reliable Software Releases through Build, Test, and Deployment Automation}
+      \field{year}{2010}
+    \endentry
+    \entry{kim2018devops}{book}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=8e1c949be5801a6f56b7ac5df47a58a9}{%
+           family={Kim},
+           familyi={K\bibinitperiod},
+           given={Gene},
+           giveni={G\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=a0f7c9b6bc980e2a3126cc043f559c07}{%
+           family={Debois},
+           familyi={D\bibinitperiod},
+           given={Patrick},
+           giveni={P\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=a09b6fdd8891cc3ae443eb45fd16799b}{%
+           family={Willis},
+           familyi={W\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=9e89d796d06f74d6551850b1c3bff900}{%
+           family={Humble},
+           familyi={H\bibinitperiod},
+           given={Jez},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{location}{1}{%
+        {Portland, OR}%
+      }
+      \list{publisher}{1}{%
+        {IT Revolution Press}%
+      }
+      \strng{namehash}{cda42d3f8ab5c70c86ed7bed1e19371e}
+      \strng{fullhash}{57b823c25fdd545422606ad0b5187d20}
+      \strng{bibnamehash}{cda42d3f8ab5c70c86ed7bed1e19371e}
+      \strng{authorbibnamehash}{cda42d3f8ab5c70c86ed7bed1e19371e}
+      \strng{authornamehash}{cda42d3f8ab5c70c86ed7bed1e19371e}
+      \strng{authorfullhash}{57b823c25fdd545422606ad0b5187d20}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{2}
+      \field{isbn}{978-1-942-78851-0}
+      \field{title}{The DevOps Handbook: How to Create World-Class Agility, Reliability, and Security in Technology Organizations}
+      \field{year}{2018}
+    \endentry
+    \entry{mckinney2022}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=27ca77940a5e8c07c5d89d0f3fb11d75}{%
+           family={McKinney},
+           familyi={M\bibinitperiod},
+           given={Wes},
+           giveni={W\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{location}{1}{%
+        {São Paulo}%
+      }
+      \list{publisher}{1}{%
+        {O'Reilly Brasil}%
+      }
+      \strng{namehash}{27ca77940a5e8c07c5d89d0f3fb11d75}
+      \strng{fullhash}{27ca77940a5e8c07c5d89d0f3fb11d75}
+      \strng{bibnamehash}{27ca77940a5e8c07c5d89d0f3fb11d75}
+      \strng{authorbibnamehash}{27ca77940a5e8c07c5d89d0f3fb11d75}
+      \strng{authornamehash}{27ca77940a5e8c07c5d89d0f3fb11d75}
+      \strng{authorfullhash}{27ca77940a5e8c07c5d89d0f3fb11d75}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{3}
+      \field{isbn}{978-8-550-81928-0}
+      \field{title}{Python para Análise de Dados: Tratamento de Dados com Pandas, NumPy e Jupyter}
+      \field{year}{2022}
+    \endentry
+    \entry{sommerville2019}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=70341b3bfcce7026902f4eb1e4111b58}{%
+           family={Sommerville},
+           familyi={S\bibinitperiod},
+           given={Ian},
+           giveni={I\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{location}{1}{%
+        {São Paulo}%
+      }
+      \list{publisher}{1}{%
+        {Pearson}%
+      }
+      \strng{namehash}{70341b3bfcce7026902f4eb1e4111b58}
+      \strng{fullhash}{70341b3bfcce7026902f4eb1e4111b58}
+      \strng{bibnamehash}{70341b3bfcce7026902f4eb1e4111b58}
+      \strng{authorbibnamehash}{70341b3bfcce7026902f4eb1e4111b58}
+      \strng{authornamehash}{70341b3bfcce7026902f4eb1e4111b58}
+      \strng{authorfullhash}{70341b3bfcce7026902f4eb1e4111b58}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{10}
+      \field{isbn}{978-8-543-02469-7}
+      \field{title}{Engenharia de Software}
+      \field{year}{2019}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

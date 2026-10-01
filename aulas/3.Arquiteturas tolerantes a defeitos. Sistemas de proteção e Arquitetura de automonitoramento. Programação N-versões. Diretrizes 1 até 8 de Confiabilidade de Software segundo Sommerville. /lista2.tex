@@ -1,0 +1,192 @@
+\documentclass[12pt]{article}
+
+% Idioma e codificação
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Matemática e listas
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+
+% Layout e cores
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+% Cores institucionais
+\definecolor{maincolor}{RGB}{0,100,50}
+\definecolor{forestgreen}{RGB}{0,100,50}
+
+% Cabeçalho e rodapé
+\usepackage{fancyhdr}
+
+% Blocos
+\usepackage[most]{tcolorbox}
+\newtcolorbox{block}[1]{%
+  colback=green!5,
+  colframe=maincolor,
+  coltitle=white,
+  title=#1,
+  fonttitle=\bfseries,
+  boxrule=1.5pt,
+  arc=3mm,
+  left=6pt,
+  right=6pt,
+  top=6pt,
+  bottom=6pt
+}
+
+% Margens
+\geometry{margin=2.5cm}
+
+% Fancyhdr
+\pagestyle{fancy}
+\fancyhf{}
+
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\footrulewidth}{2pt}
+
+\renewcommand{\headrule}{\hbox to\headwidth{%
+  \color{forestgreen}\leaders\hrule height \headrulewidth\hfill}}
+
+\renewcommand{\footrule}{\hbox to\headwidth{%
+  \color{forestgreen}\leaders\hrule height \footrulewidth\hfill}}
+
+% Altura do cabeçalho
+\setlength{\headheight}{52pt}
+\addtolength{\topmargin}{-20pt}
+
+% Cabeçalho
+\fancyhead[L]{%
+  % Substitua pelo caminho correto da imagem ou mantenha o texto se não houver arquivo
+  \textbf{UniRV} \\ \small Universidade de Rio Verde
+}
+
+\fancyhead[R]{%
+  \raggedleft
+  \textcolor{forestgreen}{%
+    \small
+    \textbf{Lista de Exercícios: Arquiteturas Tolerantes}\\
+    Me.~Sergio Souza Novak\\
+    \textit{Engenharia da Qualidade e Confiabilidade}
+    }
+}
+    
+% Rodapé
+\fancyfoot[C]{\textcolor{forestgreen}{\thepage}}
+
+% Comando para caixas de resposta
+\newtcolorbox{resposta}[1]{%
+  colback=white,
+  colframe=forestgreen!30,
+  arc=1mm,
+  height=#1,
+  width=\textwidth,
+  boxrule=0.8pt,
+  breakable
+}
+
+% =========================
+\begin{document}
+% =========================
+
+  \begin{center}
+    {\Large \textbf{Lista de Exercícios: Arquiteturas e Confiabilidade}}\\[0.2cm]
+    \textit{Engenharia de Software / Engenharia da Qualidade}
+  \end{center}
+
+  \vspace{0.4cm}
+
+  \section*{Parte 1 — Conceitos Fundamentais}
+
+  \textbf{1.} Explique o objetivo principal de uma arquitetura tolerante a defeitos.
+  \begin{resposta}{2.5cm}
+  \end{resposta}
+
+  \textbf{2.} Diferencie Prevenção, Detecção e Tolerância a defeitos.
+  \begin{resposta}{3.5cm}
+  \end{resposta}
+
+  \textbf{3.} Por que sistemas críticos não podem depender apenas de testes para garantir segurança?
+  \begin{resposta}{2.5cm}
+  \end{resposta}
+
+  \textbf{4.} Um sistema pode conter defeitos e ainda ser confiável? Justifique.
+  \begin{resposta}{2.5cm}
+  \end{resposta}
+
+  \newpage
+
+  \section*{Parte 2 — Hadoop e Sistemas Distribuídos}
+
+  \textbf{5.} Explique por que o Hadoop foi projetado assumindo que falhas de hardware são normais.
+  \begin{resposta}{2.5cm}
+  \end{resposta}
+
+  \textbf{6.} Descreva a função de cada componente: HDFS, MapReduce e YARN.
+  \begin{resposta}{4.5cm}
+  \end{resposta}
+
+  \textbf{7.} Qual é a função do \textit{heartbeat} em um cluster?
+  \begin{resposta}{8cm}
+  \end{resposta}
+
+  \textbf{8.} O que acontece quando um nó do cluster falha e como o fator de replicação (ex: 3) protege os dados?
+  \begin{resposta}{8cm}
+  \end{resposta}
+
+  \section*{Parte 3 — Sistemas de Proteção}
+
+  \textbf{9.} O que caracteriza um sistema de proteção e por que ele deve ser mais simples que o sistema principal?
+  \begin{resposta}{3.5cm}
+  \end{resposta}
+
+  \textbf{10.} Explique o conceito matemático de probabilidade de falha sob demanda: $P(\text{falha} \mid \text{demanda})$.
+  \begin{resposta}{2.5cm}
+  \end{resposta}
+
+  \newpage
+
+  \section*{Parte 4 — Métricas Quantitativas}
+
+  \begin{block}{Fórmulas de Referência}
+      \small
+      \begin{itemize}
+          \item $POFOD = \frac{\text{Nº de Falhas}}{\text{Nº de Solicitações}}$ \quad | \quad $ROCOF = \frac{\text{Nº de Falhas}}{\text{Tempo Total}}$
+          \item $MTTF = \frac{1}{ROCOF}$ \quad | \quad $MTTR = \frac{\text{Tempo Total de Reparo}}{\text{Nº de Falhas}}$
+          \item $AVAIL = \frac{MTTF}{MTTF + MTTR}$
+      \end{itemize}
+  \end{block}
+
+  \textbf{11.} Cada canal de um sistema possui $POFOD = 0,001$. Calcule a confiabilidade do sistema com três canais independentes (redundância).
+  \begin{resposta}{3.5cm}
+  \end{resposta}
+
+  \textbf{12.} Para atingir $99,99\%$ de disponibilidade com $MTTF = 4.000h$, qual deve ser o $MTTR$ máximo (em minutos)?
+  \begin{resposta}{3.5cm}
+  \end{resposta}
+
+  \section*{Parte 5 — Diversidade e N-Versões}
+
+  \textbf{13.} O que é Programação N-versões e por que $N \ge 3$ para tolerar uma falha?
+  \begin{resposta}{8cm}
+  \end{resposta}
+
+  \textbf{14.} Explique o conceito de "Falha de Modo Comum" e como a diversidade de hardware/software tenta mitigá-la.
+  \begin{resposta}{3.5cm}
+  \end{resposta}
+
+  \textbf{15.} Quando Confiabilidade é mais importante que Disponibilidade? Dê um exemplo prático.
+  \begin{resposta}{3.5cm}
+  \end{resposta}
+
+  \vspace{1cm}
+
+  \begin{center}
+      \textit{“Boa atividade! Att. Me. Prof. Sergio Souza Novak.”}
+  \end{center}
+
+% =========================
+\end{document}
+% =========================

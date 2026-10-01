@@ -1,0 +1,146 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{geometry}
+\usepackage{tikz}
+\usetikzlibrary{positioning, shapes.multipart}
+\geometry{margin=2.5cm}
+ 
+\definecolor{meuazul}{RGB}{0, 79, 151}
+
+\begin{document}
+
+\begin{center}
+    \includegraphics[width=3cm]{logo.png} \\
+    \vspace{0.5cm}
+    \textbf{\large Engenharia da Qualidade e Confiabilidade} \\
+    \textbf{Atividade Prática: Planning Poker}
+\end{center}
+
+\vspace{1cm}
+
+\begin{tcolorbox}[colback=meuazul!5, colframe=meuazul, title=\textbf{HU003: Gerenciamento de Funcionários}]
+    
+    \textbf{Título:} Gestão de Colaboradores e Operadores
+    
+    \vspace{0.3cm}
+    \textbf{Descrição (História de Usuário):} \\
+    Como \textbf{Gerente da Fazenda}, \\
+    quero \textbf{cadastrar, visualizar, atualizar e remover funcionários}, \\
+    para \textbf{alocar responsáveis pelos cuidados dos animais e pelas tarefas de ordenha}.
+    
+    \vspace{0.3cm}
+    \textbf{Valor de Negócio:} \\
+    Organização da força de trabalho e controle de responsabilidade sobre a produção.
+    
+    \vspace{0.3cm}
+    \textbf{Prioridade:} Alta
+    
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+\section*{Story Points e Protótipos de Tela}
+\begin{enumerate}
+    \item \textbf{Cadastrar Funcionário:} Inserir CPF (único), Nome, Cargo e Data de Admissão.
+    \begin{itemize}
+        \item \textit{Explicação:} Cadastro base para todos os colaboradores que interagem com o sistema de ordenha ou manejo.
+        \begin{center} \includegraphics[width=0.7\textwidth]{create_func.png} \end{center}
+    \end{itemize}
+
+    \item \textbf{Visualizar Lista:} Listagem de funcionários com filtros por cargo.
+    \begin{itemize}
+        \item \textit{Explicação:} Visualização rápida do quadro de funcionários ativos.
+        \begin{center} \includegraphics[width=0.7\textwidth]{show_func.png} \end{center}
+    \end{itemize}
+
+    \item \textbf{Atualizar Dados:} Alteração de cargo ou informações pessoais.
+    \begin{itemize}
+        \item \textit{Explicação:} Permite promover funcionários ou corrigir dados inconsistentes.
+        \begin{center} \includegraphics[width=0.7\textwidth]{edit_func.png} \end{center}
+    \end{itemize}
+
+    \item \textbf{Excluir Registro:} Desativação ou remoção de funcionário.
+    \begin{itemize}
+        \item \textit{Explicação:} Remoção física ou lógica do colaborador do sistema.
+        \begin{center} \includegraphics[width=0.7\textwidth]{delete_func.png} \end{center}
+    \end{itemize}
+\end{enumerate}
+
+\vspace{0.5cm}
+
+\section*{Modelo de Dados (Diagrama de Classes)}
+
+\begin{center}
+\begin{tikzpicture}[
+    node distance=1.5cm,
+    classBox/.style={
+        draw=meuazul,
+        thick,
+        fill=white,
+        minimum width=3.5cm,
+        rectangle split,
+        rectangle split parts=3,
+        align=left,
+        rounded corners=2pt
+    }
+]
+
+% Classe Funcionario
+\node[classBox] (Func) {
+    \textbf{Funcionario}
+    \nodepart{second}
+    - cpf: String \{PK\} \\
+    - nome: String \\
+    - cargo: String
+    \nodepart{third}
+    + realizarOrdenha() \\
+    + atenderVaca()
+};
+
+% Classe Vaca
+\node[classBox, above right=0.5cm and 3cm of Func] (Vaca) {
+    \textbf{Vaca}
+    \nodepart{second}
+    - brinco: String \{PK\}
+    \nodepart{third}
+};
+
+% Classe Ordenha
+\node[classBox, below right=0.5cm and 3cm of Func] (Ordenha) {
+    \textbf{Ordenha}
+    \nodepart{second}
+    - id: Integer \{PK\}
+    \nodepart{third}
+};
+
+% Associações
+\draw[thick, meuazul] (Func) -- (Vaca) node[pos=0, above right] {1} node[pos=1, above left] {*};
+\draw[thick, meuazul] (Func) -- (Ordenha) node[pos=0, below right] {1} node[pos=1, below left] {*};
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.5cm}
+
+\section*{Atividade: Estimativa com Planning Poker}
+
+Cada grupo deverá estimar o esforço das funcionalidades utilizando \textbf{Story Points} (Fibonacci):
+
+\begin{center}
+\textbf{0, 1, 2, 3, 5, 8, 13, 21}
+\end{center}
+
+\vspace{1cm}
+
+\begin{center}
+    \rule{0.5\textwidth}{0.4pt} \\
+    \small UniRV - Engenharia de Software
+\end{center}
+
+\end{document}

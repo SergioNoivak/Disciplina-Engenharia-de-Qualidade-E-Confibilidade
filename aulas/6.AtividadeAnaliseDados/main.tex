@@ -1,0 +1,140 @@
+\documentclass[9pt]{beamer}
+\mode<presentation>
+
+% Theme choice:
+\usetheme{Madrid}
+\usepackage{xcolor}
+\definecolor{mGreen}{rgb}{0,0.6,0}
+\definecolor{mRed}{rgb}{0.6,0,0}
+\usecolortheme[RGB={0,100,50}]{structure}
+\usefonttheme{structurebold} 
+\setbeamercovered{invisible}
+
+\usepackage[portuguese]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{amsmath}
+
+% Logo
+\titlegraphic{\includegraphics[width=4cm]{Universidade_de_Rio_Verde.jpg}}
+
+\title[Prática: Análise de Logs]{Aula Prática: Engenharia de Qualidade e Confiabilidade}
+\subtitle{Análise de Logs e Métricas de Desempenho (SRE)}
+\author{Me. Sergio Souza Novak}
+\institute[UniRV]{Faculdade de Engenharia de Software \\ Universidade de Rio Verde}
+\date{2026}
+
+\begin{document}
+
+\begin{frame}[plain]
+    \titlepage
+\end{frame}
+
+\begin{frame}{Objetivos da Aula Prática}
+    \begin{itemize}
+        \item Aprender a manipular e processar arquivos de \textit{log} reais.
+        \item Utilizar Python e Pandas para extração de métricas.
+        \item Calcular métricas estatísticas de latência (Média, Moda, Mediana).
+        \item Identificar \textit{Outliers} e calcular Percentis (P90, P98, P99).
+        \item Calcular métricas de SRE: \textbf{Error Rate} e \textbf{Availability}.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{O Dataset: access\_with\_latency.log}
+    \begin{block}{O que temos nos registros?}
+        \begin{itemize}
+            \item Endereço IP do cliente.
+            \item \textit{Timestamp} (Data e Hora).
+            \item Método HTTP (GET, POST, etc.) e URL.
+            \item Código de \textit{Status} (200, 404, 500, etc.).
+            \item Tamanho da resposta em bytes.
+            \item \textbf{Latência}: Tempo de resposta em milissegundos (ms).
+        \end{itemize}
+    \end{block}
+    \begin{exampleblock}{Exemplo}
+        \texttt{54.36.149.41 - - [22/Jan/2019:03:56:14 +0330] "GET /filter/27 HTTP/1.1" 200 30577 "-" "Mozilla/5.0" "-" 436.23}
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Ferramentas de Análise}
+    \begin{itemize}
+        \item \textbf{Python}: Versatilidade e ecossistema robusto.
+        \item \textbf{Pandas}: Manipulação de dados estruturados (DataFrames).
+        \item \textbf{Matplotlib/Seaborn}: Visualização de dados e distribuições.
+        \item \textbf{Regex}: Imprescindível para extrair dados de textos não estruturados (logs).
+    \end{itemize}
+    \begin{block}{Por que Python?}
+        Rapidez no processamento de grandes volumes de texto e facilidade na aplicação de fórmulas estatísticas complexas.
+    \end{block}
+\end{frame}
+
+\begin{frame}{Distribuição de Frequência e Latência}
+    \begin{itemize}
+        \item A latência raramente segue uma distribuição normal perfeita.
+        \item Geralmente temos uma \textbf{"cauda longa"} (algumas requisições muito lentas).
+        \item O histograma nos ajuda a visualizar onde a maioria dos usuários "está sentindo" a performance do sistema.
+    \end{itemize}
+    \begin{center}
+        \includegraphics[width=0.6\textwidth]{latencia_dist.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Métricas Estatísticas de Latência}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Tendência Central}
+                \begin{itemize}
+                    \item \textbf{Média}: Sensível a \textit{outliers}.
+                    \item \textbf{Mediana}: O valor que divide os dados ao meio (P50).
+                    \item \textbf{Moda}: O valor que mais se repete.
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Percentis (SRE)}
+                \begin{itemize}
+                    \item \textbf{P90}: 90\% das requisições são mais rápidas que este valor.
+                    \item \textbf{P98}: "Quase" todas as requisições.
+                    \item \textbf{P99}: Foco na pior experiência do usuário.
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Métricas de SRE: Error Rate e Availability}
+    \begin{block}{Error Rate (Taxa de Erro)}
+        Proporção de requisições que falharam (status 5xx ou 4xx) em relação ao total.
+        \[ \text{Error Rate} = \frac{\text{Erros}}{\text{Total}} \times 100 \]
+    \end{block}
+    \begin{block}{Availability (Disponibilidade)}
+        Proporção de requisições bem-sucedidas.
+        \[ \text{Availability} = \frac{\text{Sucessos}}{\text{Total}} \times 100 \]
+    \end{block}
+    \textit{Meta comum no Google (SRE): Buscar os "quatro noves" (99.99\%) de disponibilidade.}
+\end{frame}
+
+\begin{frame}{Atividade Prática}
+    \begin{enumerate}
+        \item Carregar o arquivo \texttt{access\_with\_latency.log}.
+        \item Realizar a limpeza dos dados (converter latência para numérico).
+        \item Gerar o histograma de latência.
+        \item Calcular as métricas de tendência central.
+        \item Identificar os percentis de performance.
+        \item Calcular a taxa de erro e a disponibilidade atual do servidor.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[plain, c]
+    \begin{center}
+        \Huge Mãos à obra!
+        
+        \vspace{1cm}
+        \large Utilize o roteiro em \texttt{atividade\_pratica.pdf}
+    \end{center}
+\end{frame}
+
+\end{document}

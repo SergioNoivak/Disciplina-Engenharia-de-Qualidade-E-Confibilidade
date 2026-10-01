@@ -1,0 +1,187 @@
+\documentclass[12pt]{article}
+
+% Idioma e codificação
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Matemática e listas
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+
+% Layout e cores
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+% Cores institucionais
+\definecolor{maincolor}{RGB}{0,100,50}
+\definecolor{forestgreen}{RGB}{0,100,50}
+
+% Cabeçalho e rodapé
+\usepackage{fancyhdr}
+
+% Blocos
+\usepackage[most]{tcolorbox}
+\newtcolorbox{block}[1]{%
+  colback=green!5,
+  colframe=maincolor,
+  coltitle=white,
+  title=#1,
+  fonttitle=\bfseries,
+  boxrule=1.5pt,
+  arc=3mm,
+  left=6pt,
+  right=6pt,
+  top=6pt,
+  bottom=6pt
+}
+
+% Margens
+\geometry{margin=2.5cm}
+
+% Fancyhdr
+\pagestyle{fancy}
+\fancyhf{}
+
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\footrulewidth}{2pt}
+
+\renewcommand{\headrule}{\hbox to\headwidth{%
+  \color{forestgreen}\leaders\hrule height \headrulewidth\hfill}}
+
+\renewcommand{\footrule}{\hbox to\headwidth{%
+  \color{forestgreen}\leaders\hrule height \footrulewidth\hfill}}
+
+\setlength{\headheight}{52pt}
+\addtolength{\topmargin}{-20pt}
+
+\fancyhead[L]{%
+  \textbf{UniRV} \\ \small Universidade de Rio Verde
+}
+
+\fancyhead[R]{%
+  \raggedleft
+  \textcolor{forestgreen}{%
+    \small
+    \textbf{Lista de Exercícios: Métricas Google SRE}\\
+    Me.~Sergio Souza Novak\\
+    \textit{Engenharia da Qualidade e Confiabilidade}
+    }
+}
+
+\fancyfoot[C]{\textcolor{forestgreen}{\thepage}}
+
+\newtcolorbox{resposta}[1]{%
+  colback=white,
+  colframe=forestgreen!30,
+  arc=1mm,
+  height=#1,
+  width=\textwidth,
+  boxrule=0.8pt,
+  breakable
+}
+
+\begin{document}
+
+\begin{center}
+  {\Large \textbf{Lista de Exercícios: Métricas Google SRE}}\\[0.2cm]
+  \textit{Engenharia de Software / Engenharia da Qualidade}
+\end{center}
+
+\vspace{0.4cm}
+
+\section*{Parte 6 — Métricas de Requisição e Confiabilidade em APIs}
+
+\textbf{16.}
+\begin{resposta}{3.5cm}
+Disponibilidade baseada em tempo mede quanto tempo o sistema ficou operacional em relação ao tempo total (ex: 99,9\% ao mês).  
+Disponibilidade baseada em requisições mede quantas requisições foram atendidas com sucesso em relação ao total recebido.  
+A primeira foca em janela temporal; a segunda foca na experiência real do usuário.
+\end{resposta}
+
+\textbf{17.}
+\begin{resposta}{3.5cm}
+Erros 4xx indicam problema na requisição do cliente (ex: requisição inválida ou não autorizada).  
+Não representam falha do servidor.  
+Por isso, normalmente apenas erros 5xx são considerados falhas do sistema para cálculo de disponibilidade.
+\end{resposta}
+
+\textbf{18.}
+\begin{resposta}{5cm}
+Total = 1.200.000  
+
+a) Apenas 2xx como sucesso:  
+Disponibilidade = 1.199.400 / 1.200.000 = 0,9995 = 99,95\%.
+
+b) Considerando apenas 5xx como falha:  
+Falhas reais = 200  
+Disponibilidade = (1.200.000 - 200) / 1.200.000  
+= 1.199.800 / 1.200.000  
+= 0,999833 = 99,9833\%.
+\end{resposta}
+
+\textbf{19.}
+\begin{resposta}{5cm}
+Meta = 99,9\%  
+
+a) Erro permitido = 0,1\%  
+0,001 × 2.500.000 = 2.500 falhas permitidas.
+
+b) Como ocorreram 1.200 falhas 5xx,  
+1.200 < 2.500  
+Logo, a meta foi cumprida.
+\end{resposta}
+
+\textbf{20.}
+\begin{resposta}{6cm}
+Total = 6  
+
+a) Apenas 2xx como sucesso:  
+3 / 6 = 0,5 = 50\%.
+
+b) Apenas 5xx como falha real:  
+Falha real = 1  
+Disponibilidade = 5 / 6 = 83,33\%.
+
+c) Em produção, considera-se apenas 5xx como falha do sistema, pois 4xx representam erro do cliente.
+\end{resposta}
+
+\textbf{21.}
+\begin{resposta}{3.5cm}
+POFOD = Número de falhas / Número de solicitações  
+
+POFOD = 350 / 700.000  
+= 0,0005  
+
+Logo, probabilidade de falha sob demanda = 0,05\%.
+\end{resposta}
+
+\textbf{22.}
+\begin{resposta}{5cm}
+a) MTTF = 1 / ROCOF  
+MTTF = 1 / 0,002 = 500 horas.
+
+b) MTTR = 30 minutos = 0,5 hora  
+
+Disponibilidade = MTTF / (MTTF + MTTR)  
+= 500 / (500 + 0,5)  
+= 500 / 500,5  
+= 0,999 = 99,9\%.
+\end{resposta}
+
+\textbf{23.}
+\begin{resposta}{4cm}
+Error Budget é a quantidade de falhas permitidas dentro da meta de disponibilidade.  
+Para 99,9\%, o sistema pode falhar 0,1\% do tempo ou das requisições.  
+Quanto maior a disponibilidade (99,99\% ou 99,999\%), menor o orçamento de erro e maior o rigor operacional.
+\end{resposta}
+
+\textbf{24.}
+\begin{resposta}{4cm}
+Em sistemas industriais, Confiabilidade é mais crítica.  
+Uma falha pode causar acidentes ou prejuízos graves.  
+É preferível o sistema parar (baixa disponibilidade) do que operar incorretamente.
+\end{resposta}
+
+\end{document}

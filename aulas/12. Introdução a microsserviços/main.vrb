@@ -1,0 +1,23 @@
+\frametitle{Exemplo Prático: Consumindo o Serviço}
+Outro microsserviço precisa das informações do cliente. Ele fará uma \textbf{chamada síncrona} pela rede para o endpoint.
+    \vspace{0.2cm}
+    \begin{lstlisting}[language=Java, basicstyle=\ttfamily\scriptsize, keywordstyle=\color{meuazul}\bfseries, stringstyle=\color{meuvermelhoescuro}, commentstyle=\color{meuverde}\itshape, showstringspaces=false, frame=single, rulecolor=\color{lightgray}]
+const axios = require('axios');
+
+async function checkCustomerStatus(customerId) {
+    try {
+        // Faz a chamada HTTP GET para o Microsservico de Clientes
+        const response = await axios.get(
+            `http://servico-cliente:3000/api/customers/${customerId}`
+        );
+
+        console.log("Status do Cliente:", response.data.status);
+        // Continua o processamento com a resposta recebida...
+
+    } catch (error) {
+        console.error("Falha ao se comunicar com o servico de clientes");
+    }
+}
+
+checkCustomerStatus(12345);
+    \end{lstlisting}

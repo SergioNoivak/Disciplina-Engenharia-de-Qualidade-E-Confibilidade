@@ -1,0 +1,390 @@
+\documentclass[12pt,a4paper]{article}
+
+% ------------------------------------------------
+% Pacotes
+% ------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{mathptmx} % Times New Roman
+\usepackage{courier} % Adiciona suporte a negrito na fonte monospace
+\usepackage{enumitem}\usepackage{amsfonts}
+\usepackage{amsmath} % Recomendado para o comando \text{}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{positioning, shapes.geometric, arrows.meta}
+\usepackage{listings}
+\usepackage{multicol}
+
+\lstset{
+    language=Java,
+    keywordstyle=\bfseries,
+    showstringspaces=false,
+    breaklines=true,
+    frame=none,
+    numbers=none,
+    tabsize=2,
+    commentstyle=\itshape\color{gray},
+    morekeywords={this, class, private, public, String, System, out, println, Solo, Caminhao, Patio, Termometro},
+    extendedchars=true,
+    inputencoding=utf8
+}
+
+% TikZ Styles for ER Diagrams
+\tikzset{
+    block/.style={rectangle, draw, thick, minimum width=2cm, minimum height=1cm, fill=white},
+    diamond_node/.style={diamond, draw, thick, minimum width=2cm, minimum height=1cm, fill=white, aspect=2},
+    attribute/.style={ellipse, draw, thin, minimum width=1.5cm, minimum height=0.6cm, fill=white, font=\scriptsize},
+    line/.style={draw, thick}, 
+}
+% ------------------------------------------------ 
+% Configuração de página
+% ------------------------------------------------
+\geometry{
+    a4paper,
+    left=2cm,
+    right=2cm,
+    top=2cm,
+    bottom=2cm,
+    headheight=15pt % Adicione isso
+}% Caixa para resposta discursiva
+\newcommand{\resposta}[1]{
+\noindent
+\framebox[\textwidth]{
+\begin{minipage}{0.98\textwidth}
+\vspace*{#1}\null
+\end{minipage}
+}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+
+\setlength{\parindent}{0pt}
+
+% ------------------------------------------------
+% Comandos auxiliares
+% ------------------------------------------------
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+% ------------------------------------------------
+% Documento
+% ------------------------------------------------
+\begin{document}
+
+% ------------------------------------------------
+% Cabeçalho
+% ------------------------------------------------
+\begin{tabularx}{\textwidth}{@{} L{4cm} X @{}}
+    \raisebox{-0.5cm}{\includegraphics[width=4cm]{Universidade_de_Rio_Verde.jpg}} &
+    \hfill
+    \begin{tabular}{|>{\centering\arraybackslash}m{9.5cm}|}
+        \hline
+        \cellcolor{black}\color{white}\rule{0pt}{1.2cm}\textbf{LISTA DE REVISÃO -- N1} 
+        \tabularnewline
+        \hline
+    \end{tabular} 
+\end{tabularx}
+\vspace{0.3cm}
+
+% ------------------------------------------------  
+% Tabela principal
+% ------------------------------------------------
+\begin{tabularx}{\textwidth}{|X|L{2cm}|}
+\hline
+\textbf{Disciplina} & \textbf{Campus} \\
+\textit{Engenharia da Qualidade e Confiabilidade} & \textit{Rio Verde} \\
+\hline
+\textbf{Professor} & \textbf{Código} \\
+\textit{Sergio Souza Novak} & \textit{ESW451} \\
+\hline
+\end{tabularx}
+ 
+% ------------------------------------------------
+% Barra de Atenção
+% ------------------------------------------------
+\vspace{0.2cm}
+
+\begin{tabularx}{\textwidth}{|X|}
+\hline
+\cellcolor{black}\color{white}
+\centering \textbf{ATENÇÃO:} Esta lista de revisão contém questões similares às da avaliação N1. Utilize-a como guia de estudos. \tabularnewline
+\hline
+\end{tabularx}
+
+\vspace{0.3cm}
+
+\textbf{ORIENTAÇÕES}  
+
+\begin{itemize}
+    \item Resolva todas as questões com atenção;
+    \item Consulte o material de aula para verificar suas respostas;
+    \item A interpretação de texto faz parte do exercício.
+\end{itemize}
+
+\vspace{0.5cm}
+
+\begin{center}
+    \rule{\textwidth}{0.4pt}
+    \textbf{QUESTÕES}
+\end{center}
+
+\vspace{0.5cm}
+
+% ================================================
+% Questão 1 - AVAIL, POFOD, MTTF (cenário diferente)
+% ================================================
+\textbf{Questão 1} -- Um servidor web de uma empresa de comércio eletrônico é monitorado durante 6 meses. Nesse período, foram registradas 5 falhas, com os seguintes tempos de operação contínua entre elas: 400h, 600h, 200h, 350h e 450h. Após cada falha, o servidor levou, respectivamente, 8h, 12h, 4h, 6h e 10h para ser restaurado. Durante o mesmo período, o sistema recebeu 500 requisições críticas de pagamento, das quais 15 resultaram em falha.
+
+Com base nesses dados e nos conceitos de métricas de confiabilidade, assinale a alternativa \textbf{correta}:
+
+\vspace{0.3cm}
+
+\begin{enumerate}[label=\textbf{(\Alph*)}]
+  
+  \item O MTTF (Mean Time To Failure) é calculado somando-se os tempos de reparo e dividindo pelo número de falhas, resultando em 8 horas.
+
+  \item O POFOD (Probability of Failure on Demand) é calculado dividindo-se o número de falhas (15) pelo número total de requisições críticas (500), resultando em 0,03 (ou 3\%).
+
+  \item O AVAIL (Disponibilidade) é calculado dividindo-se o tempo total de reparo pelo tempo total de operação, resultando em aproximadamente 0,02.
+
+  \item O MTTF é obtido dividindo-se o número de falhas pelo tempo total de operação, resultando em 0,0025 falhas por hora.
+
+  \item O AVAIL e o MTTF representam a mesma métrica expressa em unidades diferentes: o AVAIL em percentual e o MTTF em horas.
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% ================================================
+% Questão 2 - Defeito, Erro, Estado de Erro, Estado de Falha (cenário diferente)
+% ================================================
+\textbf{Questão 2} -- Uma equipe de desenvolvimento está criando um sistema de navegação GPS para veículos autônomos. Durante a implementação do módulo de cálculo de distância entre dois pontos geográficos, um programador utiliza a fórmula de distância euclidiana plana em vez da fórmula de Haversine (que considera a curvatura da Terra). Em trajetos curtos dentro de uma cidade, a diferença entre os valores é desprezível e o veículo segue normalmente. Porém, ao calcular uma rota interestadual de 800 km, o sistema estima a distância como 785 km, fazendo com que o veículo tente seguir por uma rota alternativa mais curta que passa por uma estrada interditada, resultando na imobilização do veículo.
+
+\vspace{0.2cm}
+
+Com base no cenário descrito e nos conceitos de \textbf{defeito}, \textbf{erro}, \textbf{estado de erro} e \textbf{estado de falha}, responda:
+
+\begin{enumerate}[label=\textbf{\alph*)}]
+    \item Identifique e defina cada um dos quatro conceitos (\textit{defeito}, \textit{erro}, \textit{estado de erro} e \textit{estado de falha}) aplicando-os ao cenário apresentado.
+    \item Explique por que o defeito não se manifestou imediatamente nos trajetos curtos, mas levou a uma falha nos trajetos longos.
+\end{enumerate}
+
+\vspace{0.2cm}
+\resposta{7cm}
+
+\vspace{0.5cm}
+
+% ================================================
+% Questão 3 - Programação N-Versões (cenário diferente)
+% ================================================
+\textbf{Questão 3} -- Um hospital de referência decide implementar um sistema de dosagem automática de medicamentos para pacientes em UTI. Devido à criticidade do sistema, a equipe de engenharia adota a técnica de \textbf{Programação N-Versões}: quatro equipes independentes desenvolvem, a partir da mesma especificação, implementações distintas do algoritmo de cálculo de dosagem. Em tempo de execução, as quatro versões são executadas simultaneamente e um módulo comparador seleciona o resultado de consenso majoritário.
+
+\vspace{0.2cm}
+
+Sobre a técnica de Programação N-Versões e sua aplicação no cenário descrito, assinale a alternativa \textbf{correta}:
+
+\vspace{0.3cm}
+
+\begin{enumerate}[label=\textbf{(\Alph*)}]
+    \item A técnica elimina completamente a possibilidade de falhas no sistema, pois, com quatro versões independentes, é estatisticamente impossível que mais de duas produzam o mesmo erro.
+
+    \item O módulo comparador (árbitro) é um componente trivial e não precisa ser testado com rigor, pois sua função é apenas selecionar a saída mais frequente entre as versões.
+
+    \item Uma limitação importante da técnica é que ela não protege contra erros presentes na própria especificação, pois todas as versões são desenvolvidas a partir do mesmo documento de requisitos; se a especificação estiver incorreta, todas as versões poderão produzir o mesmo resultado errado.
+
+    \item A Programação N-Versões é economicamente vantajosa porque o custo total de desenvolvimento é equivalente ao de uma única versão, já que as equipes compartilham bibliotecas e frameworks.
+
+    \item A técnica funciona de forma idêntica à redundância de hardware (\\textit{hot standby}), na qual cópias idênticas do mesmo software são executadas em processadores diferentes.
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% ================================================
+% Questão 4 - Apache Hadoop (cenário diferente)
+% ================================================
+\textbf{Questão 4} -- Uma rede de varejo com mais de 2.000 lojas em todo o Brasil deseja analisar o comportamento de compra de seus clientes a partir dos dados de transações de cartões de fidelidade. São gerados aproximadamente 50 milhões de registros diários, totalizando vários terabytes por mês. A equipe de dados propõe o uso do \textbf{Apache Hadoop} para viabilizar essa análise.
+
+\vspace{0.2cm}
+
+Considerando os conceitos fundamentais do Apache Hadoop, assinale a alternativa \textbf{correta}:
+
+\vspace{0.3cm}
+
+\begin{enumerate}[label=\textbf{(\Alph*)}]
+    \item O HDFS (Hadoop Distributed File System) armazena cada arquivo em um único nó do cluster para maximizar a velocidade de leitura sequencial, sem replicação, pois a redundância é garantida pelo hardware RAID dos servidores.
+
+    \item O modelo MapReduce divide o processamento em duas fases principais: a fase \textit{Map}, que aplica uma função de transformação aos dados de entrada em paralelo nos nós do cluster, e a fase \textit{Reduce}, que agrega os resultados intermediários para produzir a saída final. Esse modelo permite o processamento eficiente de grandes volumes de dados de forma distribuída e tolerante a falhas.
+
+    \item O Hadoop exige que todos os dados estejam estruturados em formato tabular (como em bancos de dados relacionais) antes de serem carregados no HDFS, pois o MapReduce só opera sobre dados com esquema fixo definido previamente.
+
+    \item O Hadoop substitui completamente bancos de dados tradicionais, pois oferece suporte nativo a consultas SQL em tempo real com latência inferior a milissegundos, sendo ideal para sistemas transacionais de alta frequência.
+
+    \item O processamento no Hadoop é centralizado em um único nó mestre que executa toda a lógica de negócio, enquanto os nós escravos servem apenas como unidades de armazenamento passivo de dados.
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% ================================================
+% Questão 5 - Escalonamento Vertical e Horizontal (V/F)
+% ================================================
+\textbf{Questão 5} -- Sobre as estratégias de \textbf{escalonamento vertical} (\textit{scale up}) e \textbf{escalonamento horizontal} (\textit{scale out}) de sistemas, julgue as afirmativas abaixo como \textbf{(V) Verdadeiro} ou \textbf{(F) Falso}:
+
+\vspace{0.3cm}
+
+\begin{enumerate}[label=\textbf{(\hspace{0.6cm})} ,leftmargin=2cm]
+
+    \item O escalonamento vertical é geralmente mais simples de implementar inicialmente, pois não exige mudanças na arquitetura da aplicação — basta atualizar o hardware do servidor existente.
+
+    \item Uma desvantagem do escalonamento horizontal é a necessidade de mecanismos de sincronização e consistência de dados entre os nós, o que aumenta a complexidade do sistema.
+
+    \item O escalonamento vertical oferece melhor tolerância a falhas do que o horizontal, pois concentra todos os recursos em uma única máquina robusta, eliminando pontos de falha distribuídos.
+
+    \item Sistemas como o Apache Hadoop e o Apache Kafka são exemplos de tecnologias projetadas para operar com escalonamento horizontal, distribuindo dados e processamento entre múltiplos nós.
+
+    \item O escalonamento horizontal é especialmente adequado para aplicações \textit{stateless} (sem estado), pois qualquer nó pode atender qualquer requisição sem depender de dados de sessão armazenados localmente.
+
+    \item O escalonamento vertical não possui nenhuma limitação prática, pois é sempre possível adicionar mais recursos (CPU, RAM, disco) a um único servidor de forma ilimitada.
+
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% ================================================
+% Questão 6 - Arquitetura do Sistema de Proteção (Sommerville) - Discursiva
+% ================================================
+\textbf{Questão 6} -- Considere um sistema de controle de uma usina nuclear que possui dois subsistemas: um \textbf{sistema de controle} responsável por regular a temperatura do reator e um \textbf{sistema de proteção} responsável por desligar automaticamente o reator caso a temperatura ultrapasse um limite crítico. Ambos possuem seus próprios sensores e lógica de decisão independentes.
+
+\vspace{0.2cm}
+
+Com base nos conceitos de Sommerville sobre \textbf{sistemas críticos de segurança} e na arquitetura de sistemas de proteção, responda:
+
+\begin{enumerate}[label=\textbf{\alph*)}]
+    \item Por que é fundamental que o sistema de proteção possua \textbf{sensores próprios}, independentes dos sensores utilizados pelo sistema de controle?
+    \item Explique o que poderia acontecer se o sistema de proteção compartilhasse o mesmo software e hardware do sistema de controle. Qual princípio de confiabilidade seria violado?
+\end{enumerate}
+
+\vspace{0.2cm}
+\resposta{6cm}
+
+\vspace{0.5cm}
+
+% ================================================
+% Questão 7 - ROCOF (Rate of Occurrence of Failures)
+% ================================================
+\textbf{Questão 7} -- Um sistema de gerenciamento de estoque em uma fábrica é monitorado ao longo de quatro trimestres consecutivos. No primeiro trimestre (2.160h de operação), foram registradas 6 falhas; no segundo trimestre (2.160h), 4 falhas; no terceiro trimestre (2.160h), 8 falhas; e no quarto trimestre (2.160h), 2 falhas.
+
+\vspace{0.2cm}
+
+Com base nesses dados, responda:
+
+\begin{enumerate}[label=\textbf{\alph*)}]
+    \item Calcule o \textbf{ROCOF} (Rate of Occurrence of Failures) para cada trimestre e para o período total.
+    \item O sistema está se tornando mais confiável ou menos confiável ao longo do tempo? Justifique sua resposta com base nos valores de ROCOF calculados.
+    \item Se a empresa deseja que o ROCOF total do próximo ano seja inferior a 0,002 falhas/hora, quantas falhas, \textbf{no máximo}, o sistema poderia apresentar ao longo de 8.640h de operação?
+\end{enumerate}
+
+\vspace{0.2cm}
+\resposta{6cm}
+
+\vspace{0.5cm}
+
+% ================================================
+% Questão 8 - Tolerância a Falhas: Recovery Blocks vs N-Versões
+% ================================================
+\textbf{Questão 8} -- Uma empresa de energia eólica está desenvolvendo o software de controle de suas turbinas. O sistema deve ajustar automaticamente o ângulo das pás com base na velocidade do vento. Dois engenheiros propõem abordagens diferentes para garantir a tolerância a falhas do módulo de ajuste:
+
+\begin{itemize}
+    \item \textbf{Engenheiro A} propõe utilizar \textbf{Recovery Blocks} (Blocos de Recuperação): uma versão primária do algoritmo é executada e seu resultado é verificado por um teste de aceitação; caso o teste falhe, uma versão alternativa (backup) é executada.
+    \item \textbf{Engenheiro B} propõe utilizar \textbf{Programação N-Versões}: três versões independentes do algoritmo são executadas simultaneamente e o resultado é decidido por votação majoritária.
+\end{itemize}
+
+\vspace{0.2cm}
+
+Sobre as duas abordagens, assinale a alternativa \textbf{correta}:
+
+\vspace{0.3cm}
+
+\begin{enumerate}[label=\textbf{(\Alph*)}]
+    \item Na abordagem de Recovery Blocks, todas as versões são executadas simultaneamente, assim como na Programação N-Versões, diferindo apenas no critério de decisão: teste de aceitação contra votação.
+
+    \item A Programação N-Versões tem como vantagem a detecção mais rápida de falhas, pois o resultado é obtido pela comparação simultânea de múltiplas saídas, sem a necessidade de reexecução. Já os Recovery Blocks podem apresentar maior latência em caso de falha da versão primária, pois precisam executar sequencialmente as versões alternativas.
+
+    \item Os Recovery Blocks são superiores à Programação N-Versões em todos os critérios, pois exigem menos recursos computacionais, são mais simples de implementar e oferecem a mesma garantia de tolerância a falhas.
+
+    \item Ambas as técnicas garantem que o sistema nunca falhará, desde que ao menos duas versões tenham sido desenvolvidas por equipes independentes.
+
+    \item Os Recovery Blocks não necessitam de um teste de aceitação, pois a versão de backup é executada automaticamente após qualquer saída da versão primária, independentemente de seu valor.
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% ================================================
+% Questão 9 - Conceitos Gerais de Confiabilidade
+% ================================================
+\textbf{Questão 9} -- Relacione os conceitos da coluna da esquerda com suas respectivas definições na coluna da direita:
+
+\vspace{0.3cm}
+
+\begin{tabularx}{\textwidth}{|c|L{3.2cm}|c|X|}
+\hline
+\textbf{N°} & \textbf{Conceito} & \textbf{(\ \ )} & \textbf{Definição} \\
+\hline
+1 & Confiabilidade (\textit{Reliability}) & & Probabilidade de o sistema causar dano a pessoas ou ao ambiente quando uma falha ocorre. \\
+\hline
+2 & Disponibilidade (\textit{Availability}) & & Probabilidade de o sistema estar operacional e acessível quando solicitado. \\
+\hline
+3 & Segurança (\textit{Safety}) & & Capacidade do sistema de funcionar sem falhas em condições normais durante um período de tempo especificado. \\
+\hline
+4 & Proteção (\textit{Security}) & & Capacidade do sistema de se proteger contra ataques externos, acidentais ou deliberados. \\
+\hline
+\end{tabularx}
+
+\vspace{0.2cm}
+
+A sequência correta, de cima para baixo, é:
+
+\vspace{0.2cm}
+
+\begin{enumerate}[label=\textbf{(\Alph*)}]
+    \item 3, 2, 1, 4
+    \item 4, 2, 3, 1
+    \item 1, 3, 2, 4
+    \item 2, 1, 4, 3
+    \item 3, 1, 2, 4
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% ================================================
+% Questão 10 - Questão Integradora (Discursiva)
+% ================================================
+\textbf{Questão 10} -- Uma fintech (empresa de tecnologia financeira) está projetando um sistema de processamento de transações PIX que deve operar 24 horas por dia, 7 dias por semana. O sistema precisa atender a milhões de transações diárias com tempo de resposta inferior a 2 segundos. A equipe de arquitetura está debatendo as seguintes decisões:
+
+\begin{itemize}
+    \item Utilizar escalonamento horizontal com múltiplos nós de processamento;
+    \item Implementar redundância de software com técnicas de tolerância a falhas;
+    \item Definir métricas de confiabilidade para monitoramento contínuo.
+\end{itemize}
+
+\vspace{0.2cm}
+
+Com base nos conceitos estudados, responda:
+
+\begin{enumerate}[label=\textbf{\alph*)}]
+    \item Justifique por que o \textbf{escalonamento horizontal} é mais adequado do que o vertical para este cenário. Cite pelo menos dois argumentos.
+    \item Indique quais \textbf{métricas de confiabilidade} (dentre AVAIL, POFOD, ROCOF e MTTF) seriam mais relevantes para monitorar este sistema e justifique sua escolha.
+    \item Proponha uma estratégia de \textbf{tolerância a falhas} (N-Versões ou Recovery Blocks) para o módulo de validação de transações e justifique sua escolha.
+\end{enumerate}
+
+\vspace{0.2cm}
+\resposta{8cm}
+
+\end{document}

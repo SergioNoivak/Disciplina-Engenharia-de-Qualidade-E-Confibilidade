@@ -1,0 +1,1063 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\usepackage{eso-pic}
+\usepackage[brazil]{babel}
+\shorthandoff{"}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, shapes.symbols, fit, calc, backgrounds}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{meuazul}{RGB}{0, 79, 151}
+\definecolor{meucinza}{RGB}{80, 80, 80}
+\definecolor{meuvermelhoescuro}{RGB}{180, 30, 30}
+\definecolor{meuverde}{RGB}{30, 130, 60}
+\setbeamercolor{structure}{fg=meuazul}
+
+% Configuração do Listings para Git
+\lstdefinelanguage{Git}{
+  morekeywords={git, commit, push, pull, branch, checkout, merge, flow, init, feature, start, finish, release, hotfix, add, tag},
+  sensitive=false,
+  morecomment=[l]{\#},
+}
+\lstset{
+  language=Git,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{meuazul}\bfseries,
+  commentstyle=\color{meucinza}\itshape,
+  backgroundcolor=\color{gray!10},
+  frame=single,
+  rulecolor=\color{gray!30},
+  breaklines=true,
+  showstringspaces=false
+}
+
+\title[Avaliando qualidade do ponto de vista do usuário]{Avaliando qualidade do ponto de vista do usuário}
+\subtitle{Engenharia de Qualidade e Confiabilidade}
+\author{Prof. Me. Sergio Souza Novak — UniRV}
+\titlegraphic{\includegraphics[width=2cm]{logo.png}}
+
+\begin{document}
+
+% Slide de Título
+\frame[plain]{\titlepage}
+
+% Slide de Sumário
+\begin{frame}{Sumário}
+    \begin{columns}[t]
+        \begin{column}{.5\textwidth}
+            \tableofcontents[sections={1-4}]
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \tableofcontents[sections={5-7}]
+        \end{column}
+    \end{columns}
+\end{frame}
+% -------------
+
+\section{A Avaliação sob a Ótica do Usuário}
+
+% Slide 1
+\begin{frame}{A Métrica Definitiva de Sucesso}
+    \begin{itemize}
+        \item No desenvolvimento de produtos digitais, a \textbf{métrica definitiva de sucesso} para a qualidade é a \textbf{satisfação do usuário final}.
+        \item Processos e ferramentas são meios; o fim é resolver o problema de quem usa.
+    \end{itemize}
+    \vspace{0.8cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        caixa/.style={rectangle, rounded corners, draw=meuazul, fill=meuazul!10, thick, text width=3.5cm, align=center, minimum height=1.2cm},
+        seta/.style={-{Stealth[scale=1.2]}, thick, draw=meuazul}
+    ]
+        \node[caixa] (dev) at (0,0) {Processo de Desenvolvimento};
+        \node[caixa] (prod) at (4.5,0) {Produto Digital};
+        \node[caixa, fill=meuverde!20, draw=meuverde, text width=4cm] (sat) at (9.5,0) {\textbf{Satisfação do Usuário}\\ \small(Métrica Definitiva)};
+        
+        \draw[seta] (dev) -- (prod);
+        \draw[seta] (prod) -- (sat);
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 2
+\begin{frame}{A Ilusão da Tecnologia Isolada}
+    \begin{itemize}
+        \item De nada adianta a utilização de \textbf{tecnologias de ponta}, \textbf{processos rígidos} ou \textbf{frameworks sofisticados}...
+        \item ...se o software resultante não for \textbf{utilizável} ou for \textbf{rejeitado} por quem realmente precisa dele.
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{center}
+    \begin{tikzpicture}
+        % Conjuntos
+        \fill[red, opacity=0.15] (0,0) circle (2.2cm);
+        \fill[blue, opacity=0.15] (2.5,0) circle (2.2cm);
+        
+        \draw[thick, red!80] (0,0) circle (2.2cm);
+        \draw[thick, blue!80] (2.5,0) circle (2.2cm);
+        
+        \node[text width=2.8cm, align=center] at (-0.8, 0) {\small \textbf{Alta Tecnologia}\\ \scriptsize Processos Rígidos e Frameworks};
+        \node[text width=2.8cm, align=center] at (3.3, 0) {\small \textbf{Foco no Usuário}\\ \scriptsize Necessidades Atendidas e Utilizável};
+        
+        \node[text width=1.8cm, align=center, font=\bfseries\small] at (1.25, 0) {Produto de\\Sucesso};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 3
+\begin{frame}{Consequências da Rejeição}
+    \begin{itemize}
+        \item Quando as necessidades dos usuários \textbf{não são atendidas}, o produto sofre graves consequências, impactando o negócio como um todo.
+    \end{itemize}
+    \vspace{0.5cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        box/.style={rectangle, draw=meucinza, thick, fill=gray!10, text width=4cm, align=center, minimum height=1cm, rounded corners},
+        causa/.style={box, draw=meuvermelhoescuro, fill=red!10},
+        conseq/.style={box, draw=orange, fill=orange!10},
+        seta/.style={-{Stealth}, thick, draw=meucinza}
+    ]
+        \node[causa] (necessidade) at (0,1.8) {\textbf{Necessidades Não Atendidas}};
+        \node[conseq, text width=3.5cm] (abandono) at (0,0) {\textbf{Abandono e Rejeição}};
+        
+        \node[conseq] (valor) at (-2.5,-1.8) {Redução do\\Valor Percebido};
+        \node[conseq] (custos) at (2.5,-1.8) {Elevados Custos\\(Suporte e Refatoração)};
+        
+        \draw[seta] (necessidade) -- (abandono);
+        \draw[seta] (abandono) -| (valor);
+        \draw[seta] (abandono) -| (custos);
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 4
+\begin{frame}{Prevenindo o Fracasso: Avaliação Contínua}
+    \begin{itemize}
+        \item O ciclo de desenvolvimento deve integrar a avaliação do usuário em cada etapa para garantir o alinhamento com suas necessidades.
+    \end{itemize}
+    \vspace{0.2cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        circ/.style={circle, draw=meuazul, thick, fill=meuazul!10, text width=2.5cm, align=center, minimum size=2.8cm, font=\small},
+        seta/.style={-{Stealth[scale=1.2]}, thick, draw=meuazul}
+    ]
+        \node[circ] (entender) at (0, 2) {1. Entender o Usuário};
+        \node[circ] (construir) at (3.5, 0) {2. Construir com Foco no Uso};
+        \node[circ] (avaliar) at (0, -2) {3. Avaliar na Ótica do Usuário};
+        \node[circ] (ajustar) at (-3.5, 0) {4. Ajustar e\\Refatorar};
+        
+        \draw[seta] (entender) to[bend left=25] (construir);
+        \draw[seta] (construir) to[bend left=25] (avaliar);
+        \draw[seta] (avaliar) to[bend left=25] (ajustar);
+        \draw[seta] (ajustar) to[bend left=25] (entender);
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\section{1. Introdução às métricas de satisfação}
+
+% Slide 1
+\begin{frame}{Introdução às Métricas de Satisfação}
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            \begin{itemize}
+                \item \textbf{UX (Experiência do Usuário):} Forma como uma pessoa se sente ao interagir com um sistema.
+                \item \textbf{Importância:} Garante que o software seja intuitivo, reduzindo frustrações.
+                \item \textbf{Pilares:}
+                \begin{itemize}
+                    \item \textit{Usabilidade:} Facilidade de uso e aprendizado.
+                    \item \textit{Eficiência:} Velocidade e precisão na tarefa.
+                    \item \textit{Satisfação:} Conforto e aceitação do usuário.
+                \end{itemize}
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \begin{center}
+            \begin{tikzpicture}[scale=0.8, transform shape]
+                \fill[red!40, opacity=0.6] (90:1.2) circle (1.5cm);
+                \fill[green!40, opacity=0.6] (210:1.2) circle (1.5cm);
+                \fill[blue!40, opacity=0.6] (330:1.2) circle (1.5cm);
+                \node at (90:1.7) {\footnotesize \textbf{Usabilidade}};
+                \node at (210:1.7) {\footnotesize \textbf{Eficiência}};
+                \node at (330:1.7) {\footnotesize \textbf{Satisfação}};
+                \node at (0,-0.2) {\textbf{UX}};
+            \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\section{2. Teste de Usabilidade}
+
+% Slide 2
+\begin{frame}{Teste de Usabilidade: Conceitos}
+    \begin{itemize}
+        \item \textbf{Conceito:} É uma técnica de avaliação baseada na observação de usuários reais utilizando o sistema para realizar tarefas específicas.
+        \item \textbf{Observação do comportamento:} O avaliador foca em \textit{como} o usuário interage, prestando atenção em hesitações e reações.
+    \end{itemize}
+    \vspace{0.4cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        node distance=1.5cm,
+        box/.style={rectangle, rounded corners, draw=meuazul, thick, fill=meuazul!10, text width=3cm, align=center, minimum height=1cm},
+        seta/.style={-{Stealth[scale=1.2]}, thick, draw=meuazul}
+    ]
+        \node[box] (user) {Usuário Real\\ \small(Executa Tarefas)};
+        \node[box, right=of user] (sistema) {Sistema\\ \small(Interface)};
+        \node[box, fill=orange!10, draw=orange, right=of sistema] (obs) {Avaliador\\ \small(Observa e Anota)};
+        
+        \draw[seta] (user) -- node[above]{\small Interage} (sistema);
+        \draw[seta, dashed] (sistema) -- node[above]{\small Analisa} (obs);
+        \draw[seta, dashed, bend left=30] (user.north) to node[above]{\small Comportamento} (obs.north);
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 3
+\begin{frame}{Teste de Usabilidade: Exemplos de Tarefas}
+    \begin{itemize}
+        \item O teste é conduzido solicitando ao usuário que execute \textbf{tarefas reais} no sistema.
+    \end{itemize}
+    \vspace{0.5cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        node distance=0.5cm,
+        box/.style={rectangle, draw=meucinza, thick, fill=gray!10, text width=3.8cm, align=center, minimum height=2cm, rounded corners}
+    ]
+        \node[box] (t1) {\textbf{1. Criar Conta}\\ \vspace{0.2cm}\small Avalia a fricção e clareza no cadastro inicial.};
+        \node[box, right=of t1] (t2) {\textbf{2. Achar Produto}\\ \vspace{0.2cm}\small Mede a eficiência da busca, filtros e categorização.};
+        \node[box, right=of t2] (t3) {\textbf{3. Alterar Senha}\\ \vspace{0.2cm}\small Testa a navegação em menus de configuração e segurança.};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 4
+\begin{frame}{Teste de Usabilidade: O que Registrar?}
+    Durante o teste, o observador deve focar em coletar e registrar métricas objetivas e subjetivas:
+    \vspace{0.5cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        box/.style={rectangle, rounded corners, draw=meuazul, thick, fill=meuazul!10, text width=3.5cm, align=center, minimum height=1.5cm},
+        node distance=0.5cm
+    ]
+        \node[box] (tempo) {\textbf{Tempo de Execução}\\ \small Quanto tempo a tarefa demorou?};
+        \node[box, right=of tempo] (erros) {\textbf{Número de Erros}\\ \small Quantos cliques errados ocorreram?};
+        \node[box, right=of erros] (comentarios) {\textbf{Comentários}\\ \small Falas e frustrações (Think Aloud).};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\section{3. SUS (System Usability Scale)}
+
+% Slide 5
+\begin{frame}{SUS (System Usability Scale)}
+    \begin{itemize}
+        \item O SUS é um questionário rápido e confiável composto por \textbf{10 perguntas} padronizadas para medir usabilidade.
+        \item O \textbf{resultado final} gera uma pontuação que varia de \textbf{0 a 100}.
+    \end{itemize}
+    \vspace{0.4cm}
+    \begin{center}
+        \textbf{A Escala Likert de 5 pontos do SUS} \\
+        \vspace{0.3cm}
+        \begin{tikzpicture}[
+            circ/.style={circle, draw=meucinza, thick, minimum size=0.8cm, font=\bfseries},
+            lbl/.style={text width=2.5cm, align=center, font=\footnotesize}
+        ]
+            \draw[thick, gray] (0,0) -- (8,0);
+            
+            \node[circ, fill=red!20, draw=red] (c1) at (0,0) {1};
+            \node[circ, fill=orange!20, draw=orange] (c2) at (2,0) {2};
+            \node[circ, fill=gray!20] (c3) at (4,0) {3};
+            \node[circ, fill=meuverde!20, draw=meuverde] (c4) at (6,0) {4};
+            \node[circ, fill=blue!20, draw=blue] (c5) at (8,0) {5};
+            
+            \node[lbl] at (0,-0.8) {Discordo\\Totalmente};
+            \node[lbl] at (8,-0.8) {Concordo\\Totalmente};
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 6
+\begin{frame}{SUS: Interpretação dos Resultados}
+    A pontuação do SUS não é uma porcentagem, mas um índice que classifica a interface:
+    \vspace{0.3cm}
+    \begin{center}
+        \renewcommand{\arraystretch}{1.2}
+        \begin{tabular}{c | l}
+            \hline
+            \textbf{Pontuação SUS} & \textbf{Avaliação qualitativa} \\
+            \hline
+            0 -- 25 & \textcolor{red}{\textbf{Horrível}} \\
+            26 -- 39 & \textcolor{orange}{\textbf{Ruim}} \\
+            40 -- 52 & \textcolor{yellow!80!black}{\textbf{Regular}} \\
+            53 -- 73 & \textcolor{meuverde}{\textbf{Bom}} \\
+            74 -- 85 & \textcolor{meuazul}{\textbf{Excelente}} \\
+            86 -- 100 & \textbf{Melhor imaginável} \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{frame}
+
+% Slide 7
+\begin{frame}{SUS: Vantagens da Utilização}
+    Por que o SUS é um padrão da indústria para medir usabilidade?
+    \vspace{0.8cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        circ/.style={circle, draw=meuazul, thick, fill=meuazul!5, text width=3cm, align=center, minimum size=3cm},
+        node distance=0.5cm
+    ]
+        \node[circ] (v1) {\textbf{Aplicação Rápida}\\ \vspace{0.2cm}\small Resposta em poucos minutos.};
+        \node[circ, right=of v1] (v2) {\textbf{Fácil Interpretação}\\ \vspace{0.2cm}\small Score universal de 0 a 100.};
+        \node[circ, right=of v2] (v3) {\textbf{Comparabilidade}\\ \vspace{0.2cm}\small Comparações fáceis entre sistemas.};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\section{4. NPS (Net Promoter Score)}
+
+% Slide 8
+\begin{frame}{NPS (Net Promoter Score)}
+    \begin{itemize}
+        \item O NPS é uma métrica voltada para a \textbf{lealdade} e a intenção de \textbf{recomendação} do produto pelo usuário.
+        \item Baseia-se em uma \textbf{pergunta principal}:
+    \end{itemize}
+    \vspace{0.5cm}
+    \begin{center}
+        \begin{tikzpicture}
+            \node[rectangle, draw=meuazul, thick, fill=blue!5, text width=10cm, align=center, rounded corners, inner sep=10pt] {
+                \Large \textit{"Em uma escala de 0 a 10, qual a probabilidade de você recomendar este produto para outra pessoa?"}
+            };
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 9
+\begin{frame}{NPS: Classificação e Fórmula}
+    A partir da nota dada (0 a 10), os usuários são agrupados em três categorias:
+    \vspace{0.2cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        box/.style={rectangle, rounded corners, draw=white, thick, text width=3cm, align=center, minimum height=1cm, text=white},
+        node distance=0.5cm
+    ]
+        \node[box, fill=red!70] (det) {\textbf{Notas 0 a 6}\\ Detratores};
+        \node[box, fill=gray!80, right=of det] (neu) {\textbf{Notas 7 e 8}\\ Neutros};
+        \node[box, fill=meuverde, right=of neu] (pro) {\textbf{Notas 9 e 10}\\ Promotores};
+    \end{tikzpicture}
+    \end{center}
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item \textbf{Fórmula de Cálculo:}
+    \end{itemize}
+    \begin{center}
+        \Large \textbf{NPS = \% Promotores $-$ \% Detratores}
+    \end{center}
+\end{frame}
+
+% Slide 10
+\begin{frame}{NPS: Interpretação dos Resultados}
+    O cálculo gera um score que varia de -100 a +100 e é classificado em 4 zonas:
+    \vspace{0.3cm}
+    \begin{center}
+        \renewcommand{\arraystretch}{1.3}
+        \begin{tabular}{c | l}
+            \hline
+            \textbf{Score NPS} & \textbf{Classificação (Zona)} \\
+            \hline
+            -100 a 0 & \textcolor{red}{\textbf{Zona Crítica}} \\
+            1 a 50 & \textcolor{orange}{\textbf{Zona de Aperfeiçoamento}} \\
+            51 a 75 & \textcolor{meuverde}{\textbf{Zona de Qualidade}} \\
+            76 a 100 & \textcolor{meuazul}{\textbf{Zona de Excelência}} \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{frame}
+
+\section{5. Mapas de Calor}
+
+% Slide 1
+\begin{frame}{Mapas de Calor (Heatmaps): O que são?}
+    \begin{itemize}
+        \item Os \textbf{Mapas de Calor} são uma ferramenta analítica de usabilidade.
+        \item Consistem na \textbf{representação visual} do comportamento e da interação dos usuários em uma interface digital.
+        \item Transformam dados complexos de navegação em gráficos fáceis de entender através de um espectro de cores.
+    \end{itemize}
+\end{frame}
+
+% Slide 2
+\begin{frame}{Como funcionam os Mapas de Calor?}
+    \begin{itemize}
+        \item O funcionamento baseia-se em scripts de monitoramento integrados ao software ou site.
+        \item \textbf{O que eles rastreiam?}
+        \begin{itemize}
+            \item \textbf{Cliques:} Exatamente onde os usuários clicam (ou tocam, em dispositivos móveis).
+            \item \textbf{Movimento do mouse:} Como o cursor passeia pela tela, o que geralmente reflete para onde o olhar do usuário está focado.
+            \item \textbf{Rolagem (Scroll):} Até que ponto da página o usuário desce antes de abandoná-la.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+% Slide 3
+\begin{frame}{Principais Aplicações (1/2)}
+    A utilização de Mapas de Calor ajuda a responder perguntas cruciais de design:
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item \textbf{Avaliação geral de páginas web:}
+        \begin{itemize}
+            \item Permite entender se o layout atual está guiando o usuário para o conteúdo correto ou se está causando confusão.
+            \item Demonstra visualmente se a arquitetura da informação faz sentido na prática.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+% Slide 4
+\begin{frame}{Principais Aplicações (2/2)}
+    \begin{itemize}
+        \item \textbf{Posicionamento de menus e botões:} 
+        \begin{itemize}
+            \item Ajuda a reposicionar botões de ação (Call to Action) para locais onde a atenção do usuário já se concentra naturalmente.
+        \end{itemize}
+        \vspace{0.3cm}
+        \item \textbf{Identificação de elementos ignorados:}
+        \begin{itemize}
+            \item Revela textos importantes, avisos ou banners que recebem zero atenção.
+            \item Identifica elementos que os usuários acham que são clicáveis (mas não são), gerando frustração.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+% Slide 5
+\begin{frame}{A Escala de Calor: Interpretação das Cores}
+    A visualização utiliza uma analogia térmica (temperatura) para indicar os níveis de engajamento:
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item \textcolor{red}{\textbf{Vermelho (Quente):}} Zonas de \textbf{maior concentração de atenção} e interação. É onde os usuários mais focam, clicam e passam tempo.
+        \item \textcolor{orange!90!black}{\textbf{Amarelo / Laranja (Morno):}} Zonas de \textbf{atenção moderada}. Os usuários passam por ali, mas não é o foco principal.
+        \item \textcolor{blue}{\textbf{Azul (Frio):}} Zonas de \textbf{baixa interação}. Áreas frequentemente ignoradas ou com visualização superficial.
+    \end{itemize}
+\end{frame}
+
+% Slide 6
+\begin{frame}{Representação Visual da Escala}
+    \vspace{0.5cm}
+    \begin{center}
+        \begin{tikzpicture}
+            % Degradê de cores
+            \shade[left color=blue!80, right color=yellow] (0,0) rectangle (4,1.5);
+            \shade[left color=yellow, right color=red] (4,0) rectangle (8,1.5);
+            
+            % Bordas da barra
+            \draw[thick, gray] (0,0) rectangle (8,1.5);
+            
+            % Textos descritivos embaixo
+            \node[align=center, font=\small, text=blue!80!black] at (1, -0.6) {\textbf{AZUL}\\Baixa interação};
+            \node[align=center, font=\small, text=orange!90!black] at (4, -0.6) {\textbf{AMARELO}\\Atenção moderada};
+            \node[align=center, font=\small, text=red!80!black] at (7, -0.6) {\textbf{VERMELHO}\\Alta concentração};
+            
+            % Setas indicativas
+            \draw[->, thick, gray] (1, -0.2) -- (1, 0);
+            \draw[->, thick, gray] (4, -0.2) -- (4, 0);
+            \draw[->, thick, gray] (7, -0.2) -- (7, 0);
+        \end{tikzpicture}
+    \end{center}
+    \vspace{0.5cm}
+    \begin{center}
+    \end{center}
+\end{frame}
+
+% Slide 7
+\begin{frame}{Exemplo em Redes Sociais: Instagram}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item \textbf{Foco total na Imagem:} O mapa de calor visual (eye-tracking) mostra a foto central como zona de calor máxima (Vermelho).
+                \item \textbf{Ações rápidas:} O botão de "Curtir" (coração) e o "Avatar" do autor formam os principais pontos quentes secundários.
+                \item Textos muito longos nas legendas geralmente ficam na zona azul (são ignorados pela maioria).
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+            \begin{tikzpicture}[scale=0.7, transform shape]
+                % Wireframe do app
+                \draw[thick, rounded corners=10pt, fill=white] (0,0) rectangle (5,8);
+                % Header
+                \draw[thick] (0.5, 7.3) circle (0.4cm); % Avatar
+                \draw[thick] (1.2, 7.3) -- (3, 7.3); % Nome
+                % Imagem
+                \draw[thick, fill=gray!10] (0, 3.5) rectangle (5, 6.5);
+                % Botoes
+                \draw[thick] (0.5, 3) circle (0.2cm); % Curtir
+                \draw[thick] (1.2, 3) circle (0.2cm); % Comentar
+                \draw[thick] (4.5, 3) circle (0.2cm); % Salvar
+                % Legenda
+                \draw[thick] (0.5, 2) -- (4.5, 2);
+                \draw[thick] (0.5, 1.5) -- (3.5, 1.5);
+                
+                % Heatmap Overlay (Opacity)
+                \fill[red, opacity=0.4] (2.5, 5) ellipse (2cm and 1cm); % Centro da imagem
+                \fill[red, opacity=0.4] (1.5, 4.5) circle (1cm);
+                \fill[yellow, opacity=0.4] (3.5, 5.5) circle (0.8cm);
+                
+                \fill[red, opacity=0.6] (0.5, 7.3) circle (0.6cm); % Avatar
+                \fill[red, opacity=0.7] (0.5, 3) circle (0.4cm); % Curtir
+                
+                \fill[orange, opacity=0.5] (1.2, 7.3) ellipse (1cm and 0.3cm); % Nome
+                \fill[orange, opacity=0.5] (1.2, 3) circle (0.3cm); % Comentar
+                
+                \fill[blue, opacity=0.3] (2.5, 1.75) ellipse (2cm and 0.5cm); % Texto longo
+            \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 8
+\begin{frame}{Exemplo em Redes Sociais: TikTok}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item \textbf{A "Zona do Polegar":} A barra lateral direita (Curtir, Comentar, Salvar, Compartilhar) forma uma \textbf{faixa vertical de calor extremo}.
+                \item \textbf{Atenção Central:} Em vídeos verticais curtos, o mapa de calor visual se espalha pelo centro da tela em movimento constante.
+                \item Elementos no topo da tela (abas) frequentemente viram zonas frias.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+            \begin{tikzpicture}[scale=0.7, transform shape]
+                % Wireframe do app
+                \draw[thick, rounded corners=10pt, fill=black!80] (0,0) rectangle (5,8);
+                
+                % UI Overlay (Branco)
+                % Botoes direita
+                \fill[white] (4.3, 4.5) circle (0.3cm);
+                \fill[white] (4.3, 3.2) circle (0.3cm);
+                \fill[white] (4.3, 1.9) circle (0.3cm);
+                \fill[white] (4.3, 0.8) circle (0.3cm); % Som
+                
+                % Info inferior
+                \fill[white] (0.5, 1.5) rectangle (3, 1.7); % Nome
+                \fill[white] (0.5, 0.8) rectangle (3.5, 1.2); % Legenda
+                
+                % Heatmap Overlays
+                % Centro do vídeo
+                \fill[red, opacity=0.3] (2.5, 5) circle (1.8cm);
+                \fill[orange, opacity=0.5] (2.5, 5) circle (1.2cm);
+                
+                % Lateral direita (Zona do polegar)
+                \fill[red, opacity=0.4] (4.3, 3.2) ellipse (0.7cm and 2.5cm);
+                \fill[red, opacity=0.6] (4.3, 3.2) ellipse (0.4cm and 1.5cm);
+                \fill[red, opacity=0.8] (4.3, 4.5) circle (0.5cm); % Curtir (mais quente)
+                
+                % Texto inferor (Morno)
+                \fill[orange, opacity=0.4] (1.5, 1.2) ellipse (1.5cm and 0.8cm);
+                
+                % Topo (Frio)
+                \fill[blue, opacity=0.3] (2.5, 7.5) ellipse (2cm and 0.5cm);
+            \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 9
+\begin{frame}{Exemplo em Redes Sociais: Facebook / Web}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item \textbf{O Padrão em "F" (F-Pattern):} Em feeds web para PC, o olho humano escaneia a tela no formato da letra F.
+                \item \textbf{Calor no Topo e Esquerda:} O menu superior e as primeiras linhas de texto (da esquerda para a direita) recebem calor intenso.
+                \item \textbf{Cegueira de Banner:} A barra lateral direita (onde ficam os anúncios) é uma enorme "zona azul" amplamente ignorada.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+            \begin{tikzpicture}[scale=0.7, transform shape]
+                % Wireframe Web
+                \draw[thick, fill=white] (0,0) rectangle (6,5);
+                % Header
+                \draw[thick, fill=gray!30] (0, 4.3) rectangle (6, 5);
+                % Feed Esquerda
+                \draw[thick] (0.5, 1) rectangle (3.5, 4);
+                \draw[thick] (0.7, 3.5) circle (0.2cm); % avatar
+                \draw[thick] (1.1, 3.5) -- (2.5, 3.5); % nome
+                \draw[thick] (0.7, 3) -- (3.3, 3);
+                \draw[thick] (0.7, 2.7) -- (2.0, 2.7);
+                \draw[thick, fill=gray!20] (0.7, 1.2) rectangle (3.3, 2.4); % Imagem
+                % Barra direita
+                \draw[thick] (4, 1) rectangle (5.5, 4); % Ad
+                \node[font=\tiny] at (4.75, 2.5) {Anúncio};
+                
+                % Heatmap (F-Pattern)
+                % Top bar
+                \fill[red, opacity=0.5] (0, 4.3) rectangle (3, 5);
+                \fill[orange, opacity=0.5] (3, 4.3) rectangle (6, 5);
+                
+                % Lado Esquerdo do Feed (descendo)
+                \fill[red, opacity=0.4] (0.3, 1) rectangle (1.2, 4);
+                
+                % Leitura horizontal (Braços do F)
+                \fill[red, opacity=0.5] (0.7, 3.5) ellipse (1.5cm and 0.4cm);
+                \fill[orange, opacity=0.4] (1.5, 2.8) ellipse (1.2cm and 0.3cm);
+                
+                % Lateral direita (Ads)
+                \fill[blue, opacity=0.4] (4, 1) rectangle (5.5, 4);
+            \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\section{6. A Escala Likert e sua Análise}
+
+% Slide 1
+\begin{frame}{O que é a Escala Likert?}
+    \begin{itemize}
+        \item Desenvolvida pelo psicólogo Rensis Likert em 1932.
+        \item É uma escala psicométrica comumente usada em questionários.
+        \item \textbf{Objetivo:} Medir as atitudes, opiniões e níveis de concordância dos indivíduos em relação a uma afirmação.
+    \end{itemize}
+    \vspace{0.5cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        caixa/.style={rectangle, draw=meuazul, thick, fill=meuazul!5, text width=8cm, align=center, rounded corners, minimum height=1cm}
+    ]
+        \node[caixa] {\textit{"A interface do sistema é intuitiva e fácil de usar."}\\ \vspace{0.2cm} \small $\rightarrow$ O usuário avalia o quanto concorda com isso.};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 2
+\begin{frame}{Aplicações Práticas}
+    Onde a Escala Likert é mais utilizada na Engenharia de Software?
+    \vspace{0.5cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        circ/.style={circle, draw=meucinza, thick, fill=gray!10, text width=2.5cm, align=center, minimum size=2.8cm, font=\small},
+        node distance=0.8cm
+    ]
+        \node[circ] (c1) {\textbf{UX e Usabilidade}\\ \footnotesize Avaliação de Interfaces};
+        \node[circ, right=of c1] (c2) {\textbf{Satisfação}\\ \footnotesize Feedback do Cliente};
+        \node[circ, right=of c2] (c3) {\textbf{Aceitação}\\ \footnotesize Novos Recursos};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 3
+\begin{frame}{Estrutura da Escala}
+    \begin{itemize}
+        \item \textbf{Item Likert:} Uma afirmação específica apresentada ao respondente.
+        \item \textbf{Escala Likert:} A soma ou a média das respostas de um conjunto de itens que medem um mesmo construto.
+        \item Geralmente, as respostas são simétricas, com um ponto central garantindo a neutralidade.
+    \end{itemize}
+\end{frame}
+
+% Slide 4
+\begin{frame}{Formatos Comuns (Pontos da Escala)}
+    \begin{itemize}
+        \item O formato clássico utiliza \textbf{5 pontos}, mas existem variações.
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        box/.style={rectangle, draw=gray, text width=1.8cm, align=center, font=\scriptsize, minimum height=0.6cm}
+    ]
+        \node[anchor=west] at (0, 1.5) {\textbf{3 Pontos:} Mais simples, menos nuances.};
+        \node[box, fill=red!20] at (1, 0.8) {Discordo};
+        \node[box, fill=gray!20] at (3, 0.8) {Neutro};
+        \node[box, fill=meuverde!20] at (5, 0.8) {Concordo};
+
+        \node[anchor=west] at (0, 0) {\textbf{5 Pontos:} O padrão ouro (Equilíbrio ideal).};
+        \node[box, fill=red!40] at (1, -0.7) {Discordo Tot.};
+        \node[box, fill=red!15] at (3, -0.7) {Discordo};
+        \node[box, fill=gray!20] at (5, -0.7) {Neutro};
+        \node[box, fill=meuverde!15] at (7, -0.7) {Concordo};
+        \node[box, fill=meuverde!40] at (9, -0.7) {Conc. Tot.};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 5
+\begin{frame}{Vantagens da Escala Likert}
+    \begin{itemize}
+        \item \textbf{Simplicidade:} Muito fácil para os usuários entenderem e responderem.
+        \item \textbf{Quantificação:} Transforma opiniões estritamente subjetivas em dados quantificáveis e fáceis de analisar.
+        \item \textbf{Versatilidade:} Pode ser aplicada a quase qualquer tipo de pesquisa que envolva percepção humana.
+    \end{itemize}
+\end{frame}
+
+% Slide 6
+\begin{frame}{Desvantagens e Viéses Comuns}
+    Ao analisar os dados, deve-se tomar cuidado com comportamentos psicológicos:
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item \textbf{Viés de Tendência Central:} O medo ou preguiça do respondente em ir aos extremos, escolhendo sempre o "Neutro".
+        \item \textbf{Viés de Aquiescência:} A tendência humana de ser educado e "Concordar" com as afirmações, mesmo que não seja a verdade absoluta.
+        \item \textbf{Efeito Halo:} Uma impressão geral do sistema altera a resposta de itens específicos.
+    \end{itemize}
+\end{frame}
+
+% Slide 7
+\begin{frame}{Análise de Dados: O Grande Debate}
+    \begin{itemize}
+        \item Como devemos tratar os números de uma Escala Likert na estatística?
+        \vspace{0.3cm}
+        \item \textbf{Visão Estrita (Ordinal):}
+        \begin{itemize}
+            \item A diferença entre "Discordo" e "Neutro" pode não ser a mesma que entre "Neutro" e "Concordo".
+            \item Logo, não deveríamos calcular médias (apenas moda e mediana).
+        \end{itemize}
+        \vspace{0.2cm}
+        \item \textbf{Visão Pragmática (Intervalar):}
+        \begin{itemize}
+            \item Em conjuntos de itens agrupados, a indústria e muitos pesquisadores assumem distâncias iguais e calculam \textbf{Médias} e \textbf{Desvio Padrão}.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+% Slide 8
+\begin{frame}{Estatística Descritiva Recomendada}
+    \begin{center}
+        \renewcommand{\arraystretch}{1.5}
+        \begin{tabular}{l | l | l}
+            \hline
+            \textbf{Métrica} & \textbf{Quando usar} & \textbf{O que indica?} \\
+            \hline
+            \textbf{Frequência (\%)} & Sempre & Proporção de pessoas em cada resposta. \\
+            \textbf{Moda} & Item individual & A resposta mais comum (pico). \\
+            \textbf{Mediana} & Item individual & O ponto central das respostas ordenadas. \\
+            \textbf{Média} & Escala Agregada & A pontuação geral (Ex: SUS). \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{frame}
+
+% Slide 9
+\begin{frame}{Representação Visual dos Dados}
+    \begin{itemize}
+        \item Gráficos de pizza \textbf{não} são recomendados.
+        \item A melhor representação é o \textbf{Gráfico de Barras Empilhadas Divergentes}.
+    \end{itemize}
+    \vspace{0.4cm}
+    \begin{center}
+    \begin{tikzpicture}
+        % Barra
+        \fill[red!60] (0,0) rectangle (2,0.8);
+        \fill[red!30] (2,0) rectangle (4,0.8);
+        \fill[gray!30] (4,0) rectangle (5.5,0.8);
+        \fill[meuverde!30] (5.5,0) rectangle (8,0.8);
+        \fill[meuverde!60] (8,0) rectangle (10,0.8);
+        
+        \node at (1, 0.4) {20\%};
+        \node at (3, 0.4) {20\%};
+        \node at (4.75, 0.4) {15\%};
+        \node at (6.75, 0.4) {25\%};
+        \node at (9, 0.4) {20\%};
+        
+        \node[font=\footnotesize] at (1, -0.3) {D. Tot.};
+        \node[font=\footnotesize] at (3, -0.3) {Discordo};
+        \node[font=\footnotesize] at (4.75, -0.3) {Neutro};
+        \node[font=\footnotesize] at (6.75, -0.3) {Concordo};
+        \node[font=\footnotesize] at (9, -0.3) {C. Tot.};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 10
+\begin{frame}{Boas Práticas na Criação do Questionário}
+    \begin{itemize}
+        \item \textbf{Clareza:} Uma única afirmação por item. Evite sentenças com dupla cobrança ("O sistema é rápido \textit{E} bonito").
+        \item \textbf{Alternância de polaridade:} Intercale afirmações positivas e negativas para quebrar o "viés de aquiescência" (Ex: como feito no SUS).
+        \item \textbf{Rotulagem:} Rotule todos os pontos da escala verbalmente, não apenas as pontas (1 e 5).
+    \end{itemize}
+\end{frame}
+
+\section{7. Estudo de Caso: Avaliação na Prática}
+
+% Slide 1
+\begin{frame}{O Cenário: Novo Portal do Aluno}
+    \begin{itemize}
+        \item \textbf{Contexto:} Uma universidade acabou de lançar um novo \textit{Portal do Aluno} após diversas reclamações sobre o sistema antigo.
+        \item \textbf{Objetivo do Estudo:} Avaliar a percepção de usabilidade e satisfação da nova interface pelos estudantes.
+        \item \textbf{Ferramenta escolhida:} Um questionário baseado na Escala Likert de 5 pontos.
+    \end{itemize}
+\end{frame}
+
+% Slide 2
+\begin{frame}{Metodologia da Pesquisa}
+    \begin{itemize}
+        \item \textbf{Amostra:} 200 alunos selecionados de forma aleatória que utilizaram o portal na primeira semana de aulas.
+        \item \textbf{Aplicação:} Pesquisa online disparada via e-mail institucional.
+        \item \textbf{A Escala (5 pontos):} 
+        \begin{enumerate}
+            \item Discordo Totalmente (DT)
+            \item Discordo (D)
+            \item Neutro (N)
+            \item Concordo (C)
+            \item Concordo Totalmente (CT)
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+% Slide 3
+\begin{frame}{O Instrumento: Questionário Aplicado}
+    Os alunos responderam às seguintes afirmações:
+    \vspace{0.4cm}
+    \begin{enumerate}
+        \item \textbf{Q1 (Visual):} "O visual do novo portal é moderno e agradável."
+        \item \textbf{Q2 (Navegação):} "Os menus estão bem organizados e intuitivos."
+        \item \textbf{Q3 (Eficiência):} "Consigo encontrar meu histórico e notas de forma rápida."
+        \item \textbf{Q4 (Desempenho):} "As páginas do sistema carregam sem lentidão."
+        \item \textbf{Q5 (Satisfação Geral):} "No geral, prefiro o novo portal ao antigo."
+    \end{enumerate}
+\end{frame}
+
+% Slide 4
+\begin{frame}{Dados Brutos Coletados (Frequência)}
+    Após 1 semana, obtivemos os 200 resultados tabulados:
+    \vspace{0.3cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        cell/.style={rectangle, draw=gray!50, minimum height=0.6cm, inner sep=2pt, font=\scriptsize, fill=white},
+        cellL/.style={cell, align=left, inner xsep=4pt},
+        head/.style={cell, fill=gray!20, font=\scriptsize\bfseries},
+        colhead/.style={cell, fill=gray!30, minimum height=0.4cm, font=\tiny\bfseries},
+        rowhead/.style={cell, fill=gray!30, minimum width=0.4cm, font=\tiny\bfseries}
+    ]
+        % Col headers
+        \node[colhead, minimum width=2.5cm] at (0, 0.5) {A};
+        \node[colhead, minimum width=1.2cm] at (1.85, 0.5) {B};
+        \node[colhead, minimum width=1.2cm] at (3.05, 0.5) {C};
+        \node[colhead, minimum width=1.2cm] at (4.25, 0.5) {D};
+        \node[colhead, minimum width=1.2cm] at (5.45, 0.5) {E};
+        \node[colhead, minimum width=1.2cm] at (6.65, 0.5) {F};
+        
+        % Corner
+        \node[cell, fill=gray!40, minimum width=0.4cm, minimum height=0.4cm] at (-1.45, 0.5) {};
+
+        % Row 1
+        \node[rowhead] at (-1.45, 0) {1};
+        \node[head, minimum width=2.5cm] at (0, 0) {Questão};
+        \node[head, minimum width=1.2cm] at (1.85, 0) {DT (1)};
+        \node[head, minimum width=1.2cm] at (3.05, 0) {D (2)};
+        \node[head, minimum width=1.2cm] at (4.25, 0) {N (3)};
+        \node[head, minimum width=1.2cm] at (5.45, 0) {C (4)};
+        \node[head, minimum width=1.2cm] at (6.65, 0) {CT (5)};
+
+        % Row 2
+        \node[rowhead] at (-1.45, -0.6) {2};
+        \node[cellL, minimum width=2.5cm] at (0, -0.6) {Q1 (Visual)};
+        \node[cell, minimum width=1.2cm] at (1.85, -0.6) {5};
+        \node[cell, minimum width=1.2cm] at (3.05, -0.6) {15};
+        \node[cell, minimum width=1.2cm] at (4.25, -0.6) {20};
+        \node[cell, minimum width=1.2cm] at (5.45, -0.6) {80};
+        \node[cell, minimum width=1.2cm] at (6.65, -0.6) {80};
+
+        % Row 3
+        \node[rowhead] at (-1.45, -1.2) {3};
+        \node[cellL, minimum width=2.5cm] at (0, -1.2) {Q2 (Navegação)};
+        \node[cell, minimum width=1.2cm] at (1.85, -1.2) {10};
+        \node[cell, minimum width=1.2cm] at (3.05, -1.2) {30};
+        \node[cell, minimum width=1.2cm] at (4.25, -1.2) {80};
+        \node[cell, minimum width=1.2cm] at (5.45, -1.2) {60};
+        \node[cell, minimum width=1.2cm] at (6.65, -1.2) {20};
+
+        % Row 4
+        \node[rowhead] at (-1.45, -1.8) {4};
+        \node[cellL, minimum width=2.5cm] at (0, -1.8) {Q3 (Eficiência)};
+        \node[cell, minimum width=1.2cm, fill=red!15] at (1.85, -1.8) {50};
+        \node[cell, minimum width=1.2cm, fill=red!15] at (3.05, -1.8) {70};
+        \node[cell, minimum width=1.2cm] at (4.25, -1.8) {40};
+        \node[cell, minimum width=1.2cm] at (5.45, -1.8) {30};
+        \node[cell, minimum width=1.2cm] at (6.65, -1.8) {10};
+
+        % Row 5
+        \node[rowhead] at (-1.45, -2.4) {5};
+        \node[cellL, minimum width=2.5cm] at (0, -2.4) {Q4 (Desempenho)};
+        \node[cell, minimum width=1.2cm] at (1.85, -2.4) {5};
+        \node[cell, minimum width=1.2cm] at (3.05, -2.4) {10};
+        \node[cell, minimum width=1.2cm] at (4.25, -2.4) {25};
+        \node[cell, minimum width=1.2cm] at (5.45, -2.4) {90};
+        \node[cell, minimum width=1.2cm] at (6.65, -2.4) {70};
+
+        % Row 6
+        \node[rowhead] at (-1.45, -3.0) {6};
+        \node[cellL, minimum width=2.5cm] at (0, -3.0) {Q5 (Preferência)};
+        \node[cell, minimum width=1.2cm] at (1.85, -3.0) {10};
+        \node[cell, minimum width=1.2cm] at (3.05, -3.0) {20};
+        \node[cell, minimum width=1.2cm] at (4.25, -3.0) {40};
+        \node[cell, minimum width=1.2cm] at (5.45, -3.0) {70};
+        \node[cell, minimum width=1.2cm] at (6.65, -3.0) {60};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 5
+\begin{frame}{Análise do Visual e Desempenho (Q1 e Q4)}
+    \begin{itemize}
+        \item Ao agruparmos "Concordo" e "Concordo Totalmente", vemos um sucesso estrondoso nessas áreas.
+        \item \textbf{Q1 (Visual):} 80\% de aprovação positiva.
+        \item \textbf{Q4 (Desempenho):} 80\% sentem que o sistema é rápido.
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{center}
+    \begin{tikzpicture}
+        % Q1 Barra
+        \node[anchor=east, font=\small] at (0, 0.5) {Q1 (Visual)};
+        \fill[red!60] (0.2,0.1) rectangle (1.2,0.9); % 10% (5+15)/200
+        \fill[gray!30] (1.2,0.1) rectangle (2.2,0.9); % 10% (20)/200
+        \fill[meuverde!60] (2.2,0.1) rectangle (10.2,0.9); % 80% (160)/200
+        \node[font=\footnotesize] at (6.2, 0.5) {\textbf{80\% Positivo}};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 6
+\begin{frame}{O Alerta Vermelho: Eficiência (Q3)}
+    \begin{itemize}
+        \item "Consigo encontrar meu histórico e notas de forma rápida."
+        \item \textbf{Resultado:} A soma de "Discordo" e "Discordo Totalmente" chegou a \textbf{60\%} (120 de 200 alunos).
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{center}
+    \begin{tikzpicture}
+        \node[anchor=east, font=\small] at (0, 0.5) {Q3 (Notas)};
+        \fill[red!60] (0.2,0.1) rectangle (6.2,0.9); % 60%
+        \fill[gray!30] (6.2,0.1) rectangle (8.2,0.9); % 20%
+        \fill[meuverde!60] (8.2,0.1) rectangle (10.2,0.9); % 20%
+        
+        \node[font=\footnotesize, text=white] at (3.2, 0.5) {\textbf{60\% Negativo}};
+    \end{tikzpicture}
+    \end{center}
+    \vspace{0.2cm}
+    \textbf{Conclusão Q3:} Apesar de bonito e rápido, a arquitetura da informação falhou no fluxo mais importante para o aluno.
+\end{frame}
+
+% Slide 7
+\begin{frame}{Identificação de Viés: Navegação (Q2)}
+    \begin{itemize}
+        \item "Os menus estão bem organizados e intuitivos."
+        \item Observamos uma concentração incomum na resposta \textbf{Neutro (40\%)}.
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        barra/.style={rectangle, draw=black, thick, minimum width=1cm, anchor=south}
+    ]
+        % Eixos
+        \draw[thick, ->] (0,0) -- (6,0);
+        \draw[thick, ->] (0,0) -- (0,3);
+        
+        % Barras
+        \node[barra, fill=red!40, minimum height=0.5cm] at (1,0) {}; % 10
+        \node[barra, fill=red!15, minimum height=1.5cm] at (2,0) {}; % 30
+        \node[barra, fill=gray!30, minimum height=3cm] at (3,0) {}; % 80
+        \node[barra, fill=meuverde!15, minimum height=2.5cm] at (4,0) {}; % 60
+        \node[barra, fill=meuverde!40, minimum height=1cm] at (5,0) {}; % 20
+        
+        \node[font=\tiny] at (1, -0.3) {DT};
+        \node[font=\tiny] at (2, -0.3) {D};
+        \node[font=\tiny] at (3, -0.3) {\textbf{N (Pico)}};
+        \node[font=\tiny] at (4, -0.3) {C};
+        \node[font=\tiny] at (5, -0.3) {CT};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 8
+\begin{frame}{Avaliando a Satisfação Geral}
+    \begin{itemize}
+        \item Para ter um panorama global, podemos calcular a \textbf{média ponderada de cada item}.
+        \item \textbf{Média Global do Portal:} Somando os pontos de todos os itens.
+    \end{itemize}
+    \vspace{0.2cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        cell/.style={rectangle, draw=gray!50, minimum height=0.6cm, inner sep=2pt, font=\scriptsize, fill=white},
+        cellL/.style={cell, align=left, inner xsep=4pt},
+        head/.style={cell, fill=gray!20, font=\scriptsize\bfseries},
+        colhead/.style={cell, fill=gray!30, minimum height=0.4cm, font=\tiny\bfseries},
+        rowhead/.style={cell, fill=gray!30, minimum width=0.4cm, font=\tiny\bfseries}
+    ]
+        % Col headers
+        \node[colhead, minimum width=2.5cm] at (0, 0.5) {A};
+        \node[colhead, minimum width=2.0cm] at (2.25, 0.5) {B};
+        \node[colhead, minimum width=4.5cm] at (5.5, 0.5) {C};
+        
+        % Corner
+        \node[cell, fill=gray!40, minimum width=0.4cm, minimum height=0.4cm] at (-1.45, 0.5) {};
+
+        % Row 1
+        \node[rowhead] at (-1.45, 0) {1};
+        \node[head, minimum width=2.5cm] at (0, 0) {Questão};
+        \node[head, minimum width=2.0cm] at (2.25, 0) {Média (1 a 5)};
+        \node[head, minimum width=4.5cm] at (5.5, 0) {Diagnóstico};
+
+        % Row 2
+        \node[rowhead] at (-1.45, -0.6) {2};
+        \node[cellL, minimum width=2.5cm] at (0, -0.6) {Q1 (Visual)};
+        \node[cell, minimum width=2.0cm, font=\scriptsize\bfseries] at (2.25, -0.6) {4.08};
+        \node[cellL, minimum width=4.5cm, text=meuverde] at (5.5, -0.6) {Excelente};
+
+        % Row 3
+        \node[rowhead] at (-1.45, -1.2) {3};
+        \node[cellL, minimum width=2.5cm] at (0, -1.2) {Q2 (Navegação)};
+        \node[cell, minimum width=2.0cm, font=\scriptsize\bfseries] at (2.25, -1.2) {3.25};
+        \node[cellL, minimum width=4.5cm, text=orange] at (5.5, -1.2) {Alerta (Tend. Central)};
+
+        % Row 4
+        \node[rowhead] at (-1.45, -1.8) {4};
+        \node[cellL, minimum width=2.5cm] at (0, -1.8) {Q3 (Eficiência)};
+        \node[cell, minimum width=2.0cm, font=\scriptsize\bfseries] at (2.25, -1.8) {2.40};
+        \node[cellL, minimum width=4.5cm, text=red] at (5.5, -1.8) {Crítico (Gargalo)};
+
+        % Row 5
+        \node[rowhead] at (-1.45, -2.4) {5};
+        \node[cellL, minimum width=2.5cm] at (0, -2.4) {Q4 (Desempenho)};
+        \node[cell, minimum width=2.0cm, font=\scriptsize\bfseries] at (2.25, -2.4) {4.05};
+        \node[cellL, minimum width=4.5cm, text=meuverde] at (5.5, -2.4) {Excelente};
+
+        % Row 6
+        \node[rowhead] at (-1.45, -3.0) {6};
+        \node[cellL, minimum width=2.5cm] at (0, -3.0) {Q5 (Preferência)};
+        \node[cell, minimum width=2.0cm, font=\scriptsize\bfseries] at (2.25, -3.0) {3.75};
+        \node[cellL, minimum width=4.5cm, text=meuazul] at (5.5, -3.0) {Bom};
+
+        % Row 7 (Result)
+        \node[rowhead] at (-1.45, -3.6) {7};
+        \node[head, minimum width=2.5cm, fill=yellow!20] at (0, -3.6) {Média Geral};
+        \node[head, minimum width=2.0cm, fill=yellow!20, font=\scriptsize\bfseries] at (2.25, -3.6) {3.51};
+        \node[head, minimum width=4.5cm, fill=yellow!20] at (5.5, -3.6) {Aprovado, com ressalvas.};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 9
+\begin{frame}{O Valor da Estatística Descritiva}
+    Por que a análise individual dos itens superou a Média Geral?
+    \vspace{0.5cm}
+    \begin{itemize}
+        \item A média geral (\textbf{3.51 em 5}) indica superficialmente que o sistema é "Bom".
+        \item O alto desempenho (Q4) e o visual (Q1) \textbf{mascararam} a péssima eficiência em achar notas (Q3 = 2.40).
+        \item \textbf{Lição Aprendida:} Analisar o Score agregado é bom para painéis gerenciais, mas para a Engenharia de Software, \textbf{a resposta a cada item isolado é o que guia a refatoração}.
+    \end{itemize}
+\end{frame}
+
+% Slide 10
+\begin{frame}{Plano de Ação (Próximos Passos)}
+    Com base na análise matemática dos dados Likert, a equipe de engenharia elaborou o plano de sprints:
+    \vspace{0.4cm}
+    \begin{enumerate}
+        \item \textbf{Curto Prazo:} Inserir um atalho gigante na tela inicial escrito "Minhas Notas e Histórico" (Resolve Q3).
+        \item \textbf{Médio Prazo:} Fazer um teste de usabilidade em laboratório apenas focado nos menus para entender o pico de neutralidade de Q2.
+        \item \textbf{Longo Prazo:} Aplicar novo questionário Likert em 3 meses para verificar se a Média de Q3 subiu de 2.40 para $> 4.0$.
+    \end{enumerate}
+\end{frame}
+
+\end{document}

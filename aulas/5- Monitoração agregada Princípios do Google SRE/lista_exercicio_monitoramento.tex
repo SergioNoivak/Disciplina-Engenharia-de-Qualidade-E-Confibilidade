@@ -1,0 +1,178 @@
+\documentclass[12pt]{article}
+
+% Idioma e codificação
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Matemática e listas
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+
+% Layout e cores
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+% Cores institucionais
+\definecolor{maincolor}{RGB}{0,100,50}
+\definecolor{forestgreen}{RGB}{0,100,50}
+
+% Cabeçalho e rodapé
+\usepackage{fancyhdr}
+
+% Blocos
+\usepackage[most]{tcolorbox}
+\newtcolorbox{block}[1]{%
+  colback=green!5,
+  colframe=maincolor,
+  coltitle=white,
+  title=#1,
+  fonttitle=\bfseries,
+  boxrule=1.5pt,
+  arc=3mm,
+  left=6pt,
+  right=6pt,
+  top=6pt,
+  bottom=6pt
+}
+
+% Margens
+\geometry{margin=2.5cm}
+
+% Fancyhdr
+\pagestyle{fancy}
+\fancyhf{}
+
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\footrulewidth}{2pt}
+
+\renewcommand{\headrule}{\hbox to\headwidth{%
+  \color{forestgreen}\leaders\hrule height \headrulewidth\hfill}}
+
+\renewcommand{\footrule}{\hbox to\headwidth{%
+  \color{forestgreen}\leaders\hrule height \footrulewidth\hfill}}
+
+% Altura do cabeçalho
+\setlength{\headheight}{52pt}
+\addtolength{\topmargin}{-20pt}
+
+% Cabeçalho
+\fancyhead[L]{%
+  \textbf{UniRV} \\ \small Universidade de Rio Verde
+}
+
+\fancyhead[R]{%
+  \raggedleft
+  \textcolor{forestgreen}{%
+    \small
+    \textbf{Lista de Exercícios: Monitoração SRE}\\
+    Me.~Sergio Souza Novak\\
+    \textit{Engenharia da Qualidade e Confiabilidade}
+    }
+}
+    
+% Rodapé
+\fancyfoot[C]{\textcolor{forestgreen}{\thepage}}
+
+% Comando para caixas de resposta
+\newtcolorbox{resposta}[1]{%
+  colback=white,
+  colframe=forestgreen!30,
+  arc=1mm,
+  height=#1,
+  width=\textwidth,
+  boxrule=0.8pt,
+  breakable
+}
+
+% =========================
+\begin{document}
+% =========================
+
+\begin{center}
+  {\Large \textbf{Lista de Exercícios: Monitoração Agregada e Princípios SRE}}\\[0.2cm]
+  \textit{Engenharia de Software / Engenharia da Qualidade}
+\end{center}
+
+\vspace{0.4cm}
+
+\section*{Exercícios de Fixação}
+
+\textbf{1.} De acordo com os princípios do Google SRE, defina monitoração e explique por que ela é considerada a base da Hierarquia de Necessidades de Confiabilidade.
+\begin{resposta}{3.5cm}
+\end{resposta}
+
+\textbf{2.} Os sistemas de monitoração produzem diferentes saídas. Explique a diferença conceitual e de urgência entre \textbf{Alertas (Paging)}, \textbf{Tickets} e \textbf{Logging}.
+\begin{resposta}{4.5cm}
+\end{resposta}
+
+\textbf{3.} Diferencie a monitoração de \textbf{Caixa-Branca (White-box)} da monitoração de \textbf{Caixa-Preta (Black-box)}. Em qual situação cada uma é mais indicada para um SRE?
+\begin{resposta}{4cm}
+\end{resposta}
+
+\textbf{4.} O Google define os "4 Sinais de Ouro" da monitoração. Liste-os e forneça uma breve definição para cada um, exemplificando sua aplicação em um sistema HTTP.
+\begin{resposta}{5.5cm}
+\end{resposta}
+
+\textbf{5.} Sobre a métrica de \textbf{Latência}, por que é fundamental monitorar separadamente a latência de requisições que resultaram em erro das que resultaram em sucesso?
+\begin{resposta}{3.5cm}
+\end{resposta}
+
+\textbf{6.} Explique os conceitos de \textbf{SLI}, \textbf{SLO} e \textbf{SLA}. Como eles se relacionam hierarquicamente na gestão de serviços?
+\begin{resposta}{4cm}
+\end{resposta}
+
+\textbf{7.} Se um serviço possui um SLO de disponibilidade de $99,95\%$ em um período mensal, qual é o seu \textbf{Orçamento de Erro (Error Budget)} em termos percentuais? O que deve acontecer se esse orçamento for totalmente consumido antes do fim do período?
+\begin{resposta}{4cm}
+\end{resposta}
+
+\textbf{8.} No contexto de alertas, qual a diferença entre um alerta baseado em \textbf{Causa} e um alerta baseado em \textbf{Sintoma}? Por que o Google recomenda priorizar alertas baseados em sintomas com impacto no usuário?
+\begin{resposta}{4.5cm}
+\end{resposta}
+
+\textbf{9.} Por que a \textbf{Média} pode ser enganosa ao analisar a latência de um sistema distribuído? Qual a vantagem de utilizar \textbf{Percentis} (como P95 ou P99) em vez da média aritmética?
+\begin{resposta}{4cm}
+\end{resposta}
+
+\textbf{10.} Um sistema web registrou as seguintes latências de resposta (em milissegundos) durante um período de monitoração. A tabela apresenta cada valor observado e sua respectiva frequência.
+
+\begin{center}
+\begin{tabular}{c|c}
+\textbf{Latência (ms)} & \textbf{Frequência} \\
+\hline
+100 & 15 \\
+105 & 18 \\
+110 & 22 \\
+120 & 20 \\
+150 & 12 \\
+200 & 6 \\
+800 & 3 \\
+2500 & 2 \\
+5000 & 1 \\
+12000 & 1 \\
+\end{tabular}
+\end{center}
+
+\begin{enumerate}[label=\alph*)]
+
+\item Calcule a \textbf{média aritmética} das latências considerando suas frequências.
+
+\item Determine a \textbf{mediana (P50)} da distribuição.
+
+\item Compare os valores obtidos e responda:
+
+\begin{itemize}
+\item Qual medida representa melhor a experiência da \textbf{maioria dos usuários}?
+\item Qual medida revela a existência de \textbf{latências extremas (cauda da distribuição)}?
+\end{itemize}
+
+\item Explique por que, em sistemas distribuídos e em engenharia de confiabilidade (SRE), percentis como \textbf{P95, P98 ou P99} costumam ser mais informativos do que a média.
+
+\end{enumerate}
+
+\begin{resposta}{15cm}
+\end{resposta}
+% =========================
+\end{document}
+% =========================

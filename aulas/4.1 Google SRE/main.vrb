@@ -1,0 +1,19 @@
+\frametitle{Gastando o Error Budget com Segurança}
+\begin{center}
+\begin{tikzpicture}[
+    tactic/.style={draw, rounded corners=6pt, thick, minimum width=3.8cm, minimum height=0.9cm, font=\scriptsize, align=center},
+]
+    \node[tactic, fill=blue!10] (t1) at (-2.3, 1) {\textbf{Rollouts em Fases}\\(Canary Releases)};
+    \node[tactic, fill=green!10] (t2) at (2.3, 1) {\textbf{Experimentos de 1\%}\\de Tráfego};
+    \node[tactic, fill=orange!10] (t3) at (-2.3, -0.6) {\textbf{Testes de Carga}\\em Produção};
+    \node[tactic, fill=purple!10] (t4) at (2.3, -0.6) {\textbf{Lançamento Rápido}\\de Features};
+
+    \node[draw, rounded corners=8pt, fill=structure!15, draw=structure, thick, minimum width=8.5cm, font=\scriptsize\bfseries, align=center] at (0, -2) {
+        Interrupções dentro do Error Budget são partes normais e esperadas da inovação!
+    };
+\end{tikzpicture}
+\end{center}
+
+\begin{exampleblock}{Mudança de Paradigma}
+A meta não é "zero interrupções", mas sim \textbf{maximizar a velocidade de lançamento} respeitando o limite do \textit{Error Budget}.
+\end{exampleblock}

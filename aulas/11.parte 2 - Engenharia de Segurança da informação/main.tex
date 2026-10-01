@@ -1,0 +1,942 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\usepackage{eso-pic}
+\usepackage[brazil]{babel}
+\shorthandoff{"}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, shapes.symbols, fit, calc, backgrounds}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{meuazul}{RGB}{0, 79, 151}
+\definecolor{meucinza}{RGB}{80, 80, 80}
+\definecolor{meuvermelhoescuro}{RGB}{180, 30, 30}
+\definecolor{meuverde}{RGB}{30, 130, 60}
+\setbeamercolor{structure}{fg=meuazul}
+
+\title[Engenharia de Segurança]{Engenharia de Segurança da Informação (PARTE 2)}
+\subtitle{Engenharia de Qualidade e Confiabilidade}
+\author{Prof. Me. Sergio Souza Novak — UniRV}
+\titlegraphic{\includegraphics[width=2cm]{logo.png}}
+
+\begin{document}
+
+% Slide de Título
+\frame[plain]{\titlepage}
+
+% Slide de Sumário
+\begin{frame}{Sumário}
+    \begin{columns}[t]
+        \begin{column}{.5\textwidth}
+            \tableofcontents[sections={1-2}]
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \tableofcontents[sections={3-4}]
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\section{Introdução à Criptografia}
+{
+\setbeamercolor{background canvas}{bg=meuazul}
+\begin{frame}[plain]
+    \centering
+    \Huge \color{white} \bfseries Introdução à Criptografia
+\end{frame}
+}
+
+\subsection{Conceitos e Funcionamento}
+
+% --- Slide: O que é Criptografia? ---
+\begin{frame}{O que é Criptografia?}
+    A criptografia é usada para proteger os dados contra roubo, alteração ou comprometimento.
+    \begin{itemize}
+        \item \textbf{Definição:} Processo de transformar dados em um código secreto.
+        \item \textbf{Mecanismo:} Só pode ser desbloqueado com uma chave digital exclusiva.
+        \item \textbf{Objetivo:} Garantir que apenas partes autorizadas acessem a informação.
+    \end{itemize}
+    \begin{block}{Processamento de Dados}
+        Funciona para dados \textbf{em repouso} (armazenados), \textbf{em trânsito} (rede) ou \textbf{em processamento}, seja localmente ou na nuvem.
+    \end{block}
+\end{frame}
+
+% --- Slide: Como funciona a Criptografia ---
+\begin{frame}{Como funciona a Criptografia}
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            \begin{itemize}
+                \item \textbf{Texto Simples (Plaintext):} A informação original legível.
+                \item \textbf{Algoritmo:} Modelo matemático usado para converter os dados.
+                \item \textbf{Texto Criptografado (Ciphertext):} A versão embaralhada e ilegível.
+                \item \textbf{Chave:} Uma string de números ou senha necessária para decodificar.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \centering
+            \begin{tikzpicture}[node distance=1cm]
+                \node (p) [draw, fill=gray!10] {Texto};
+                \node (a) [draw, circle, fill=meuazul!10, below=of p] {Alg};
+                \node (c) [draw, fill=meuvermelhoescuro!10, below=of a] {Cipher};
+                \draw[->] (p) -- (a);
+                \draw[->] (a) -- (c);
+                \node (k) [left=of a] {Chave};
+                \draw[->, dotted] (k) -- (a);
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% --- Slide: Força da Chave e Ataques ---
+\begin{frame}{Força da Chave e Ataques}
+    A segurança de um método criptográfico depende da complexidade da sua chave.
+    \begin{itemize}
+        \item \textbf{Ataque de Força Bruta:} Tentativa de adivinhar a chave testando todas as combinações possíveis.
+        \item \textbf{Resistência:} Métodos modernos usam chaves tão grandes que computadores atuais levariam séculos para quebrá-las.
+    \end{itemize}
+    \begin{alertblock}{Segurança baseada em Algoritmos}
+        Matemáticos e cientistas inventam modelos cada vez mais complexos para acompanhar a evolução do poder de processamento.
+    \end{alertblock}
+\end{frame}
+
+% --- Slide: Exemplo Histórico: Cifra de César ---
+\begin{frame}{Exemplo Histórico: Cifra de César}
+    Um dos primeiros exemplos, usado pelo imperador romano Júlio César para mensagens militares.
+    \begin{itemize}
+        \item \textbf{Método:} Criptografia de substituição simples.
+        \item \textbf{Lógica:} Cada letra é substituída por outra um número fixo de posições à frente no alfabeto.
+        \item \textbf{Chave (Shift):} Se o shift for 4 para a esquerda, cada "E" vira "A".
+    \end{itemize}
+    \centering
+    \texttt{A B C D E F G ...} $\rightarrow$ \texttt{X Y Z A B C D ...}
+    \vspace{0.3cm}
+    \begin{exampleblock}{Modernidade}
+        Hoje, as chaves são strings de centenas ou milhares de caracteres gerados por computador.
+    \end{exampleblock}
+\end{frame}
+
+\subsection{Tipos de Criptografia}
+
+% --- Slide: Criptografia Simétrica ---
+\begin{frame}{Criptografia Simétrica}
+    Também conhecida como criptografia de \textbf{chave privada} ou chave compartilhada.
+    \begin{itemize}
+        \item \textbf{Mecanismo:} Usa a \textbf{mesma chave} tanto para criptografar quanto para descriptografar.
+        \item \textbf{Vantagens:} Mais barata de produzir e processamento extremamente rápido (baixo atraso).
+        \item \textbf{Desvantagem:} O desafio de trocar a chave com segurança. Se alguém intercepta a chave, a segurança é totalmente comprometida.
+    \end{itemize}
+    \centering
+\begin{tikzpicture}[every node/.style={font=\small}]
+
+% --- REMETENTE (pilha compacta) ---
+\node (r1) [draw, rectangle, minimum width=3.5cm, minimum height=0.5cm] {Texto Original};
+\node (r2) [draw, rectangle, below=0.25cm of r1, minimum width=3.5cm, minimum height=0.5cm] {Algoritmo Criptográfico};
+\node (r3) [draw, rectangle, below=0.25cm of r2, minimum width=3.5cm, minimum height=0.5cm] {Texto Cifrado};
+
+\node at ($(r1.north)+(0,0.4)$) {\textbf{Remetente}};
+
+% --- DESTINATÁRIO (pilha compacta) ---
+\node (d1) [draw, rectangle, minimum width=3.5cm, minimum height=0.5cm, right=5cm of r1] {Texto Original};
+\node (d2) [draw, rectangle, below=0.25cm of d1, minimum width=3.5cm, minimum height=0.5cm] {Algoritmo de Descriptografia};
+\node (d3) [draw, rectangle, below=0.25cm of d2, minimum width=3.5cm, minimum height=0.5cm] {Texto Cifrado};
+
+\node at ($(d1.north)+(0,0.4)$) {\textbf{Destinatário}};
+
+% --- SETAS VERTICAIS (fluxo em camadas) ---
+\draw[->] (r1) -- (r2);
+\draw[->] (r2) -- (r3);
+
+\draw[->] (d3) -- (d2);
+\draw[->] (d2) -- (d1);
+
+% --- CANAL DE COMUNICAÇÃO ---
+\draw[<->, thick] (r3.east) -- node[above] {Canal de Comunicação} (d3.west);
+
+% --- CHAVE ---
+\node (k) [draw, fill=yellow!20, below=-1.2cm of $(r3)!0.5!(d3)$] {Mesma Chave};
+
+\draw[->] (k) -- (r2);
+\draw[->] (k) -- (d2);
+
+\end{tikzpicture}
+\end{frame}
+
+% --- Slide: Criptografia Assimétrica ---
+\begin{frame}{Criptografia Assimétrica}
+    Também conhecida como criptografia de \textbf{chave pública}.
+    \begin{itemize}
+        \item \textbf{Mecanismo:} Usa \textbf{duas chaves} separadas (um par):
+        \begin{itemize}
+            \item \textbf{Chave Pública:} Compartilhada com todos (para criptografar).
+            \item \textbf{Chave Privada:} Mantida em segredo pelo dono (para descriptografar).
+        \end{itemize}
+        \item \textbf{Chaves Típicas:} Entre 1.024 e 2.048 bits.
+        \item \textbf{Custo:} Exige muito mais capacidade computacional e tempo de processamento.
+    \end{itemize}
+    \begin{tikzpicture}[every node/.style={font=\small}]
+
+% --- REMETENTE (pilha) ---
+\node (r1) [draw, rectangle, minimum width=3.5cm, minimum height=0.8cm] {Texto Original};
+\node (r2) [draw, rectangle, below=0.25cm of r1, minimum width=3.5cm, minimum height=0.8cm] {Algoritmo Criptográfico};
+\node (r3) [draw, rectangle, below=0.25cm of r2, minimum width=3.5cm, minimum height=0.8cm] {Texto Cifrado};
+
+\node at ($(r1.north)+(0,0.4)$) {\textbf{Remetente}};
+
+% --- DESTINATÁRIO (pilha) ---
+\node (d1) [draw, rectangle, minimum width=3.5cm, minimum height=0.8cm, right=5cm of r1] {Texto Original};
+\node (d2) [draw, rectangle, below=0.25cm of d1, minimum width=3.5cm, minimum height=0.8cm] {Algoritmo de Descriptografia};
+\node (d3) [draw, rectangle, below=0.25cm of d2, minimum width=3.5cm, minimum height=0.8cm] {Texto Cifrado};
+
+\node at ($(d1.north)+(0,0.4)$) {\textbf{Destinatário}};
+
+% --- FLUXO VERTICAL ---
+\draw[->] (r1) -- (r2);
+\draw[->] (r2) -- (r3);
+
+\draw[->] (d3) -- (d2);
+\draw[->] (d2) -- (d1);
+
+% --- CANAL DE COMUNICAÇÃO ---
+\draw[<->, thick] (r3.east) -- node[above] {Canal de Comunicação} (d3.west);
+
+% --- CHAVES (ASSIMÉTRICAS) ---
+\node (pub) [draw, fill=meuazul!20, above=2.0cm of r2] {Chave Pública};
+\node (priv) [draw, fill=meuvermelhoescuro!20, above=2.0cm of d2] {Chave Privada};
+
+\draw[->] (pub) -- (r2);
+\draw[->] (priv) -- (d2);
+
+\end{tikzpicture}
+\end{frame}
+
+\subsection{Algoritmos Comuns}
+
+% --- Slide: Algoritmos Simétricos ---
+\begin{frame}{Algoritmos Simétricos}
+    \begin{itemize}
+        \item \textbf{DES (Data Encryption Standard):} Padrão dos anos 70. Hoje obsoleto devido ao tamanho da chave (56 bits).
+        \item \textbf{3DES (Triple DES):} Aplica o DES três vezes. Descontinuado para fins oficiais desde 2023 por ser inseguro.
+        \item \textbf{AES (Advanced Encryption Standard):} O padrão mundial hoje. Usa blocos de 128 bits e chaves de até 256 bits. Extremamente seguro e eficiente.
+        \item \textbf{Twofish:} Focado em hardware/software, muito rápido e usado em apps como PGP.
+    \end{itemize}
+\end{frame}
+
+% --- Slide: Algoritmos Assimétricos ---
+\begin{frame}{Algoritmos Assimétricos}
+    \begin{itemize}
+        \item \textbf{RSA (Rivest-Shamir-Adelman - 1977):} Baseado na dificuldade de fatorar números primos gigantes. Muito seguro, mas lento. Usado para proteger a troca das chaves simétricas.
+        \item \textbf{ECC (Elliptic Curve Cryptography):} Forma avançadamente eficiente. Uma chave ECC de 256 bits oferece segurança similar a uma RSA de 3.072 bits.
+    \end{itemize}
+    \begin{exampleblock}{Eficiência do ECC}
+        É preferível em dispositivos com hardware limitado (celulares, IoT) por exigir menor infraestrutura e processamento.
+    \end{exampleblock}
+\end{frame}
+
+\subsection{Aplicação e Benefícios}
+
+% --- Slide: Importância no Cotidiano ---
+\begin{frame}{Importância no Cotidiano}
+    Usamos criptografia constantemente, muitas vezes de forma invisível:
+    \begin{itemize}
+        \item \textbf{HTTPS (TLS):} O "s" em sites seguros indica criptografia em trânsito.
+        \item \textbf{VPNs:} Criam túneis privados para tráfego de dados.
+        \item \textbf{Mensagens:} apps como WhatsApp e e-mails usam criptografia para garantir privacidade.
+    \end{itemize}
+    \begin{block}{Conformidade}
+        É obrigatoriedade regulatória em setores como Saúde (dados de pacientes), Bancário e Varejo.
+    \end{block}
+\end{frame}
+
+% --- Slide: As 4 Funções da Criptografia ---
+\begin{frame}{As 4 Funções da Criptografia}
+    \centering
+    \begin{tikzpicture}[node distance=0.8cm]
+        \node (c) [draw, fill=meuazul!10, text width=8cm] {\textbf{1. Confidencialidade:} Mantém os dados em segredo.};
+        \node (i) [draw, fill=meuazul!10, text width=8cm, below=of c] {\textbf{2. Integridade:} Verifica se os dados não foram alterados.};
+        \node (a) [draw, fill=meuazul!10, text width=8cm, below=of i] {\textbf{3. Autenticação:} Valida a origem da mensagem.};
+        \node (n) [draw, fill=meuazul!10, text width=8cm, below=of a] {\textbf{4. Não Repúdio:} Impede que o remetente negue o envio.};
+    \end{tikzpicture}
+\end{frame}
+
+\section{Controles e Atributos}
+{
+\setbeamercolor{background canvas}{bg=meuazul}
+\begin{frame}[plain]
+    \centering
+    \Huge \color{white} \bfseries Controles e Atributos
+\end{frame}
+}
+
+\subsection{Ciclo de Defesa}
+% --- Slide 37: Controles de Segurança: O Ciclo de Defesa ---
+\begin{frame}{Controles de Segurança: O Ciclo de Defesa}
+    A segurança baseia-se em três pilares fundamentais:
+    \centering
+    \begin{tikzpicture}[node distance=2cm, every node/.style={circle, draw, fill=meuazul!10, text width=2.2cm, align=center, font=\tiny}]
+        \node (prev) {1. Prevenção\\(Evitar)};
+        \node (det) [right=of prev, xshift=1cm] {2. Detecção\\(Neutralizar)};
+        \node (rec) [below=of $(prev)!0.5!(det)$, yshift=-0.5cm] {3. Recuperação\\(Limitar danos)};
+        
+        \draw[thick, ->] (prev) -- (det);
+        \draw[thick, ->] (det) -- (rec);
+        \draw[thick, ->] (rec) -- (prev);
+    \end{tikzpicture}
+\end{frame}
+
+% --- Slide 38: 1. Prevenção da Vulnerabilidade ---
+\begin{frame}{1. Prevenção da Vulnerabilidade}
+    \begin{itemize}
+        \item Estratégia de projetar o sistema para que ataques não logrem êxito.
+        \item \textbf{Isolamento:} Sistemas militares sensíveis não conectados à Internet.
+        \item \textbf{Encriptação:} Um dos controles mais eficazes.
+    \end{itemize}
+    \begin{exampleblock}{Custo da Prevenção}
+        Encriptação forte é cara em termos de processamento, mas é uma barreira quase intransponível para o acesso não autorizado a dados.
+    \end{exampleblock}
+\end{frame}
+
+% --- Slide 39: 2. Detecção e Neutralização de Ataques ---
+\begin{frame}{2. Detecção e Neutralização de Ataques}
+    \begin{itemize}
+        \item Monitoramento constante da operação do sistema.
+        \item Verificação de padrões de atividade incomuns (ex: múltiplas tentativas de login em segundos).
+        \item \textbf{Ação corretiva:} Desligar partes do sistema ou restringir o acesso a usuários suspeitos.
+    \end{itemize}
+    \centering
+    \begin{tikzpicture}
+        \node (mon) [draw, fill=meuazul!10] {Monitoramento};
+        \node (alert) [draw, star, star points=7, fill=yellow!30, right=of mon, xshift=1cm] {ALERTA};
+        \node (act) [draw, fill=meuvermelhoescuro!10, below=of alert] {Bloqueio};
+        \draw[thick, ->] (mon) -- (alert);
+        \draw[thick, ->] (alert) -- (act);
+    \end{tikzpicture}
+\end{frame}
+
+% --- Slide 40: 3. Limitação da Exposição e Recuperação ---
+\begin{frame}{3. Limitação da Exposição e Recuperação}
+    Quando a prevenção e a detecção falham, o objetivo é sobreviver ao ataque:
+    \begin{itemize}
+        \item \textbf{Backup Automatizado:} Garantir que os dados possam ser restaurados.
+        \item \textbf{Espelhamento (Mirroring):} Manter réplicas da informação em tempo real.
+        \item \textbf{Estratégias de Negócio:} Apólices de seguro contra crimes cibernéticos.
+    \end{itemize}
+    \begin{alertblock}{Resiliência}
+        A capacidade de retomar a operação normal o mais rápido possível após uma violação.
+    \end{alertblock}
+\end{frame}
+
+% slide em duas colunas 
+\subsection{Relação com Atributos e Casos}
+
+\begin{frame}{Segurança e Outros Atributos}
+
+\begin{columns}
+
+    % Coluna da esquerda (texto)
+    \column{0.48\textwidth}
+    A segurança não existe isoladamente; ela está intrinsecamente ligada aos demais atributos de dependabilidade:
+    
+    \vspace{0.3cm}
+    
+    \begin{itemize}
+        \item Confiabilidade (Reliability)
+        \item Disponibilidade (Availability)
+        \item Segurança (Safety)
+        \item Resiliência (Resilience)
+    \end{itemize}
+
+    \vspace{0.3cm}
+    
+    \begin{block}{Ideia Central}
+        A segurança atua como um elemento integrador, influenciando diretamente o funcionamento e a robustez do sistema como um todo.
+    \end{block}
+
+    % Coluna da direita (diagrama)
+    \column{0.52\textwidth}
+    \centering
+    \begin{tikzpicture}[node distance=1.5cm]
+        \node (sec) [draw, circle, fill=meuazul!20, thick, minimum size=2.5cm] {SEGURANÇA};
+        
+        \foreach \a/\p in {Confiabilidade/72, Disponibilidade/144, Safety/216, Resiliência/288} {
+            \node (n\a) [draw, rounded corners, fill=meuazul!5, font=\tiny] at (\p:3cm) {\a};
+            \draw[<->, thick] (sec) -- (n\a);
+        }
+    \end{tikzpicture}
+
+\end{columns}
+
+\end{frame}
+
+% --- Slide 42: Segurança e Confiabilidade ---
+\begin{frame}{1. Segurança e Confiabilidade}
+    \begin{itemize}
+        \item Ataques que corrompem dados levam a falhas de sistema, reduzindo a confiabilidade.
+        \item \textbf{Exploração de Brechas:} Entradas imprevistas ou limites de vetores não verificados.
+        \item \textbf{Injeção de Código:} Se o sistema não valida a entrada, o atacante pode executar comandos maliciosos.
+    \end{itemize}
+    \begin{block}{Entrada de Dados}
+        A falta de validação rigorosa é uma das maiores causas de vulnerabilidades técnicas.
+    \end{block}
+\end{frame}
+
+% --- Slide 43: [CS6] Caso de Estudo: Injeção de Código ---
+\begin{frame}{[CS6] Caso de Estudo: Injeção de Código (SQL)}
+    \begin{itemize}
+        \item \textbf{Cenário:} Um campo de busca em um site não sanitiza as entradas.
+        \item \textbf{Ataque:} O invasor insere comandos SQL no campo de busca (ex: \texttt{' OR 1=1; --}).
+        \item \textbf{Resultado:} O sistema executa o comando e retorna todos os usuários do banco de dados, ignorando a autenticação.
+    \end{itemize}
+    \centering
+    \begin{tikzpicture}
+        \node (inp) [draw, fill=yellow!10, text width=5cm] {Search: \texttt{' OR 1=1; --}};
+        \node (db) [draw, cylinder, shape border rotate=90, fill=meuazul!10, right=of inp, xshift=1cm] {Database};
+        \draw[->, ultra thick, meuvermelhoescuro] (inp) -- node[above, font=\tiny] {Comando Malicioso} (db);
+    \end{tikzpicture}
+\end{frame}
+
+% --- Slide 44: Segurança e Disponibilidade ---
+\begin{frame}{2. Segurança e Disponibilidade}
+    \begin{itemize}
+        \item O foco aqui são os ataques que visam paralisar o serviço.
+        \item \textbf{Inundação (Flooding):} Servidores web bombardeados com solicitações de múltiplas fontes.
+        \item \textbf{Extorsão:} Ameaça de manter o site offline a menos que um resgate seja pago.
+    \end{itemize}
+    \begin{alertblock}{Ransomware e DoS}
+        A disponibilidade é atacada tanto por força bruta quanto por sequestro de ativos.
+    \end{alertblock}
+\end{frame}
+
+% --- Slide 45: [CS7] Caso de Estudo: Ransomware ---
+\begin{frame}{[CS7] Caso de Estudo: Sequestro de Dados}
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            \textbf{Ação:} Um malware criptografa todos os arquivos críticos de um servidor hospitalar.
+            \vspace{0.3cm}
+            \textbf{Dilema:} O hospital não consegue acessar prontuários. Os atacantes exigem pagamento em criptomoedas para fornecer a chave de descriptografia.
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \node (file) [draw, fill=meuazul!5] {Dados};
+                \node (lock) [draw, circle, fill=meuvermelhoescuro!20, above=of file, yshift=-0.5cm] {LOCK};
+                \node (money) [draw, diamond, fill=meuverde!10, right=of lock] {Resgate};
+                \draw[->, thick] (money) -- (lock);
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% --- Slide 46: Segurança (Security) vs. Segurança (Safety) ---
+\begin{frame}{3. Segurança (Security) vs. Segurança (Safety)}
+    \begin{itemize}
+        \item \textbf{Safety:} Preocupa-se com acidentes e falhas acidentais.
+        \item \textbf{Security:} Preocupa-se com ataques maliciosos e deliberados.
+        \item \textbf{Conexão:} Um ataque (Security) pode corromper o código executável, invalidando todas as garantias de Safety do sistema.
+    \end{itemize}
+    \begin{block}{Características Negativas}
+        Ambas são sobre o que \textbf{não deve acontecer}. Nunca se pode provar que um sistema é 100\% seguro sob essas óticas.
+    \end{block}
+\end{frame}
+
+% --- Slide 47: Segurança e Resiliência ---
+\begin{frame}{4. Segurança e Resiliência}
+    \begin{itemize}
+        \item Resiliência é a capacidade de resistir, reagir e se recuperar de eventos prejudiciais.
+        \item Hoje, a maioria dos eventos prejudiciais são ciberataques.
+        \item \textbf{Foco:} Manter as funções críticas do sistema mesmo sob ataque intenso.
+    \end{itemize}
+    \centering
+    \begin{tikzpicture}[node distance=1cm]
+        \node (att) [draw, fill=meuvermelhoescuro!10] {Ciberataque};
+        \node (res) [draw, fill=meuverde!10, right=of att, xshift=1.5cm] {Resiliência};
+        \draw[->, ultra thick] (att) -- node[above, font=\tiny] {Evento} (res);
+    \end{tikzpicture}
+\end{frame}
+
+\subsection{Segurança no Ciclo de Vida}
+% --- Slide 48: Segurança no Ciclo de Vida ---
+\begin{frame}{Segurança no Ciclo de Vida}
+    \begin{itemize}
+        \item Segurança não é uma funcionalidade "extra".
+        \item Deve ser considerada desde os requisitos iniciais até a operação e manutenção.
+        \item Projeto para segurança $\rightarrow$ Desenvolvimento seguro $\rightarrow$ Teste de segurança.
+    \end{itemize}
+    \begin{exampleblock}{Conclusão}
+        Sistemas confiáveis, disponíveis e robustos exigem que a segurança seja um pilar central de todo o processo de engenharia.
+    \end{exampleblock}
+\end{frame}
+
+\section{Segurança e Organizações}
+{
+\setbeamercolor{background canvas}{bg=meuazul}
+\begin{frame}[plain]
+    \centering
+    \Huge \color{white} \bfseries Segurança e Organizações
+\end{frame}
+}
+
+\subsection{Decisão de Negócio e Políticas}
+% --- Slide 49: Segurança da Informação e Organizações ---
+\begin{frame}{Segurança da Informação e Organizações}
+    Criar sistemas seguros é caro e incerto. As organizações enfrentam o desafio de equilibrar custos e proteção.
+    \begin{itemize}
+        \item \textbf{Segurança (Safety) vs. Security:} 
+        \begin{itemize}
+            \item \textit{Safety:} Regida por leis e normas rigorosas (custo secundário à vida).
+            \item \textit{Security:} Decisão muitas vezes pragmática, baseada em risco pessoal/financeiro.
+        \end{itemize}
+        \item Frequentemente, sistemas não seguros são implantados porque a lei não os impede (exceto em casos de dados pessoais).
+    \end{itemize}
+\end{frame}
+
+% --- Slide 50: Segurança como Decisão de Negócio ---
+\begin{frame}{Segurança como Decisão de Negócio}
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            \textbf{Avaliação de Perdas:} As empresas podem decidir que é mais barato aceitar um risco do que investir para eliminá-lo.
+            \vspace{0.3cm}
+            \begin{exampleblock}{Caso das Operadoras de Cartão}
+                Muitas vezes, compensar o usuário por fraudes é mais barato do que implantar novas tecnologias globais de redução de fraudes em tempo integral.
+            \end{exampleblock}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \node (cost) [draw, circle, fill=meuazul!10, text width=1.5cm, align=center] {Custo Tecnologia};
+                \node (loss) [draw, circle, fill=meuvermelhoescuro!10, right=of cost, xshift=0.5cm, text width=1.5cm, align=center] {Perda por Fraude};
+                \draw[<->, ultra thick] (cost) -- (loss) node[midway, above, font=\tiny] {Trade-off};
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% --- Slide 51: Gerenciamento de Risco: Negócio vs. Técnico ---
+\begin{frame}{Gerenciamento de Risco: Negócio vs. Técnico}
+    \begin{itemize}
+        \item O gerenciamento de risco é, acima de tudo, uma questão de \textbf{negócio}.
+        \item Devem ser pesadas as perdas financeiras e de reputação contra o custo das medidas de proteção.
+    \end{itemize}
+    \begin{block}{Política de Segurança}
+        Para um gerenciamento eficaz, a organização deve ter uma política documentada e clara para todos os colaboradores.
+    \end{block}
+\end{frame}
+
+% --- Slide 52: Política de Segurança da Informação ---
+\begin{frame}{Política de Segurança da Informação}
+    Uma política de segurança robusta deve definir quatro pilares:
+    \centering
+    \begin{tikzpicture}[node distance=1.2cm, every node/.style={draw, fill=meuazul!10, text width=6cm, align=center, font=\tiny}]
+        \node (a) {1. Ativos a serem protegidos};
+        \node (n) [below=of a] {2. Nível de proteção necessário};
+        \node (r) [below=of n] {3. Responsabilidades (Usuário/Gestor/Org)};
+        \node (p) [below=of r] {4. Procedimentos e tecnologias existentes};
+    \end{tikzpicture}
+\end{frame}
+
+\subsection{Gestão de Ativos e Responsabilidades}
+% --- Slide 53: 1. Ativos a serem Protegidos ---
+\begin{frame}{1. Ativos a serem Protegidos}
+    \begin{itemize}
+        \item Nem todos os ativos justificam segurança rigorosa.
+        \item \textbf{Dados Públicos:} Manter seguras informações que já são de domínio público é um custo desnecessário.
+        \item Ativos de valor livre podem até melhorar a imagem da empresa se forem disponibilizados sem barreiras.
+    \end{itemize}
+\end{frame}
+
+% --- Slide 54: 2. Níveis de Proteção ---
+\begin{frame}{2. Níveis de Proteção}
+    A proteção deve ser proporcional à sensibilidade do dado:
+    \begin{itemize}
+        \item \textbf{Alta Sensibilidade:} Informações pessoais sensíveis (ex: saúde). Alto nível de controle.
+        \item \textbf{Média/Baixa Sensibilidade:} Consequências da perda são menores. Nível de segurança adequado ao custo-benefício.
+    \end{itemize}
+    \centering
+    \begin{tikzpicture}
+        \node (p1) [draw, fill=meuazul!30, text width=3cm] {Admin / Executivo};
+        \node (p2) [draw, fill=meuazul!10, below=of p1, yshift=0.8cm, text width=3cm] {Usuário Padrão};
+    \end{tikzpicture}
+\end{frame}
+
+% --- Slide 55: 3. Responsabilidades ---
+\begin{frame}{3. Responsabilidades}
+    A política estabelece o que se espera de cada parte:
+    \begin{itemize}
+        \item \textbf{Usuários:} Usar senhas fortes, trancar salas, fazer log out.
+        \item \textbf{Organização:} Prover ferramentas de backup, arquivamento e equipamentos seguros.
+    \end{itemize}
+    \begin{exampleblock}{Compromisso Mútuo}
+        A segurança só funciona se houver colaboração entre o técnico (org) e o humano (usuário).
+    \end{exampleblock}
+\end{frame}
+
+% --- Slide 56: 4. Procedimentos e Tecnologias Legadas ---
+\begin{frame}{4. Procedimentos e Tecnologias Legadas}
+    \begin{itemize}
+        \item Por razões econômicas, pode ser necessário manter abordagens limitadas.
+        \item \textbf{Exemplo:} Manter autenticação por senha em vez de biometria porque os usuários rejeitam mudanças complexas no fluxo de trabalho atual.
+    \end{itemize}
+\end{frame}
+
+\subsection{Políticas de Acesso e Riscos}
+% --- Slide 57: Estratégias de Acesso e Política Militar ---
+\begin{frame}{Estratégias de Acesso e Política Militar}
+    As políticas frequentemente estabelecem quem pode ler o quê:
+    \begin{itemize}
+        \item \textbf{Senioridade/Permissão:} O acesso é baseado na classificação do documento e na habilitação do leitor.
+        \item \textbf{Regra:} Um leitor só pode acessar documentos de nível igual ou inferior ao seu.
+    \end{itemize}
+    \begin{block}{Objetivo da Política}
+        Garantir a conscientização organizacional sem ser um documento excessivamente técnico.
+    \end{block}
+\end{frame}
+
+% --- Slide 58: Classificação de Documentos ---
+\begin{frame}{Classificação de Documentos}
+    \centering
+    \begin{tikzpicture}[node distance=0cm, every node/.style={draw, minimum width=8cm, minimum height=1cm, align=center}]
+        \node (top) [fill=meuvermelhoescuro!20] {\textbf{Ultrassecreto} (Top Secret)};
+        \node (sec) [below=of top, fill=meuazul!20] {\textbf{Secreto} (Secret)};
+        \node (con) [below=of sec, fill=meuazul!10] {Confidencial};
+        \node (ope) [below=of con, fill=gray!10] {Aberto / Público};
+        
+        \draw[->, ultra thick, meuvermelhoescuro] ([xshift=0.5cm]ope.south east) -- ([xshift=0.5cm]top.north east) node[midway, right, align=left] {Sensibilidade\\Crescente};
+    \end{tikzpicture}
+\end{frame}
+
+% --- Slide 59: Avaliação dos Riscos à Segurança ---
+\begin{frame}{Avaliação dos Riscos à Segurança}
+    \begin{itemize}
+        \item Focada em identificar e compreender os riscos para os ativos (sistemas e dados).
+        \item \textbf{Dilema Prático:} Avaliar cada ativo individualmente pode ser inviável.
+    \end{itemize}
+    \begin{exampleblock}{Sistemas Novos}
+        Embora avaliações genéricas possam ser aplicadas a sistemas existentes, \textbf{sistemas novos} devem obrigatoriamente passar por avaliações de risco individuais.
+    \end{exampleblock}
+\end{frame}
+
+% --- Slide 60: Ataques de Personificação (Social Engineering) ---
+\begin{frame}{Ataques de Personificação (Social Engineering)}
+    Nem todos os ataques são técnicos. Alguns exploram falhas nos processos organizacionais:
+    \begin{itemize}
+        \item \textbf{Cenário:} Um atacante finge ser um engenheiro credenciado para ganhar acesso físico.
+        \item \textbf{Defesa Simples:} Um processo organizacional de averiguação com fornecedores é mais eficaz do que qualquer barreira de software.
+    \end{itemize}
+    \begin{alertblock}{O Fator Humano}
+        A tecnologia não pode deter alguém que "abre a porta" voluntariamente.
+    \end{alertblock}
+\end{frame}
+
+% --- Slide 61: Estágio 1: Avaliação Preliminar de Risco ---
+\begin{frame}{Estágio 1: Avaliação Preliminar de Risco}
+    Ocorre antes das decisões detalhadas de projeto:
+    \begin{itemize}
+        \item Identificar riscos genéricos ao sistema.
+        \item Avaliar se um nível de segurança adequado é alcançável por um custo razoável.
+        \item \textbf{Resultado:} Auxilia na identificação dos \textbf{Requisitos de Segurança}.
+    \end{itemize}
+\end{frame}
+
+% --- Slide 62: Estágio 2: Avaliação de Risco do Projeto (Design) ---
+\begin{frame}{Estágio 2: Avaliação de Risco do Projeto (Design)}
+    Ocorre durante o ciclo de vida do desenvolvimento:
+    \begin{itemize}
+        \item Informada por decisões técnicas de projeto e implementação.
+        \item Identifica vulnerabilidades conhecidas em middleware ou componentes reusáveis.
+        \item \textbf{Resultado:} Pode levar à inclusão de novos requisitos técnicos e mudanças na funcionalidade.
+    \end{itemize}
+\end{frame}
+
+% --- Slide 63: Estágio 3: Avaliação de Risco Operacional ---
+\begin{frame}{Estágio 3: Avaliação de Risco Operacional}
+    Focada no uso prático do sistema:
+    \begin{itemize}
+        \item Considera o ambiente real (ex: usuários saindo para resolver urgências).
+        \item \textbf{Mecanismo de Defesa:} Implementação de \textit{timeouts} para deslogar usuários inativos.
+    \end{itemize}
+    \begin{block}{Natureza Contínua}
+        A avaliação operacional deve continuar após a instalação para acompanhar a evolução do uso do sistema pela organização.
+    \end{block}
+\end{frame}
+
+\section{Requisitos de Segurança}
+{
+\setbeamercolor{background canvas}{bg=meuazul}
+\begin{frame}[plain]
+    \centering
+    \Huge \color{white} \bfseries Requisitos de Segurança
+\end{frame}
+}
+
+\subsection{Definição e Estratégias}
+% --- Slide 64: Requisitos de Segurança da Informação (13.3) ---
+\begin{frame}{Requisitos de Segurança da Informação (13.3)}
+    A especificação de requisitos de segurança (security) tem muito em comum com a de segurança física (safety).
+    \begin{itemize}
+        \item \textbf{Natureza de Probabilidade:} Não é possível especificar nenhum dos dois como meras probabilidades.
+        \item \textbf{Foco no Negativo:} Frequentemente são do tipo "\textbf{não deve}", definindo comportamentos inaceitáveis em vez de funcionalidades.
+    \end{itemize}
+    \begin{block}{O Desafio}
+        A segurança da informação é muito mais desafiadora do que a safety devido à presença de um adversário inteligente.
+    \end{block}
+\end{frame}
+
+% --- Slide 65: Especificação: Requisitos "Não Deve" ---
+\begin{frame}{Especificação: Requisitos "Não Deve"}
+    \centering
+    \begin{tikzpicture}[node distance=2cm]
+        \node (func) [draw, fill=meuazul!10, text width=4cm, align=center] {Requisitos Funcionais:\\O que o sistema \textbf{deve} fazer.};
+        \node (sec) [draw, fill=meuvermelhoescuro!10, right=of func, xshift=1cm, text width=4cm, align=center] {Requisitos de Segurança:\\O que o sistema \textbf{não deve} permitir.};
+    \end{tikzpicture}
+    \vspace{0.5cm}
+    \begin{itemize}
+        \item Exemplo: "O sistema \textbf{não deve} permitir que usuários sem permissão 'X' acessem o registro 'Y'".
+    \end{itemize}
+\end{frame}
+
+% --- Slide 66: Segurança da Informação vs. Segurança (Safety) I ---
+\begin{frame}{Segurança da Informação vs. Segurança (Safety) I}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \textbf{Segurança (Safety)}
+            \begin{itemize}
+                \item \textbf{Ambiente:} Não hostil. Ninguém tenta causar incidentes ativamente.
+                \item \textbf{Causa:} Erros acidentais ou omissões humanas.
+                \item \textbf{Solução:} Buscar o erro no código ou processo.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \textbf{Segurança da Informação}
+            \begin{itemize}
+                \item \textbf{Ambiente:} Hostil. Ataques \textbf{deliberados} e planejados.
+                \item \textbf{Causa:} Perpetrador inteligente explorando pontos fracos.
+                \item \textbf{Dificuldade:} O atacante tenta esconder as provas.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% --- Slide 67: Segurança da Informação vs. Segurança (Safety) II ---
+\begin{frame}{Segurança da Informação vs. Segurança (Safety) II}
+    \begin{itemize}
+        \item \textbf{Estratégia de Falha:} 
+        \begin{itemize}
+            \item \textit{Safety:} Desligar o sistema pode ser aceitável para evitar acidentes.
+            \item \textit{Security:} Desligar o sistema significa que o ataque de \textbf{Negação de Serviço} (DoS) foi bem-sucedido.
+        \end{itemize}
+        \item \textbf{Dinâmica:} 
+        \begin{itemize}
+            \item \textit{Safety:} Eventos acidentais.
+            \item \textit{Security:} Adversário inteligente que sonda as defesas e modifica ataques conforme aprende.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+% --- Slide 68: 10 Tipos de Requisitos de Segurança (Firesmith) I ---
+\begin{frame}{10 Tipos de Requisitos de Segurança (Firesmith) I}
+    Firesmith (2003) identificou 10 tipos fundamentais de requisitos:
+    \centering
+    \scriptsize
+    \begin{tabular}{lp{10cm}}
+        \hline
+        \textbf{Requisito} & \textbf{Definição} \\
+        \hline
+        \textbf{Identificação} & O sistema deve identificar seus usuários antes da interação. \\
+        \textbf{Autenticação} & Especifica como os usuários são identificados (ex: tokens, biometria). \\
+        \textbf{Autorização} & Especifica privilégios e permissões de acesso. \\
+        \textbf{Imunidade} & Como o sistema se protege de vírus e worms. \\
+        \textbf{Integridade} & Como a corrupção de dados deve ser evitada. \\
+        \hline
+    \end{tabular}
+\end{frame}
+
+% --- Slide 69: 10 Tipos de Requisitos de Segurança (Firesmith) II ---
+\begin{frame}{10 Tipos de Requisitos de Segurança (Firesmith) II}
+    \centering
+    \scriptsize
+    \begin{tabular}{lp{10cm}}
+        \hline
+        \textbf{Requisito} & \textbf{Definição} \\
+        \hline
+        \textbf{Detecção de Intrusão} & Mecanismos para detectar ataques em tempo real. \\
+        \textbf{Não repúdio} & Uma parte não pode negar seu envolvimento em uma transação. \\
+        \textbf{Privacidade} & Como a privacidade dos dados deve ser mantida. \\
+        \textbf{Auditoria} & Como o uso do sistema pode ser auditado e verificado. \\
+        \textbf{Segurança da Manutenção} & Impedir que mudanças autorizadas quebrem a segurança. \\
+        \hline
+    \end{tabular}
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item \textbf{Nota:} Nem todos os tipos são necessários em todos os sistemas.
+    \end{itemize}
+\end{frame}
+
+% --- Slide 70: Estratégias de Gerenciamento de Risco ---
+\begin{frame}{Estratégias de Gerenciamento de Risco}
+    Os requisitos de segurança apoiam três estratégias gerais:
+    \begin{itemize}
+        \item \textbf{1. Requisitos de Prevenção:} Evitar que os riscos surjam no projeto.
+        \item \textbf{2. Requisitos de Detecção:} Identificar o risco e neutralizá-lo antes da perda.
+        \item \textbf{3. Requisitos de Mitigação:} Projetar o sistema para recuperação e restauração após perda.
+    \end{itemize}
+    \centering
+    \begin{tikzpicture}[node distance=1.5cm]
+        \node (p) [draw, fill=meuverde!10] {Prevenção};
+        \node (d) [draw, fill=yellow!10, right=of p] {Detecção};
+        \node (m) [draw, fill=orange!10, right=of d] {Mitigação};
+        \draw[thick, ->] (p) -- (d);
+        \draw[thick, ->] (d) -- (m);
+    \end{tikzpicture}
+\end{frame}
+
+\subsection{Processo Dirigido por Risco}
+% --- Slide 71: Processo de Requisitos Dirigido por Risco ---
+\begin{frame}{Processo de Requisitos Dirigido por Risco}
+    \begin{block}{Figura 13.5: Processo preliminar de avaliação do risco}
+        Identificação de ativos e ameaças para derivação de requisitos.
+    \end{block}
+    \centering
+    \begin{tikzpicture}[
+        node distance=0.4cm and 0.2cm,
+        block/.style={draw=meuazul, fill=meuazul!5, text width=2.8cm, align=center, font=\tiny, rounded corners=0.2cm, thick, minimum height=0.7cm}
+    ]
+        % Nodes
+        \node[block] (s1) {Identificação de Ativos};
+        
+        \node[block, below right=0.3cm and 0.5cm of s1] (s2) {Avaliação de Valor de Ativos};
+        \node[block, below=1cm of s1] (s4) {Identificação de Ameaças};
+        
+        \node[block, right=2.5cm of s2] (s3) {Avaliação de Exposição};
+        \node[block, right=0.8cm of s4] (s5) {Avaliação de Ataques};
+        
+        \node[block, below right=0.3cm and 0.5cm of s4] (s6) {Identificação de Controles};
+        \node[block, right=1.5cm of s6] (s7) {Avaliação de Viabilidade};
+        
+        \node[block, below right=0.5cm and 0.2cm of s3, xshift=-1cm, fill=meuazul!20] (s8) {Definição de Requisitos de Segurança};
+
+        % Path/Arrows
+        \begin{scope}[-Stealth, thick]
+            \draw (s1.south) -- +(0,-0.2) -| (s2.west);
+            \draw (s1.south) -- +(0,-0.2) -| (s4.north);
+            \draw (s2) -- (s3);
+            \draw (s4) -- (s5);
+            \draw (s5.south) -- +(0,-0.2) -| (s6.north);
+            \draw (s5.south east) -- (s8.north west);
+            \draw (s6) -- (s7);
+            \draw (s7) -- (s8);
+            \draw (s3) -- (s8);
+        \end{scope}
+    \end{tikzpicture}
+\end{frame}
+
+% --- Slide 72: Estágio 1: Identificação de Ativos ---
+\begin{frame}{Estágio 1: Identificação de Ativos}
+    \begin{itemize}
+        \item Identificar o que precisa de proteção no sistema.
+        \item \textbf{O que pode ser um ativo?}
+        \begin{itemize}
+            \item Dados associados ao sistema.
+            \item Funções específicas do sistema (ex: processamento de pagamentos).
+            \item O próprio hardware e infraestrutura.
+        \end{itemize}
+    \end{itemize}
+    \centering
+    \begin{tikzpicture}
+        \node (a) [draw, fill=meuazul!10] {SISTEMA};
+        \node (d) [draw, cylinder, shape border rotate=90, fill=meuazul!5, right=of a] {DADOS};
+        \node (f) [draw, rounded corners, fill=meuazul!5, left=of a] {FUNÇÕES};
+    \end{tikzpicture}
+\end{frame}
+
+% --- Slide 73: Estágio 2 e 3: Valor e Exposição ---
+\begin{frame}{Estágio 2 e 3: Valor e Exposição}
+    \begin{itemize}
+        \item \textbf{Avaliação de Valor:} Quanto vale o ativo para a organização? (Financeiro, estratégico, reputacional).
+        \item \textbf{Avaliação de Exposição:} Quais as perdas possíveis associadas a cada ativo?
+        \begin{itemize}
+            \item Perdas diretas (furto de informação).
+            \item Custo da recuperação do sistema.
+            \item Danos à reputação da marca.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+% --- Slide 74: Estágio 4 e 5: Ameaças e Ataques ---
+\begin{frame}{Estágio 4 e 5: Ameaças e Ataques}
+    \begin{itemize}
+        \item \textbf{Identificação de Ameaças:} O que pode dar errado para cada ativo?
+        \item \textbf{Avaliação de Ataques:} Decompor cada ameaça em ataques específicos.
+    \end{itemize}
+    \begin{block}{Árvores de Ataque (Schneier)}
+        Técnica para analisar como um ataque pode ocorrer, partindo da ameaça (raiz) e identificando as causas possíveis.
+    \end{block}
+\end{frame}
+
+% --- Slide 75: Exemplo de Árvore de Ataque ---
+\begin{frame}{Exemplo de Árvore de Ataque}
+    \centering
+    \begin{tikzpicture}[level 1/.style={sibling distance=4cm}, level 2/.style={sibling distance=2cm}, every node/.style={draw, fill=meuazul!10, font=\tiny, align=center}]
+        \node {Roubo de\\Dados de Paciente}
+            child {node {Acesso Físico}
+                child {node {Furtar\\Laptop}}
+                child {node {Fingir ser\\Engenheiro}}
+            }
+            child {node {Acesso Remoto}
+                child {node {Exploração\\de SQLi}}
+                child {node {Quebra de\\Senha}}
+            };
+    \end{tikzpicture}
+\end{frame}
+
+% --- Slide 76: Estágio 6: Identificação de Controles ---
+\begin{frame}{Estágio 6: Identificação de Controles}
+    \begin{itemize}
+        \item Propor mecanismos técnicos ou organizacionais para proteger os ativos.
+        \item \textbf{Mecanismos Técnicos:} Encriptação, firewalls, autenticação multifator.
+        \item \textbf{Mecanismos Organizacionais:} Treinamento de pessoal, processos de auditoria.
+    \end{itemize}
+\end{frame}
+
+% --- Slide 77: Estágio 7: Avaliação de Viabilidade ---
+\begin{frame}{Estágio 7: Avaliação de Viabilidade}
+    \begin{itemize}
+        \item Avaliar a viabilidade técnica e os custos dos controles propostos.
+        \item \textbf{Regra de Ouro:} Não vale a pena implementar controles cujo custo supere o valor do ativo ou a perda potencial.
+    \end{itemize}
+    \centering
+    \begin{tikzpicture}
+        \node (bal) [draw, fill=gray!10] {Balança de Decisão};
+        \node (c) [draw, fill=meuvermelhoescuro!10, left=of bal, xshift=-0.5cm, yshift=-0.5cm] {Custo do Controle};
+        \node (v) [draw, fill=meuverde!10, right=of bal, xshift=0.5cm, yshift=-0.5cm] {Valor do Ativo};
+        \draw[<->, ultra thick] (c) -- (v);
+    \end{tikzpicture}
+\end{frame}
+
+% --- Slide 78: Estágio 8: Definição de Requisitos ---
+\begin{frame}{Estágio 8: Definição de Requisitos}
+    \begin{itemize}
+        \item Consolidação do conhecimento (exposição, ameaças e viabilidade) em requisitos formais.
+        \item Os requisitos podem se aplicar à \textbf{infraestrutura} (ex: requisitos de rede) ou diretamente à \textbf{aplicação} (ex: lógica de autorização).
+    \end{itemize}
+    \begin{exampleblock}{Conclusão}
+        Um requisito de segurança bem definido é o fundamento para um sistema resiliente e confiável.
+    \end{exampleblock}
+\end{frame}
+
+% ===== SLIDE FINAL =====
+\begin{frame}
+  \centering
+  \Huge Obrigado!\\
+  \vspace{1cm}
+  \large Dúvidas?
+\end{frame}
+
+% -------------
+\end{document}

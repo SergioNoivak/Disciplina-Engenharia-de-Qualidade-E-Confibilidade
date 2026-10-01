@@ -1,0 +1,273 @@
+\documentclass[12pt]{article}
+
+% Idioma e codificação
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Matemática e listas
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+
+% Layout e cores
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+% Cores institucionais
+\definecolor{maincolor}{RGB}{0, 79, 151}
+\definecolor{meuazul}{RGB}{0, 79, 151}
+
+% Cabeçalho e rodapé
+\usepackage{fancyhdr}
+
+% Blocos
+\usepackage[most]{tcolorbox}
+\newtcolorbox{block}[1]{%
+  colback=blue!5,
+  colframe=maincolor,
+  coltitle=white,
+  title=#1,
+  fonttitle=\bfseries,
+  boxrule=1.5pt,
+  arc=3mm,
+  left=6pt,
+  right=6pt,
+  top=6pt,
+  bottom=6pt
+}
+
+\newtcolorbox{resposta}[1]{%
+  colback=white,
+  colframe=meuazul!30,
+  arc=1mm,
+  height=#1,
+  width=\textwidth,
+  boxrule=0.8pt
+}
+
+% Margens
+\geometry{margin=2.5cm}
+
+% Fancyhdr
+\pagestyle{fancy}
+\fancyhf{}
+
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\footrulewidth}{2pt}
+
+\renewcommand{\headrule}{\hbox to\headwidth{%
+  \color{meuazul}\leaders\hrule height \headrulewidth\hfill}}
+
+\renewcommand{\footrule}{\hbox to\headwidth{%
+  \color{meuazul}\leaders\hrule height \footrulewidth\hfill}}
+
+\setlength{\headheight}{52pt}
+\addtolength{\topmargin}{-20pt}
+
+\fancyhead[L]{%
+  \includegraphics[height=1.2cm]{logo.png}
+}
+
+\fancyhead[R]{%
+  \raggedleft
+  \textcolor{meuazul}{%
+    \small
+    \textbf{Lista de Exercícios — Resposta a Emergências}\\
+    Me.~Sergio Souza Novak\\
+    \textit{Engenharia da Qualidade e Confiabilidade}
+  }
+}
+
+\fancyfoot[C]{\textcolor{meuazul}{\thepage}}
+
+% =========================
+\begin{document}
+% =========================
+
+\vspace*{0.2cm}
+
+\begin{center}
+  {\Large \textbf{Resposta a Emergências}}\\[0.2cm]
+  \textit{Instruções: Justifique suas respostas de forma clara e objetiva.
+  Para questões discursivas, escreva na caixa de resposta abaixo de cada enunciado.}
+\end{center}
+
+\vspace{0.4cm}
+
+\begin{block}{Conceitos de Referência}
+  \small
+  \begin{itemize}
+    \item $\text{MTTF}$ — Tempo Médio Para Falhas \quad|\quad
+          $\text{MTTR}$ — Tempo Médio Para Correção
+    \item $\displaystyle A = \frac{\text{MTTF}}{\text{MTTF} + \text{MTTR}}$ \quad (Disponibilidade)
+    \item \textbf{Runbook}: manual de procedimentos para resposta a incidentes
+    \item \textbf{Postmortem}: documento de análise pós-incidente (sem culpa)
+    \item \textbf{Canary deployment}: implantação gradual para detectar falhas antes da liberação global
+  \end{itemize}
+\end{block}
+
+\vspace{0.5cm}
+
+% -------------------------------------------------------
+% QUESTÃO 1
+% -------------------------------------------------------
+\textbf{1.} Um sistema de pagamentos operou 4.320 horas e apresentou 6 falhas. O tempo
+total gasto em reparos foi de 3 horas.
+
+\begin{enumerate}[label=\alph*)]
+  \item Calcule o \textbf{MTTF} e o \textbf{MTTR} do sistema.
+  \item Calcule a \textbf{Disponibilidade} ($A$). O sistema atende ao requisito de 99,9\%?
+  \item Para atingir 99,99\% de disponibilidade mantendo o mesmo MTTF, qual deve ser
+        o MTTR máximo (em minutos)?
+\end{enumerate}
+\begin{resposta}{5cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% -------------------------------------------------------
+% QUESTÃO 2
+% -------------------------------------------------------
+\textbf{2.} Compare os dois sistemas abaixo em termos de disponibilidade:
+
+\begin{itemize}
+  \item \textbf{Sistema A}: MTTF = 2.000 h, MTTR = 2 h (com intervenção humana)
+  \item \textbf{Sistema B}: MTTF = 500 h, MTTR = 0,1 h (recuperação automatizada)
+\end{itemize}
+
+\begin{enumerate}[label=\alph*)]
+  \item Calcule a disponibilidade de cada sistema.
+  \item Qual sistema oferece maior disponibilidade? Justifique por que sistemas com
+        mais falhas podem ser preferíveis quando possuem recuperação automática.
+\end{enumerate}
+\begin{resposta}{5.5cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% -------------------------------------------------------
+% QUESTÃO 3
+% -------------------------------------------------------
+\textbf{3.} Um engenheiro de plantão estava sozinho quando um incidente crítico se iniciou às
+2h da manhã. Sem um runbook disponível, ele improvisou a solução e levou 90 minutos
+para restaurar o serviço. Em um incidente posterior, semelhante, havia um runbook bem
+escrito. O MTTR caiu para 30 minutos.
+
+\begin{enumerate}[label=\alph*)]
+  \item Qual foi a melhoria percentual no MTTR entre os dois incidentes?
+  \item O que, conceitualmente, explica essa melhoria segundo a literatura de SRE?
+  \item Liste \textbf{quatro itens} que um runbook eficaz deve conter.
+\end{enumerate}
+\begin{resposta}{6cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% -------------------------------------------------------
+% QUESTÃO 4
+% -------------------------------------------------------
+\textbf{4.} O Google realizou um teste controlado em um banco de dados MySQL distribuído,
+bloqueando o acesso a 1 entre 100 bancos de dados. O resultado foi uma falha generalizada
+em serviços internos e externos.
+
+\begin{enumerate}[label=\alph*)]
+  \item Que tipo de falha o teste pretendia revelar? Por que esse objetivo é valioso?
+  \item O SRE abortou o teste imediatamente ao perceber o impacto. Isso foi a decisão
+        certa? Justifique.
+  \item Cite \textbf{duas lições aprendidas} com esse incidente que podem ser aplicadas
+        em qualquer organização.
+\end{enumerate}
+\begin{resposta}{6cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% -------------------------------------------------------
+% QUESTÃO 5
+% -------------------------------------------------------
+\textbf{5.} Uma mudança de configuração foi implantada globalmente em uma sexta-feira
+no Google. Em segundos, alertas foram disparados e serviços internos e externos ficaram
+inacessíveis. O engenheiro responsável pela mudança fez o rollback 5 minutos após o
+início do incidente.
+
+\begin{enumerate}[label=\alph*)]
+  \item O que é \textit{canary deployment} e como poderia ter evitado esse incidente?
+  \item Por que implantações globais em sextas-feiras são consideradas práticas de
+        alto risco em ambientes de produção?
+  \item A monitoração detectou o problema em segundos, mas gerou alertas excessivos.
+        Qual o impacto negativo de alertas excessivos durante um incidente?
+\end{enumerate}
+\begin{resposta}{6cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% -------------------------------------------------------
+% QUESTÃO 6
+% -------------------------------------------------------
+\textbf{6.} Um bug na automação de desativação do Google enviou todas as máquinas de
+uma instalação para a fila de limpeza de disco (\textit{Diskerase}) globalmente, porque a
+automação interpretou uma resposta vazia como ``aplicar a todas as máquinas''.
+
+\begin{enumerate}[label=\alph*)]
+  \item O que é uma \textbf{verificação de sanidade} (\textit{sanity check}) e como ela
+        poderia ter evitado esse incidente?
+  \item A equipe desabilitou toda a automação como primeira ação de contenção. Por quê
+        isso foi importante?
+  \item Construa uma linha do tempo simplificada do incidente, indicando os marcos
+        principais: t=0, t=1h, t=3h, t=3 dias.
+\end{enumerate}
+\begin{resposta}{7cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% -------------------------------------------------------
+% QUESTÃO 7
+% -------------------------------------------------------
+\textbf{7.} (Dissertativa) Um postmortem eficaz é um dos pilares da cultura SRE.
+
+\begin{enumerate}[label=\alph*)]
+  \item Explique o que é um postmortem ``sem culpa'' (\textit{blameless postmortem})
+        e por que essa cultura é importante para a melhoria contínua.
+  \item Quais são as \textbf{três perguntas centrais} que um postmortem bem escrito
+        deve responder?
+  \item Por que é importante \textbf{publicar} postmortems para toda a empresa e não
+        apenas para a equipe envolvida no incidente?
+\end{enumerate}
+\begin{resposta}{7cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% -------------------------------------------------------
+% QUESTÃO 8
+% -------------------------------------------------------
+\textbf{8.} Considere a seguinte afirmação:
+
+\begin{quote}
+  \textit{``Você preferiria que uma falha ocorresse às 2h da manhã de sábado, sem aviso
+  — ou quando você tivesse seus melhores profissionais à mão, monitorando um teste
+  que revisaram meticulosamente nas últimas semanas?''}
+\end{quote}
+
+\begin{enumerate}[label=\alph*)]
+  \item O que essa afirmação defende em termos de estratégia de confiabilidade?
+  \item Cite \textbf{dois benefícios} concretos dos testes proativos de falhas
+        (\textit{disaster recovery testing}) em relação às falhas inesperadas.
+  \item Quais \textbf{três perguntas do tipo ``E se\ldots?''} você faria para avaliar
+        a preparação para emergências de um sistema crítico de sua escolha?
+\end{enumerate}
+\begin{resposta}{7cm}
+\end{resposta}
+
+\vspace{0.8cm}
+
+\begin{center}
+  \textit{``Boa atividade! Att. Me. Prof. Sergio Souza Novak.''}
+\end{center}
+
+% =========================
+\end{document}
+% =========================

@@ -1,0 +1,327 @@
+\documentclass[12pt,a4paper]{article}
+
+% ------------------------------------------------
+% Pacotes
+% ------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{mathptmx} % Times New Roman
+\usepackage{courier} % Adiciona suporte a negrito na fonte monospace
+\usepackage{enumitem}\usepackage{amsfonts}
+\usepackage{amsmath} % Recomendado para o comando \text{}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{positioning, shapes.geometric, arrows.meta}
+\usepackage{listings}
+\usepackage{multicol}
+
+\lstset{
+    language=Java,
+    keywordstyle=\bfseries,
+    showstringspaces=false,
+    breaklines=true,
+    frame=none,
+    numbers=none,
+    tabsize=2,
+    commentstyle=\itshape\color{gray},
+    morekeywords={this, class, private, public, String, System, out, println, Solo, Caminhao, Patio, Termometro},
+    extendedchars=true,
+    inputencoding=utf8
+}
+
+% TikZ Styles for ER Diagrams
+\tikzset{
+    block/.style={rectangle, draw, thick, minimum width=2cm, minimum height=1cm, fill=white},
+    diamond_node/.style={diamond, draw, thick, minimum width=2cm, minimum height=1cm, fill=white, aspect=2},
+    attribute/.style={ellipse, draw, thin, minimum width=1.5cm, minimum height=0.6cm, fill=white, font=\scriptsize},
+    line/.style={draw, thick}, 
+}
+% ------------------------------------------------ 
+% Configuração de página
+% ------------------------------------------------
+\geometry{
+    a4paper,
+    left=2cm,
+    right=2cm,
+    top=2cm,
+    bottom=2cm,
+    headheight=15pt % Adicione isso
+}% Caixa para resposta discursiva
+\newcommand{\resposta}[1]{
+\noindent
+\framebox[\textwidth]{
+\begin{minipage}{0.98\textwidth}
+\vspace*{#1}\null
+\end{minipage}
+}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+
+\setlength{\parindent}{0pt}
+
+% ------------------------------------------------
+% Comandos auxiliares
+% ------------------------------------------------
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+% ------------------------------------------------
+% Documento
+% ------------------------------------------------
+\begin{document}
+
+% ------------------------------------------------
+% Cabeçalho - Corrigido para evitar aninhamento problemático
+% ------------------------------------------------
+\begin{tabularx}{\textwidth}{@{} L{4cm} X @{}}
+    \raisebox{-0.5cm}{\includegraphics[width=4cm]{Universidade_de_Rio_Verde.jpg}} &
+    \hfill
+    \begin{tabular}{|>{\centering\arraybackslash}m{9.5cm}|>{\raggedright\arraybackslash}p{1.8cm}|}
+        \hline
+        \cellcolor{black}\color{white}\rule{0pt}{1.2cm}\textbf{AVALIAÇÃO 1} 
+        & 
+        \scriptsize Nota \tabularnewline
+        \hline
+    \end{tabular} 
+\end{tabularx}
+\vspace{0.3cm}
+
+% ------------------------------------------------  
+% Tabela principal - Estrutura limpa
+% ------------------------------------------------
+\begin{tabularx}{\textwidth}{|X|L{2cm}|}
+\hline
+\textbf{Curso} & \textbf{Campus} \\
+\textit{Engenharia da Qualidade e Confiabilidade} & \textit{Rio Verde} \\
+\hline
+\multicolumn{2}{|l|}{ \textit{}} \\
+\hline
+\textbf{Nome do(a) acadêmico(a)} & \textbf{Valor} \\
+& 7,0 \\
+\hline
+\textbf{Professor} & \textbf{Turma} \\
+\textit{ Sergio Souza Novak} & \textit{} \\
+\hline
+\textbf{Data da Avaliação} & \textbf{Código} \\
+\textit{01/10/2026} & \textit{ESW451} \\
+\hline
+\end{tabularx}
+ 
+% ------------------------------------------------
+% Barra de Atenção
+% ------------------------------------------------
+\vspace{0.2cm}
+
+\begin{tabularx}{\textwidth}{|X|}
+\hline
+\cellcolor{black}\color{white}
+\centering \textbf{ATENÇÃO:} Somente serão passíveis de \textbf{REVISÃO} avaliações resolvidas à \textbf{TINTA}. \tabularnewline
+\hline
+\end{tabularx}
+
+\vspace{0.3cm}
+
+\textbf{ORIENTAÇÕES PARA A RESOLUÇÃO}  
+
+\begin{itemize}
+    \item A avaliação é individual, sem consulta;
+    \item A interpretação de texto faz parte da avaliação;
+\end{itemize}
+
+\vspace{0.5cm}
+
+\begin{center}
+    \rule{\textwidth}{0.4pt}
+    \textbf{QUESTÕES}
+\end{center}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 1 - AVAIL, POFOD, MTTF
+% ------------------------------------------------
+\textbf{Questão 1} -- Um sistema de controle industrial é monitorado ao longo de 12 meses. Durante esse período, foram registradas 4 falhas, com os seguintes tempos de operação entre elas: 500h, 800h, 300h e 600h. Após cada falha, o sistema levou, respectivamente, 10h, 20h, 5h e 15h para ser reparado e voltar à operação. Foram realizadas ainda 200 demandas ao sistema nesse período, das quais 8 resultaram em falha.
+
+Com base nesses dados e nos conceitos de métricas de confiabilidade, assinale a alternativa \textbf{correta}:
+
+\vspace{0.3cm}
+
+\begin{enumerate}[label=\textbf{(\Alph*)}]
+  
+  \item O AVAIL (Disponibilidade) é a razão entre o tempo total de operação e o tempo total (operação + reparo), resultando em aproximadamente 0,957 (ou 95,7\%). Este valor indica a proporção do tempo em que o sistema está disponível para uso.
+  \item O MTTF (Mean Time To Failure) é calculado como a soma de todos os tempos de reparo dividida pelo número de falhas, resultando em 12,5 horas.
+
+    \item O POFOD (Probability of Failure on Demand) é calculado dividindo-se o número total de horas de falha pelo número de demandas, resultando em 0,25.
+
+    \item O MTTF representa o tempo médio até a falha e, nesse caso, é calculado somando-se todos os tempos entre falhas e dividindo pelo número de demandas, resultando em 11 horas.
+
+    \item O AVAIL e o POFOD medem o mesmo fenômeno — a probabilidade de o sistema falhar — diferindo apenas na unidade de medida: o AVAIL é expresso em horas e o POFOD em percentual.
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 2 - Defeito, Erro, Estado de Erro, Estado de Falha
+% ------------------------------------------------
+\textbf{Questão 2} -- Durante o desenvolvimento de um sistema embarcado de controle de temperatura para um reator químico, um programador comete um equívoco ao implementar a fórmula de conversão de unidades de temperatura: em vez de utilizar a fórmula correta $°C = (°F - 32) \times \frac{5}{9}$, o código foi escrito com a subtração de 30 no lugar de 32. O sistema passou pelos testes iniciais sem que o erro fosse detectado. Em operação, ao receber uma leitura de 212°F, o sistema calculou 100,6°C em vez de 100°C. Essa discrepância não foi suficiente para disparar o alarme de segurança. Contudo, em uma leitura de 32°F, o sistema retornou 0,8°C em vez de 0°C, fazendo com que a bomba de resfriamento permanecesse desligada quando deveria estar ativa, comprometendo a segurança do processo.
+
+\vspace{0.2cm}
+
+Com base no cenário descrito e nos conceitos de \textbf{defeito}, \textbf{erro}, \textbf{estado de erro} e \textbf{estado de falha}, responda:
+
+\begin{enumerate}[label=\textbf{\alph*)}]
+    \item Identifique e defina cada um dos quatro conceitos (\textit{defeito}, \textit{erro}, \textit{estado de erro} e \textit{estado de falha}) aplicando-os ao cenário apresentado.
+    \item Explique a relação de causalidade entre esses conceitos, descrevendo como um leva ao outro neste caso.
+\end{enumerate}
+
+\vspace{0.2cm}
+\resposta{7cm}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 3 - Programação N-Versões
+% ------------------------------------------------
+\textbf{Questão 3} -- Uma empresa desenvolvedora de software para sistemas críticos de aviação decide adotar a técnica de \textbf{Programação N-Versões} no módulo responsável pelo cálculo da trajetória de pouso automático de aeronaves. Para isso, três equipes distintas recebem a mesma especificação e desenvolvem suas implementações de forma independente. Em tempo de execução, as três versões rodam em paralelo e um árbitro compara suas saídas, adotando o resultado da maioria.
+
+\vspace{0.2cm}
+
+Sobre a técnica de Programação N-Versões e sua aplicação no cenário descrito, assinale a alternativa \textbf{correta}:
+
+\vspace{0.3cm}
+
+\begin{enumerate}[label=\textbf{(\Alph*)}]
+    \item A principal vantagem da técnica é a redução de custo de desenvolvimento, pois as três equipes compartilham o mesmo código-base e apenas ajustam parâmetros de configuração para gerar versões distintas.
+
+    \item A técnica garante tolerância a falhas mesmo quando a especificação original contém ambiguidades ou erros, pois cada equipe interpreta a especificação de forma diferente, produzindo comportamentos diversos que se anulam no processo de votação.
+
+    \item A Programação N-Versões baseia-se na hipótese de que equipes independentes, trabalhando sobre a mesma especificação, raramente cometerão os mesmos erros de implementação, de modo que falhas em uma versão serão mascaradas pela saída correta das demais, aumentando a confiabilidade do sistema.
+
+    \item O árbitro que compara as saídas das versões pode ser implementado como um módulo de software simples, sem necessidade de ser considerado crítico, pois ele não interfere na lógica de negócio do sistema.
+
+    \item A técnica de N-Versões é equivalente à redundância simples (\textit{hot standby}), diferindo apenas no número de réplicas ativas; em ambos os casos, utiliza-se o mesmo código replicado em múltiplos processadores.
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 4 - O que é o Hadoop
+% ------------------------------------------------
+\textbf{Questão 4} -- Uma empresa de telecomunicações precisa processar diariamente bilhões de registros de chamadas telefônicas para detectar padrões de fraude. Os dados chegam de centenas de fontes diferentes, somando terabytes por dia, e devem ser analisados em poucas horas. A equipe de TI avalia a adoção do \textbf{Apache Hadoop} como solução de infraestrutura para esse processamento.
+
+\vspace{0.2cm}
+
+Considerando as características do Apache Hadoop, assinale a alternativa \textbf{correta}:
+
+\vspace{0.3cm}
+
+\begin{enumerate}[label=\textbf{(\Alph*)}]
+    \item O Hadoop é um banco de dados relacional distribuído de código aberto, projetado para substituir o SQL tradicional em aplicações de alta disponibilidade, oferecendo transações ACID em clusters de múltiplos servidores.
+
+    \item O Hadoop é um framework de código aberto para armazenamento e processamento distribuído de grandes volumes de dados (\textit{big data}). Ele utiliza o sistema de arquivos distribuído HDFS para armazenar dados replicados em múltiplos nós e o modelo \textit{MapReduce} para processar esses dados em paralelo, sendo projetado para tolerar falhas de hardware como um evento esperado e não como exceção.
+
+    \item O Hadoop é uma solução de virtualização de servidores desenvolvida pela Apache Software Foundation, cujo principal objetivo é garantir alta disponibilidade de aplicações web por meio do balanceamento automático de carga entre instâncias replicadas.
+
+    \item O Hadoop funciona exclusivamente em ambientes de nuvem pública (como AWS e Google Cloud), pois seu modelo de processamento exige latência de rede mínima garantida por provedores de infraestrutura certificados; não é possível implantá-lo em servidores físicos \textit{on-premise}.
+
+    \item O Hadoop adota uma arquitetura de processamento em memória (\textit{in-memory computing}), na qual todos os dados são mantidos na RAM dos nós durante o processamento, descartando o uso de disco para maximizar a velocidade de resposta.
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 5 - Escala Vertical e Horizontal
+% ------------------------------------------------
+\textbf{Questão 5} -- Sobre as estratégias de \textbf{escalonamento vertical} (\textit{scale up}) e \textbf{escalonamento horizontal} (\textit{scale out}) de sistemas, julgue as afirmativas abaixo como \textbf{(V) Verdadeiro} ou \textbf{(F) Falso}:
+
+\vspace{0.3cm}
+
+\begin{enumerate}[label=\textbf{(\hspace{0.6cm})} ,leftmargin=2cm]
+
+    \item O escalonamento vertical consiste em aumentar a capacidade de um único servidor, adicionando mais CPU, memória RAM ou armazenamento, sem alterar a arquitetura da aplicação.
+
+    \item O escalonamento horizontal exige que a aplicação seja projetada para suportar múltiplas instâncias simultâneas, pois envolve adicionar mais máquinas (nós) ao sistema que dividem a carga de trabalho entre si.
+
+    \item O escalonamento vertical possui limite físico de crescimento imposto pelo hardware disponível, enquanto o escalonamento horizontal, em teoria, pode crescer indefinidamente pela adição de novos nós.
+
+    \item O escalonamento horizontal é mais simples de implementar do que o vertical, pois não exige nenhuma alteração no código da aplicação nem na forma como os dados são particionados.
+
+    \item Um sistema que adota escalonamento horizontal geralmente apresenta maior tolerância a falhas do que um sistema que depende exclusivamente de escalonamento vertical, pois a falha de um nó não implica necessariamente a indisponibilidade de todo o sistema.
+
+    \item O escalonamento vertical é a estratégia adotada por padrão em sistemas de \textit{big data} como o Hadoop, pois o processamento paralelo distribuído exige uma única máquina com altíssima capacidade de processamento.
+
+\end{enumerate}
+
+% \newpage
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 6 - Arquitetura do Sistema de Proteção (Sommerville)
+% ------------------------------------------------
+\textbf{Questão 6} -- Observe o diagrama abaixo, que representa a \textbf{arquitetura de um sistema de proteção} conforme proposta por Sommerville:
+
+\vspace{0.4cm}
+
+\begin{center}
+\begin{tikzpicture}[
+    caixa/.style={rectangle, draw, thick, minimum width=3.4cm, minimum height=0.9cm,
+                  align=center, fill=white, font=\small},
+    seta/.style={-Stealth, thick}
+]
+
+% --- Nós ---
+\node[caixa] (amb)  at ( 0,    0  ) {Ambiente do sistema};
+\node[caixa] (sp)   at (-2.8, -1.9) {Sensores\\de proteção};
+\node[caixa] (se)   at ( 2.8, -1.9) {Sensores};
+\node[caixa] (prot) at (-2.8, -3.8) {Sistema\\de proteção};
+\node[caixa] (ctrl) at ( 2.8, -3.8) {Sistema de controle};
+\node[caixa] (atu)  at ( 0,   -5.7) {Atuadores};
+\node[caixa] (eq)   at ( 0,   -7.6) {Equipamento\\controlado};
+
+% --- Setas principais ---
+\draw[seta] (amb)  -- (sp);
+\draw[seta] (amb)  -- (se);
+\draw[seta] (sp)   -- (prot);
+\draw[seta] (se)   -- (ctrl);
+\draw[seta] (prot) -- (atu);
+\draw[seta] (ctrl) -- (atu);
+\draw[seta] (atu)  -- (eq);
+
+% --- Realimentação (feedback): Equipamento controlado → esquerda → cima → Sensores de proteção ---
+\draw[seta] (eq.west) -- ++(-3.2, 0) -- ++(0, 5.7) -- (sp.west);
+
+% --- Regiões de agrupamento ---
+% Região do sistema de proteção (esquerda)
+\draw[dashed, rounded corners=6pt, draw=black!50]
+    (-5.3, -4.7) rectangle (-0.1, -0.6);
+
+% Região do sistema de controle (direita)
+\draw[dashed, rounded corners=6pt, draw=black!50]
+    ( 0.1, -4.7) rectangle ( 5.3, -0.6);
+
+% Rótulos das regiões
+\node[font=\scriptsize\itshape, text=black!60] at (-4.6, -4.4) {Sistema de proteção};
+\node[font=\scriptsize\itshape, text=black!60] at ( 4.3, -4.4) {Sistema de controle};
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+Com base no diagrama e nos conceitos de Sommerville sobre sistemas críticos de segurança, responda:
+Por que o sistema de proteção é mantido \textbf{separado} do sistema de controle? Qual é a importância arquitetural dessa separação para a confiabilidade do sistema?
+\vspace{0.2cm}
+
+\resposta{4cm}
+
+\end{document}

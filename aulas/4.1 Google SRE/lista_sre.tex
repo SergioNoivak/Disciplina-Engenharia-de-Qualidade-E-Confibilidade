@@ -1,0 +1,280 @@
+\documentclass[12pt]{article}
+
+% Idioma e codificação
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Matemática e listas
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+
+% Layout e cores
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+% Cores institucionais
+\definecolor{maincolor}{RGB}{0,100,50}
+\definecolor{forestgreen}{RGB}{0,100,50}
+
+% Cabeçalho e rodapé
+\usepackage{fancyhdr}
+
+% Blocos
+\usepackage[most]{tcolorbox}
+\newtcolorbox{block}[1]{%
+  colback=green!5,
+  colframe=maincolor,
+  coltitle=white,
+  title=#1,
+  fonttitle=\bfseries,
+  boxrule=1.5pt,
+  arc=3mm,
+  left=6pt,
+  right=6pt,
+  top=6pt,
+  bottom=6pt
+}
+
+\newtcolorbox{resposta}[1]{%
+  colback=white,
+  colframe=forestgreen!30,
+  arc=1mm,
+  height=#1,
+  width=\textwidth,
+  boxrule=0.8pt
+}
+
+% Margens
+\geometry{margin=2.5cm}
+
+% Fancyhdr
+\pagestyle{fancy}
+\fancyhf{}
+
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\footrulewidth}{2pt}
+
+\renewcommand{\headrule}{\hbox to\headwidth{%
+  \color{forestgreen}\leaders\hrule height \headrulewidth\hfill}}
+
+\renewcommand{\footrule}{\hbox to\headwidth{%
+  \color{forestgreen}\leaders\hrule height \footrulewidth\hfill}}
+
+% Altura do cabeçalho
+\setlength{\headheight}{52pt}
+\addtolength{\topmargin}{-20pt}
+
+% Cabeçalho
+\fancyhead[L]{%
+  \includegraphics[height=1.2cm]{Universidade_de_Rio_Verde.jpg}
+}
+
+\fancyhead[R]{%
+  \raggedleft
+  \textcolor{forestgreen}{%
+    \small
+    \textbf{Lista de Exercícios — Google SRE}\\
+    Me.~Sergio Souza Novak\\
+    \textit{Engenharia da Qualidade e Confiabilidade}
+  }
+}
+
+% Rodapé
+\fancyfoot[C]{\textcolor{forestgreen}{\thepage}}
+
+% =========================
+\begin{document}
+% =========================
+
+\vspace*{0.2cm}
+
+\begin{center}
+  {\Large \textbf{Lista de Exercícios: Google SRE (Site Reliability Engineering)}}\\[0.2cm]
+  \textit{Instruções: Responda às questões abaixo apresentando os cálculos e fundamentações necessárias.}
+\end{center}
+
+\vspace{0.3cm}
+
+
+\textbf{1.} Explique o conceito da ``Muralha da Confusão'' (\textit{Wall of Confusion}) existente no modelo tradicional de TI entre as equipes de Desenvolvimento e Operações (Sysadmins). Como o modelo SRE criado por Ben Treynor Sloss no Google resolve essa incompatibilidade de incentivos utilizando a Engenharia de Software?
+\begin{resposta}{4.5cm}
+\end{resposta}
+
+\vspace{0.4cm}
+
+\textbf{2.} De acordo com os princípios de Engenharia de Confiabilidade do Google, qual é a porcentagem máxima recomendada de tempo que um engenheiro SRE deve gastar em atividades operacionais manuais e repetitivas (\textit{Toil}), e qual deve ser o destino do tempo restante?
+\begin{enumerate}[label=\alph*)]
+    \item No máximo 30\% em \textit{Toil}; os 70\% restantes devem ser dedicados a plantões adicionais.
+    \item No máximo 50\% em \textit{Toil}; os 50\% restantes devem ser dedicados a projetos de engenharia de software e automação.
+    \item No máximo 75\% em \textit{Toil}; os 25\% restantes devem ser dedicados a atendimento de tickets de suporte de nível 1.
+    \item No máximo 10\% em \textit{Toil}; os 90\% restantes devem ser dedicados ao desenvolvimento de novas funcionalidades do produto.
+    \item 100\% do tempo em \textit{Toil}; equipes de SRE não devem escrever código de automação.
+\end{enumerate}
+
+\vspace{0.4cm}
+
+\textbf{3.} Um serviço web de grande porte possui um Objetivo de Nível de Serviço (SLO) de disponibilidade estipulado em \textbf{99,9\%} para um mês comercial de 30 dias (720 horas).
+\begin{enumerate}[label=\alph*)]
+    \item Calcule o percentual do \textit{Error Budget} e o tempo máximo total de indisponibilidade (\textit{downtime}) permitido no mês, em minutos.
+    \item Se a diretoria decidir elevar o SLO para \textbf{99,99\%}, qual será o novo tempo máximo de \textit{downtime} mensal permitido? Discuta por que buscar 100\% de disponibilidade é financeiramente e operacionalmente inviável.
+\end{enumerate}
+\begin{resposta}{5.5cm}
+\end{resposta}
+
+\vspace{0.4cm}
+
+\textbf{4.} No modelo Google SRE, estima-se que cada incidente grave exige aproximadamente 6 horas de trabalho total (mitigação, investigação, escrita de postmortem e automação). Com base nisso, qual é o limite máximo sustentável de incidentes graves por turno de 12 horas?
+\begin{enumerate}[label=\alph*)]
+    \item No máximo 1 incidente por turno.
+    \item No máximo 2 incidentes por turno.
+    \item No máximo 5 incidentes por turno.
+    \item No máximo 8 incidentes por turno.
+    \item Não há limite, desde que o plantonista permaneça acordado.
+\end{enumerate}
+
+\vspace{0.4cm}
+
+\textbf{5.} Uma equipe composta por 4 engenheiros SRE soma 160 horas semanais de trabalho útil. Na medição do último mês, verificou-se que 112 horas semanais foram gastas respondendo a alertas manuais, executando rotinas repetitivas de manutenção e atendendo tickets de suporte.
+\begin{enumerate}[label=\alph*)]
+    \item Calcule o percentual de tempo gasto pela equipe em \textit{Toil} (trabalho operacional braçal).
+    \item O limite máximo recomendado pela filosofia SRE foi ultrapassado? Caso positivo, qual mecanismo institucional de proteção o modelo SRE exige que seja acionado?
+\end{enumerate}
+\begin{resposta}{7.0cm}
+\end{resposta}
+
+\vspace{0.4cm}
+
+\textbf{6.} O \textit{Error Budget} (Orçamento de Erro) é um conceito central em SRE definido como $100\% - \text{SLO}$. O que deve acontecer quando uma equipe de produto esgota 100\% do seu \textit{Error Budget} em um determinado ciclo?
+\begin{enumerate}[label=\alph*)]
+    \item A equipe de SRE deve ser responsabilizada financeiramente e pagar multas operacionais.
+    \item O SLO do sistema deve ser automaticamente reduzido para cobrir as falhas ocorridas.
+    \item O congelamento de deploys de novas funcionalidades (\textit{feature releases}) deve ser acionado, priorizando a estabilização e correção de bugs de infraestrutura.
+    \item O limite de indisponibilidade é zerado automaticamente sem necessidade de ação corretiva.
+    \item Os clientes devem receber reembolso imediato, independentemente dos termos do SLA contratual.
+\end{enumerate}
+
+\vspace{0.4cm}
+
+\textbf{7.} Durante um deploy manual realizado na sexta-feira às 19h, um desenvolvedor executou um script de migração de banco de dados no ambiente errado, resultando na perda de dados de transações e em 2 horas de paralisação.
+\begin{enumerate}[label=\alph*)]
+    \item Por que a abordagem tradicional de culpar ou demitir o profissional é considerada prejudicial para a confiabilidade de longo prazo no modelo SRE?
+    \item Sob a perspectiva de um \textit{Postmortem Blameless} (Sem Culpados), cite dois elementos fundamentais que devem constar no documento e proponha uma melhoria de engenharia para evitar que a falha humana volte a derrubar o sistema.
+\end{enumerate}
+\begin{resposta}{5.5cm}
+\end{resposta}
+
+\vspace{0.4cm}
+
+\textbf{8.} Assinale a alternativa que descreve CORRETAMENTE a relação de rigor e hierarquia entre SLI (Indicador), SLO (Objetivo) e SLA (Acordo):
+\begin{enumerate}[label=\alph*)]
+    \item O SLA contratual deve ser mais rigoroso e exigente do que o SLO interno da equipe técnica.
+    \item O SLI mede a meta desejada, enquanto o SLO é a cláusula jurídica de penalidade financeira.
+    \item O SLO é a meta interna de confiabilidade adotada pela equipe de engenharia e deve ser igual ou mais estrito que o SLA acordado com os clientes.
+    \item O SLA não possui implicações comerciais nem financeiras em caso de descumprimento.
+    \item O SLI representa a porcentagem de chamados telefônicos atendidos pelo suporte técnico.
+\end{enumerate}
+
+\vspace{0.4cm}
+
+\textbf{9.} Considere os seguintes indicadores de uma API de pagamento:
+\begin{itemize}
+    \item \textbf{SLI:} Porcentagem de requisições HTTP com resposta com código \texttt{200 OK} em tempo $< 300\text{ms}$.
+    \item \textbf{SLO:} $99,5\%$ das requisições atendendo ao critério acima em um período de 24 horas.
+    \item \textbf{SLA:} $99,0\%$ de requisições atendidas, sob pena de reembolso financeiro de 10\% na fatura dos clientes.
+\end{itemize}
+Em um dia de pico com $2.000.000$ de requisições totais, $16.000$ requisições demoraram mais de $300\text{ms}$ ou retornaram erro \texttt{500}.
+\begin{enumerate}[label=\alph*)]
+    \item O SLI medido no dia atendeu ao SLO? Apresente os cálculos.
+    \item O SLA foi violado a ponto de gerar penalidade financeira para a empresa? Justifique.
+\end{enumerate}
+\begin{resposta}{5.5cm}
+\end{resposta}
+
+\vspace{0.4cm}
+
+\textbf{10.} Qual é a finalidade principal de confeccionar um relatório de \textit{Postmortem Blameless} (Análise Pós-Incidente Sem Culpados) após a ocorrência de uma falha grave em produção?
+\begin{enumerate}[label=\alph*)]
+    \item Identificar e punir disciplinarmente o desenvolvedor ou operador que cometeu o erro manual.
+    \item Provar judicialmente que a equipe de infraestrutura não teve culpa na interrupção do serviço.
+    \item Identificar falhas nos processos, ferramentas e arquitetura do sistema para implementar automações e proteções que impeçam a repetição da falha.
+    \item Isentar a empresa do cumprimento de acordos de nível de serviço (SLAs) com os clientes.
+    \item Justificar o aumento do orçamento financeiro do departamento de TI.
+\end{enumerate}
+
+\vspace{0.4cm}
+
+\textbf{11.} A famosa frase de Ben Treynor afirma: \textit{``SRE é o que acontece quando você pede a um engenheiro de software para projetar uma equipe de operações''}. Diferencie os conceitos de DevOps e SRE em termos de escopo e implementação. Como a SRE concretiza na prática o princípio DevOps de ``Automação de Tudo''?
+\begin{resposta}{4.5cm}
+\end{resposta}
+
+\vspace{0.4cm}
+
+\textbf{12.} O modelo SRE estima que cada incidente grave exige cerca de 6 horas de trabalho dedicado (mitigação, investigação de causa-raiz, escrita de postmortem e implementação de automação preventiva).
+\begin{enumerate}[label=\alph*)]
+    \item Em um turno de plantão (\textit{on-call}) de 12 horas, qual é a quantidade máxima sustentável de incidentes por turno?
+    \item Caso um plantonista receba 5 alertas urgentes em um único turno de 12 horas, explique as consequências imediatas para a qualidade das respostas técnicas e para a saúde da equipe (\textit{burnout} e fadiga de alertas).
+\end{enumerate}
+\begin{resposta}{7.0cm}
+\end{resposta}
+
+\vspace{0.4cm}
+
+\textbf{13.} Uma equipe de produto esgotou 100\% do seu \textit{Error Budget} trimestral logo nos primeiros 15 dias do trimestre devido a falhas recorrentes de um novo módulo.
+\begin{enumerate}[label=\alph*)]
+    \item De acordo com os princípios do Google SRE, qual deve ser a ação imediata aplicada ao pipeline de novos lançamentos (\textit{feature releases}) da equipe de Desenvolvimento?
+    \item Como o \textit{Error Budget} funciona como um mecanismo neutro de negociação entre a velocidade de inovação (Dev) e a estabilidade de produção (SRE)?
+\end{enumerate}
+\begin{resposta}{7.0cm}
+\end{resposta}
+
+\vspace{0.4cm}
+
+\textbf{14.} Em um quadro Kanban de uma equipe SRE, o trabalho é dividido entre tarefas de Operação (atendimento a chamados/resposta a incidentes) e projetos de Engenharia (automação/desenvolvimento de ferramentas). Explique como a distribuição de cartões no Kanban deve se comportar em um \textbf{Sistema Maduro} vs. um \textbf{Sistema Instável (Com Alto Débito Técnico)}.
+\begin{resposta}{4.5cm}
+\end{resposta}
+
+\vspace{0.4cm}
+
+\textbf{15.} O modelo Google SRE define uma diretriz clara: \textit{``O Pager só deve tocar quando um ser humano precisa tomar uma ação imediata em produção''}.
+\begin{enumerate}[label=\alph*)]
+    \item Diferencie a destinação adequada de um \textbf{Alerta Urgente (Pager)}, um \textbf{Alerta Informativo (Ticket/Email)} e um \textbf{Registro de Log}.
+    \item Suponha que o uso de CPU de um servidor secundário atingiu 85\%, mas o sistema continua respondendo normalmente sem impacto aos usuários. Esse evento deve acionar o pager? Justifique sua resposta com base nos princípios SRE.
+\end{enumerate}
+\begin{resposta}{7.0cm}
+\end{resposta}
+
+\vspace{0.4cm}
+
+\textbf{16.} Uma API de transações bancárias opera 24/7 com um SLO de disponibilidade fixado em \textbf{99,95\%} para um mês comercial de 30 dias (720 horas).
+\begin{enumerate}[label=\alph*)]
+    \item Calcule o orçamento total de erros (\textit{Error Budget}) em minutos para todo o mês.
+    \item Na primeira semana (7 dias completos), ocorreu uma instabilidade que causou 12,6 minutos de indisponibilidade acumulada. Calcule a porcentagem do \textit{Error Budget} mensal que foi consumida nessa primeira semana e analise se a taxa de queima (\textit{Burn Rate}) excedeu o limite proporcional esperado para 7 dias ($\approx 23,3\%$ do mês).
+\end{enumerate}
+\begin{resposta}{5.5cm}
+\end{resposta}
+
+\vspace{0.4cm}
+
+\textbf{17.} Uma plataforma de streaming mede seu SLI de latência estabelecendo que a busca de vídeos deve responder em tempo $< 150\text{ms}$. O SLO estipulado é de \textbf{99,8\%} de requisições bem-sucedidas dentro desta meta de tempo por dia. Em um dia de pico com $5.000.000$ de requisições totais:
+\begin{itemize}
+    \item $4.985.000$ requisições responderam em $< 150\text{ms}$.
+    \item $15.000$ requisições levaram entre $150\text{ms}$ e $500\text{ms}$.
+\end{itemize}
+\begin{enumerate}[label=\alph*)]
+    \item Calcule a porcentagem real do SLI de latência atingida no dia e determine se a equipe cumpriu ou violou o SLO.
+    \item Calcule quantas requisições lentas a mais poderiam ter ocorrido no dia antes de o SLO de $99,8\%$ ser estourado.
+\end{enumerate}
+\begin{resposta}{5.5cm}
+\end{resposta}
+
+\vspace{0.8cm}
+
+\begin{center}
+    \textit{“Boa atividade! Att. Me. Prof. Sergio Souza Novak.”}
+\end{center}
+
+% =========================
+\end{document}
+% =========================

@@ -1,0 +1,428 @@
+\documentclass[12pt]{article}
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usetikzlibrary{positioning,arrows.meta,calc}
+
+% Definições de Cores
+\definecolor{meuazul}{RGB}{0, 79, 151}
+\definecolor{meuvermelhoescuro}{RGB}{180, 30, 30}
+\definecolor{meuverde}{RGB}{30, 130, 60}
+
+\geometry{margin=2.0cm}
+\pagestyle{fancy}
+\fancyhf{}
+
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\footrulewidth}{2pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{meuazul}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrule}{\hbox to\headwidth{\color{meuazul}\leaders\hrule height \footrulewidth\hfill}}
+
+\setlength{\headheight}{45pt}
+\fancyhead[L]{\includegraphics[height=1.2cm]{logo.png}}
+\fancyhead[R]{\raggedleft \textcolor{meuazul}{\small \textbf{Engenharia da Qualidade e Confiabilidade}\\ \textbf{Assunto: Git, GitHub e GitFlow}\\ Prof. Me. Sergio Souza Novak}}
+\fancyfoot[C]{\textcolor{meuazul}{\thepage}}
+
+% Configuração do Listings
+\lstdefinelanguage{Git}{
+  morekeywords={git, commit, push, pull, branch, checkout, merge, flow, init, feature, start, finish, release, hotfix, add, tag, status, log, clone, remote, switch},
+  sensitive=false,
+  morecomment=[l]{\#},
+}
+\lstset{
+  language=Git,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{meuazul}\bfseries,
+  commentstyle=\color{gray}\itshape,
+  backgroundcolor=\color{gray!10},
+  frame=single,
+  rulecolor=\color{gray!30},
+  breaklines=true,
+  showstringspaces=false
+}
+
+\begin{document}
+
+\begin{center}
+    \textcolor{meuazul}{\Large \textbf{Lista de Exercícios: Git, GitHub e GitFlow}}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[
+  colback=meuazul!5,
+  colframe=meuazul,
+  arc=4pt,
+  title={\textbf{Contexto do Projeto}},
+  fonttitle=\bfseries\color{white}
+]
+Você foi contratado para desenvolver o site da \textbf{Lanchonete do Bairro}. O projeto consiste em uma página web simples com os arquivos \texttt{index.html} (página principal), \texttt{style.css} (estilos) e \texttt{cardapio.js} (lógica do cardápio). Além disso, haverá um arquivo \texttt{README.md} com as instruções do projeto. Todos os exercícios a seguir são baseados nesse projeto. \textbf{Execute os comandos no terminal da sua máquina, dentro de uma pasta chamada} \texttt{lanchonete-web}.
+\end{tcolorbox}
+
+\vspace{0.4cm}
+
+% ============================================================
+% WIREFRAMES DAS TELAS HTML
+% ============================================================
+\begin{center}
+    \textcolor{meuazul}{\large \textbf{Referência Visual: Wireframes do Projeto}}\\[0.15cm]
+    {\small Use os wireframes abaixo como guia para criar os arquivos HTML do projeto.}
+\end{center}
+\vspace{0.3cm}
+
+\noindent
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    {\small\bfseries\texttt{index.html} --- Página Principal}\\[0.25cm]
+    \resizebox{\textwidth}{!}{%
+    \begin{tikzpicture}[font=\scriptsize]
+      % Borda externa
+      \draw[thick, gray!60] (0,0) rectangle (10,-10.5);
+      % ---- NAV ----
+      \fill[gray!20] (0,0) rectangle (10,-0.9);
+      \draw[gray!50] (0,-0.9) -- (10,-0.9);
+      \draw[gray!60] (0.2,-0.12) rectangle (1.1,-0.78);
+      \draw[gray!60] (0.2,-0.12) -- (1.1,-0.78);
+      \draw[gray!60] (1.1,-0.12) -- (0.2,-0.78);
+      \node[anchor=east, font=\tiny] at (9.85,-0.45) {Início $|$ Cardápio $|$ Promoções $|$ Contato};
+      \node[anchor=west, text=gray, font=\tiny] at (0.1,-1.05) {\texttt{<nav>}};
+      % ---- HERO ----
+      \fill[gray!8] (0.25,-1.25) rectangle (9.75,-4.2);
+      \draw[dashed, gray!50] (0.25,-1.25) rectangle (9.75,-4.2);
+      \node[font=\small\bfseries] at (5,-2.3) {Bem-vindo à Lanchonete do Bairro};
+      \draw[rounded corners=2pt, gray!60, fill=gray!15] (3.4,-3.0) rectangle (6.6,-3.8);
+      \node[font=\scriptsize] at (5,-3.4) {Ver Cardápio →};
+      \node[anchor=west, text=gray, font=\tiny] at (0.1,-4.38) {\texttt{<section id="hero">}};
+      % ---- SECTION CARDAPIO ----
+      \node[anchor=west, font=\small\bfseries] at (0.25,-4.9) {Nosso Cardápio};
+      \node[anchor=west, text=gray, font=\tiny] at (0.1,-5.2) {\texttt{<section id="cardapio">}};
+      % -- Card 1 --
+      \draw[gray!70] (0.2,-5.5) rectangle (3.3,-9.3);
+      \fill[gray!20] (0.35,-5.65) rectangle (3.15,-7.35);
+      \draw[gray!50] (0.35,-5.65) -- (3.15,-7.35);
+      \draw[gray!50] (3.15,-5.65) -- (0.35,-7.35);
+      \node at (1.75,-7.75) {X-Burguer};
+      \node[text=gray] at (1.75,-8.2) {R\$ 18,90};
+      \draw[rounded corners=1pt, gray!60, fill=gray!15] (0.65,-8.55) rectangle (2.85,-9.05);
+      \node[font=\tiny] at (1.75,-8.8) {Pedir};
+      % -- Card 2 --
+      \draw[gray!70] (3.6,-5.5) rectangle (6.7,-9.3);
+      \fill[gray!20] (3.75,-5.65) rectangle (6.55,-7.35);
+      \draw[gray!50] (3.75,-5.65) -- (6.55,-7.35);
+      \draw[gray!50] (6.55,-5.65) -- (3.75,-7.35);
+      \node at (5.15,-7.75) {X-Bacon};
+      \node[text=gray] at (5.15,-8.2) {R\$ 21,90};
+      \draw[rounded corners=1pt, gray!60, fill=gray!15] (4.05,-8.55) rectangle (6.25,-9.05);
+      \node[font=\tiny] at (5.15,-8.8) {Pedir};
+      % -- Card 3 --
+      \draw[gray!70] (7.0,-5.5) rectangle (9.8,-9.3);
+      \fill[gray!20] (7.15,-5.65) rectangle (9.65,-7.35);
+      \draw[gray!50] (7.15,-5.65) -- (9.65,-7.35);
+      \draw[gray!50] (9.65,-5.65) -- (7.15,-7.35);
+      \node at (8.4,-7.75) {Combo Família};
+      \node[text=gray] at (8.4,-8.2) {R\$ 45,90};
+      \draw[rounded corners=1pt, gray!60, fill=gray!15] (7.3,-8.55) rectangle (9.5,-9.05);
+      \node[font=\tiny] at (8.4,-8.8) {Pedir};
+      % ---- FOOTER ----
+      \fill[gray!25] (0,-9.6) rectangle (10,-10.5);
+      \draw[gray!50] (0,-9.6) -- (10,-9.6);
+      \node[font=\tiny] at (5,-10.05) {© 2024 Lanchonete do Bairro};
+      \node[anchor=west, text=gray, font=\tiny] at (0.1,-10.65) {\texttt{<footer>}};
+    \end{tikzpicture}}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \centering
+    {\small\bfseries\texttt{promocoes.html} --- Página de Promoções}\\[0.25cm]
+    \resizebox{\textwidth}{!}{%
+    \begin{tikzpicture}[font=\scriptsize]
+      % Borda externa
+      \draw[thick, gray!60] (0,0) rectangle (10,-11.5);
+      % ---- NAV ----
+      \fill[gray!20] (0,0) rectangle (10,-0.9);
+      \draw[gray!50] (0,-0.9) -- (10,-0.9);
+      \draw[gray!60] (0.2,-0.12) rectangle (1.1,-0.78);
+      \draw[gray!60] (0.2,-0.12) -- (1.1,-0.78);
+      \draw[gray!60] (1.1,-0.12) -- (0.2,-0.78);
+      \node[anchor=east, font=\tiny] at (9.85,-0.45) {Início $|$ Cardápio $|$ Promoções $|$ Contato};
+      \node[anchor=west, text=gray, font=\tiny] at (0.1,-1.05) {\texttt{<nav>}};
+      % ---- TITULO ----
+      \node[font=\normalsize\bfseries] at (5,-1.7) {Promoções do Dia};
+      \draw[gray!40] (2.5,-2.05) -- (7.5,-2.05);
+      \node[anchor=west, text=gray, font=\tiny] at (0.1,-2.2) {\texttt{<main>}};
+      % ---- SIDEBAR ----
+      \draw[dashed, gray!60] (7.6,-2.5) rectangle (9.8,-8.0);
+      \node[font=\tiny\bfseries] at (8.7,-2.9) {Categorias};
+      \draw[gray!40] (7.7,-3.15) -- (9.7,-3.15);
+      \draw[gray!60] (7.75,-3.45) rectangle (8.1,-3.75); \node[anchor=west, font=\tiny] at (8.15,-3.6) {Lanches};
+      \draw[gray!60] (7.75,-4.05) rectangle (8.1,-4.35); \node[anchor=west, font=\tiny] at (8.15,-4.2) {Bebidas};
+      \draw[gray!60] (7.75,-4.65) rectangle (8.1,-4.95); \node[anchor=west, font=\tiny] at (8.15,-4.8) {Combos};
+      \draw[gray!60] (7.75,-5.25) rectangle (8.1,-5.55); \node[anchor=west, font=\tiny] at (8.15,-5.4) {Sobremesas};
+      \node[anchor=west, text=gray, font=\tiny] at (7.6,-8.2) {\texttt{<aside>}};
+      % ---- CARDS PROMOCAO (2 colunas) ----
+      % Card 1
+      \draw[gray!70] (0.2,-2.5) rectangle (3.7,-6.4);
+      \fill[gray!20] (0.35,-2.65) rectangle (3.55,-4.5);
+      \draw[gray!50] (0.35,-2.65) -- (3.55,-4.5);
+      \draw[gray!50] (3.55,-2.65) -- (0.35,-4.5);
+      \node[font=\tiny\bfseries] at (1.95,-4.85) {Combo X-Bacon};
+      \node[text=gray, font=\tiny] at (1.95,-5.2) {De: R\$ 25,00};
+      \node[font=\tiny] at (1.95,-5.55) {\textbf{Por: R\$ 18,90}};
+      \node[text=gray, font=\tiny] at (1.95,-5.85) {Válido até: 30/06};
+      \draw[rounded corners=1pt, gray!60, fill=gray!15] (0.7,-6.0) rectangle (3.2,-6.55);
+      \node[font=\tiny] at (1.95,-6.28) {Aproveitar};
+      % Card 2
+      \draw[gray!70] (3.9,-2.5) rectangle (7.4,-6.4);
+      \fill[gray!20] (4.05,-2.65) rectangle (7.25,-4.5);
+      \draw[gray!50] (4.05,-2.65) -- (7.25,-4.5);
+      \draw[gray!50] (7.25,-2.65) -- (4.05,-4.5);
+      \node[font=\tiny\bfseries] at (5.65,-4.85) {Frango Grelhado};
+      \node[text=gray, font=\tiny] at (5.65,-5.2) {De: R\$ 20,00};
+      \node[font=\tiny] at (5.65,-5.55) {\textbf{Por: R\$ 14,90}};
+      \node[text=gray, font=\tiny] at (5.65,-5.85) {Válido até: 30/06};
+      \draw[rounded corners=1pt, gray!60, fill=gray!15] (4.4,-6.0) rectangle (6.9,-6.55);
+      \node[font=\tiny] at (5.65,-6.28) {Aproveitar};
+      % Card 3
+      \draw[gray!70] (0.2,-6.8) rectangle (3.7,-10.7);
+      \fill[gray!20] (0.35,-6.95) rectangle (3.55,-8.8);
+      \draw[gray!50] (0.35,-6.95) -- (3.55,-8.8);
+      \draw[gray!50] (3.55,-6.95) -- (0.35,-8.8);
+      \node[font=\tiny\bfseries] at (1.95,-9.15) {Milkshake 500ml};
+      \node[text=gray, font=\tiny] at (1.95,-9.5) {De: R\$ 15,00};
+      \node[font=\tiny] at (1.95,-9.85) {\textbf{Por: R\$ 10,90}};
+      \node[text=gray, font=\tiny] at (1.95,-10.15) {Válido até: 30/06};
+      \draw[rounded corners=1pt, gray!60, fill=gray!15] (0.7,-10.3) rectangle (3.2,-10.85);
+      \node[font=\tiny] at (1.95,-10.58) {Aproveitar};
+      % Card 4
+      \draw[gray!70] (3.9,-6.8) rectangle (7.4,-10.7);
+      \fill[gray!20] (4.05,-6.95) rectangle (7.25,-8.8);
+      \draw[gray!50] (4.05,-6.95) -- (7.25,-8.8);
+      \draw[gray!50] (7.25,-6.95) -- (4.05,-8.8);
+      \node[font=\tiny\bfseries] at (5.65,-9.15) {Batata Frita M};
+      \node[text=gray, font=\tiny] at (5.65,-9.5) {De: R\$ 12,00};
+      \node[font=\tiny] at (5.65,-9.85) {\textbf{Por: R\$ 8,90}};
+      \node[text=gray, font=\tiny] at (5.65,-10.15) {Válido até: 30/06};
+      \draw[rounded corners=1pt, gray!60, fill=gray!15] (4.4,-10.3) rectangle (6.9,-10.85);
+      \node[font=\tiny] at (5.65,-10.58) {Aproveitar};
+      % ---- FOOTER ----
+      \fill[gray!25] (0,-11.0) rectangle (10,-11.5);
+      \draw[gray!50] (0,-11.0) -- (10,-11.0);
+      \node[font=\tiny] at (5,-11.25) {© 2024 Lanchonete do Bairro};
+      \node[anchor=west, text=gray, font=\tiny] at (0.1,-11.65) {\texttt{<footer>}};
+    \end{tikzpicture}}
+\end{minipage}
+
+\vspace{0.6cm}
+
+\begin{center}
+    \textcolor{meuazul}{\Large \textbf{Parte 1: Fundamentos do Git}}
+\end{center}
+\vspace{0.2cm}
+
+\begin{enumerate}[label=\textbf{Questão \arabic*:}, leftmargin=1.5cm, labelsep=0.5cm]
+
+    \item \textbf{Inicializando o Repositório} \\
+    Crie a pasta do projeto e inicialize o repositório Git. Em seguida, crie os arquivos iniciais do projeto.
+    \begin{enumerate}[label=\alph*)]
+        \item Execute os comandos abaixo e copie a saída do terminal:
+\begin{lstlisting}
+mkdir lanchonete-web
+cd lanchonete-web
+git init
+\end{lstlisting}
+        \item Crie manualmente os arquivos \texttt{index.html}, \texttt{style.css}, \texttt{cardapio.js} e \texttt{README.md} dentro da pasta (podem estar vazios por enquanto).
+        \item Execute \texttt{git status} e explique o que significa o status \textit{``Untracked files''} exibido para esses arquivos.
+    \end{enumerate}
+
+    \item \textbf{Primeiro Commit: Preparando e Salvando} \\
+    Com os arquivos criados, registre a primeira versão do projeto no histórico do Git.
+    \begin{enumerate}[label=\alph*)]
+        \item Adicione o arquivo \texttt{README.md} individualmente à \textit{Staging Area} usando \texttt{git add README.md} e execute \texttt{git status}. O que mudou?
+        \item Adicione todos os demais arquivos de uma vez com \texttt{git add .}
+        \item Realize o commit inicial com a mensagem: \texttt{feat: estrutura inicial do projeto}. Anote o hash curto exibido (ex: \texttt{a1b2c3d}).
+        \item Execute \texttt{git log -{-}oneline} e descreva o que é exibido.
+    \end{enumerate}
+
+    \item \textbf{Modificando e Rastreando Arquivos} \\
+    Edite o arquivo \texttt{index.html} adicionando uma estrutura HTML básica com o título ``Lanchonete do Bairro''. Em seguida:
+    \begin{enumerate}[label=\alph*)]
+        \item Execute \texttt{git status} e explique a diferença entre um arquivo \textit{Untracked} e um arquivo \textit{Modified}.
+        \item Execute \texttt{git diff} antes de fazer o \texttt{git add}. O que esse comando mostra?
+        \item Faça o \texttt{git add} e o \texttt{git commit} com a mensagem \texttt{feat: adiciona estrutura basica do HTML}.
+    \end{enumerate}
+
+    \item \textbf{Histórico de Versões com \texttt{git log}} \\
+    Faça pelo menos mais duas alterações em arquivos diferentes (ex: adicionar conteúdo ao \texttt{style.css} e ao \texttt{cardapio.js}), realizando um commit para cada uma. Depois:
+    \begin{enumerate}[label=\alph*)]
+        \item Execute \texttt{git log} (versão completa) e identifique: o hash completo, o autor, a data e a mensagem de cada commit.
+        \item Execute \texttt{git log -{-}oneline -{-}graph} e descreva o que o símbolo \texttt{*} representa na saída.
+        \item Qual a importância de escrever mensagens de commit claras e descritivas em um projeto profissional?
+    \end{enumerate}
+
+    \item \textbf{Trabalhando com Branches: Nova Funcionalidade} \\
+    A lanchonete quer testar uma nova página de ``Promoções'' antes de publicar no site oficial. Crie uma branch para isso.
+    \begin{enumerate}[label=\alph*)]
+        \item Crie e já mude para a branch com: \texttt{git checkout -b feature/pagina-promocoes}
+        \item Crie um arquivo \texttt{promocoes.html} com algum conteúdo e faça o commit dele na nova branch.
+        \item Execute \texttt{git branch} e explique o que o asterisco (*) ao lado de um nome indica.
+        \item Volte para a branch \texttt{main} com \texttt{git checkout main} e verifique se o arquivo \texttt{promocoes.html} está visível. O que aconteceu com ele e por quê?
+    \end{enumerate}
+
+    \item \textbf{Integrando Branches com \texttt{git merge}} \\
+    A página de promoções foi aprovada! Hora de integrá-la ao site oficial.
+    \begin{enumerate}[label=\alph*)]
+        \item Estando na branch \texttt{main}, execute \texttt{git merge feature/pagina-promocoes}.
+        \item Copie a saída do terminal e identifique qual estratégia de merge o Git utilizou.
+        \item Execute \texttt{git log -{-}oneline -{-}graph} e descreva visualmente o que mudou no histórico após o merge.
+        \item Após o merge, delete a branch de feature com \texttt{git branch -d feature/pagina-promocoes}. Por que é uma boa prática deletar branches concluídas?
+    \end{enumerate}
+
+    \item \textbf{Desfazendo Erros com \texttt{git revert}} \\
+    Imagine que o último commit introduziu um erro no \texttt{style.css} (ex: cor de fundo errada). Precisamos desfazê-lo.
+    \begin{enumerate}[label=\alph*)]
+        \item Faça um commit com uma alteração proposital ``errada'' no \texttt{style.css} (ex: adicionar \texttt{background: pink}).
+        \item Usando \texttt{git log -{-}oneline}, identifique o hash desse commit ruim.
+        \item Execute \texttt{git revert <hash>} para desfazê-lo. Qual a diferença entre \texttt{git revert} e \texttt{git reset}? Por que o \texttt{revert} é mais seguro em projetos colaborativos?
+    \end{enumerate}
+
+    \item \textbf{Repositório Remoto com GitHub} \\
+    Leve o projeto local para a nuvem usando o GitHub.
+    \begin{enumerate}[label=\alph*)]
+        \item Crie um repositório \textbf{público} no GitHub chamado \texttt{lanchonete-web} (sem inicializar com README).
+        \item Conecte o repositório local ao remoto:
+\begin{lstlisting}
+git remote add origin https://github.com/<seu-usuario>/lanchonete-web.git
+git push -u origin main
+\end{lstlisting}
+        \item Acesse o repositório no GitHub pelo navegador e tire um print da tela com o histórico de commits. O que significa a flag \texttt{-u} no \texttt{git push}?
+        \item Faça uma pequena alteração diretamente pelo editor do GitHub (no \texttt{README.md}) e depois execute \texttt{git pull} localmente. O que o \texttt{git pull} fez?
+    \end{enumerate}
+
+\end{enumerate}
+
+\vspace{0.5cm}
+\begin{center}
+    \textcolor{meuazul}{\Large \textbf{Parte 2: GitFlow --- Fluxo Profissional de Desenvolvimento}}
+\end{center}
+\vspace{0.2cm}
+
+\begin{enumerate}[label=\textbf{Questão \arabic*:}, leftmargin=1.5cm, labelsep=0.5cm, resume]
+
+    \item \textbf{Inicializando o GitFlow} \\
+    Com o projeto da lanchonete já no GitHub, vamos aplicar a metodologia GitFlow.
+    \begin{enumerate}[label=\alph*)]
+        \item Instale o plugin GitFlow (se necessário: \texttt{sudo apt install git-flow} no Linux).
+        \item Execute \texttt{git flow init} dentro da pasta \texttt{lanchonete-web}. Pressione \texttt{Enter} em todas as perguntas para aceitar os valores padrão. Copie toda a saída do comando.
+        \item Execute \texttt{git branch} e liste todas as branches criadas. Qual branch foi criada além da \texttt{main}? Para que ela serve?
+        \item Faça o push da branch \texttt{develop} para o GitHub: \texttt{git push -u origin develop}.
+    \end{enumerate}
+
+    \item \textbf{Ciclo de Feature: Novo Cardápio Online} \\
+    A lanchonete quer um cardápio interativo. Aplique o fluxo de \textit{feature} corretamente.
+    \begin{enumerate}[label=\alph*)]
+        \item Inicie a feature com: \texttt{git flow feature start cardapio-interativo}. Em qual branch você está agora?
+        \item Edite o arquivo \texttt{cardapio.js} adicionando um array de objetos com pelo menos 3 itens do cardápio (ex: nome, preço, categoria). Faça dois commits com mensagens descritivas durante o desenvolvimento.
+        \item Finalize a feature com \texttt{git flow feature finish cardapio-interativo}. O que o comando fez automaticamente? Para qual branch o código foi enviado?
+        \item Verifique com \texttt{git log -{-}oneline -{-}graph} e desenhe (ou descreva) o fluxo que ocorreu.
+    \end{enumerate}
+
+    \item \textbf{Ciclo de Release: Preparando a Versão 1.0} \\
+    As funcionalidades da primeira versão estão prontas. Hora de preparar o lançamento oficial.
+    \begin{enumerate}[label=\alph*)]
+        \item Inicie a release com: \texttt{git flow release start 1.0.0}. Em qual branch o fluxo de release é criado? A partir de qual branch ela nasce?
+        \item Na branch de release, faça apenas ajustes de preparação para o lançamento: atualize o \texttt{README.md} com instruções de uso e corrija qualquer texto no \texttt{index.html}. Faça um commit com a mensagem \texttt{chore: prepara release v1.0.0}.
+        \item Finalize a release com \texttt{git flow release finish 1.0.0}. Explique o que ocorreu com as branches \texttt{main} e \texttt{develop} após esse comando.
+        \item Execute \texttt{git tag} e verifique se a tag \texttt{1.0.0} foi criada. Qual é a função de uma tag no contexto do GitFlow?
+    \end{enumerate}
+
+    \item \textbf{Ciclo de Hotfix: Corrigindo Bug em Produção} \\
+    Após o lançamento, um cliente reportou que o título da página está escrito errado no \texttt{index.html}. Precisa ser corrigido \textit{urgentemente} em produção!
+    \begin{enumerate}[label=\alph*)]
+        \item Inicie o hotfix a partir da \texttt{main}: \texttt{git flow hotfix start correcao-titulo}. Explique por que o hotfix nasce da \texttt{main} e não da \texttt{develop}.
+        \item Corrija o erro no \texttt{index.html} e faça o commit com a mensagem \texttt{fix: corrige titulo da pagina principal}.
+        \item Finalize o hotfix com \texttt{git flow hotfix finish correcao-titulo}. Após a finalização, execute \texttt{git log -{-}oneline -{-}all -{-}graph} e identifique para quais branches o hotfix foi mesclado.
+        \item Qual seria o número de versão correto após esse hotfix, seguindo o padrão do Versionamento Semântico (SemVer)? Justifique.
+    \end{enumerate}
+
+    \item \textbf{Reflexão Final: GitFlow na Prática} \\
+    Após completar todos os exercícios, reflita sobre o fluxo de trabalho aplicado.
+    \begin{enumerate}[label=\alph*)]
+        \item Desenhe (à mão ou digitalmente) o diagrama completo do histórico de branches do projeto da lanchonete, representando: as branches \texttt{main} e \texttt{develop}, a \textit{feature}, a \textit{release} e o \textit{hotfix}, com as setas de merge entre elas.
+        \item Em que tipo de projeto o GitFlow seria \textbf{mais indicado}? E em qual seria \textbf{desnecessariamente complexo}? Justifique com base nas suas experiências durante os exercícios.
+        \item Compare o histórico de branches de um projeto \textbf{sem} GitFlow (como foi nos exercícios 1--8) com um projeto \textbf{com} GitFlow (exercícios 9--13). Cite uma vantagem e uma desvantagem percebidas.
+    \end{enumerate}
+
+\end{enumerate}
+
+\vspace{1cm}
+
+% ============================================================
+% INSTRUÇÕES DE ENTREGA
+% ============================================================
+\begin{tcolorbox}[
+  colback=meuverde!5,
+  colframe=meuverde,
+  arc=4pt,
+  title={\textbf{Instruções de Entrega}},
+  fonttitle=\bfseries\color{white}
+]
+A entrega desta lista é feita \textbf{pelo próprio repositório GitHub} criado durante os exercícios, juntamente com um arquivo PDF com as respostas conceituais.
+Envie no campo de entrega do Google Classroom \textbf{dois itens}: um link do repositório público e um arquivo PDF com as respostas conceituais. Pode colocar os arquivos dentro de um arquivo zipado:
+
+\vspace{0.3cm}
+\begin{enumerate}[label=\textbf{\arabic*.}, leftmargin=1.5cm]
+    \item \textbf{Link do Repositório Público:} A URL completa do repositório \texttt{lanchonete-web} no GitHub\\
+    (exemplo: \texttt{https://github.com/seu-usuario/lanchonete-web})
+
+    \item \textbf{Arquivo PDF com as Respostas Conceituais:} Um documento contendo as respostas textuais das questões teóricas (itens que pedem explicação, diferenciação ou reflexão). Esse documento pode ser gerado como um arquivo no próprio repositório (\texttt{respostas.md} ou \texttt{respostas.pdf}).
+\end{enumerate}
+\end{tcolorbox}
+
+\vspace{0.4cm}
+
+\begin{tcolorbox}[
+  colback=gray!5,
+  colframe=gray!50,
+  arc=4pt,
+  title={\textbf{Critérios de Avaliação (Rubrica)}},
+  fonttitle=\bfseries
+]
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{>{\bfseries}p{4.5cm} p{5.5cm} p{4.5cm}}
+\toprule
+\textbf{Critério} & \textbf{O que será avaliado} & \textbf{Como verificar} \\
+\midrule
+Qualidade dos Commits & Mensagens claras, descritivas e no formato correto & \texttt{git log} no repositório \\
+Uso de Branches & Criação, uso isolado e deleção após o merge & Aba ``Insights $\to$ Network'' do GitHub \\
+Fluxo GitFlow & Branches \texttt{feature/}, \texttt{release/} e \texttt{hotfix/} corretamente aplicadas & Histórico de branches e tags \\
+Tags de Versão & Presença das tags \texttt{1.0.0} e \texttt{1.1.1} (ou superior) & Aba ``Releases / Tags'' do GitHub \\
+Repositório Remoto & Repo público com todos os arquivos e histórico completo & Acesso direto à URL enviada \\
+Respostas Conceituais & Clareza, corretude e profundidade das explicações textuais & Arquivo PDF ou \texttt{respostas.md} \\
+\bottomrule
+\end{tabular}
+\end{tcolorbox}
+
+\vspace{0.6cm}
+
+\begin{center}
+    \begin{tikzpicture}
+        \draw[meuazul, thick] (0,0) -- (16,0);
+        \node[below, meuazul, font=\tiny] at (8,-0.1) {Engenharia da Qualidade e Confiabilidade --- UniRV --- Prof. Sergio Novak --- \today};
+    \end{tikzpicture}
+\end{center}
+
+\end{document}

@@ -1,0 +1,184 @@
+\documentclass[12pt]{article}
+
+% Idioma e codificação
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Matemática e listas
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+
+% Layout e cores
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+% Cores institucionais
+\definecolor{maincolor}{RGB}{0,100,50}
+\definecolor{forestgreen}{RGB}{0,100,50}
+
+% Cabeçalho e rodapé
+\usepackage{fancyhdr}
+
+% Blocos
+\usepackage[most]{tcolorbox}
+\newtcolorbox{block}[1]{%
+  colback=green!5,
+  colframe=maincolor,
+  coltitle=white,
+  title=#1,
+  fonttitle=\bfseries,
+  boxrule=1.5pt,
+  arc=3mm,
+  left=6pt,
+  right=6pt,
+  top=6pt,
+  bottom=6pt
+}
+
+% Margens
+\geometry{margin=2.5cm}
+
+% Fancyhdr
+\pagestyle{fancy}
+\fancyhf{}
+
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\footrulewidth}{2pt}
+
+\renewcommand{\headrule}{\hbox to\headwidth{%
+  \color{forestgreen}\leaders\hrule height \headrulewidth\hfill}}
+
+\renewcommand{\footrule}{\hbox to\headwidth{%
+  \color{forestgreen}\leaders\hrule height \footrulewidth\hfill}}
+
+% Altura do cabeçalho (corrigida)
+\setlength{\headheight}{52pt}
+\addtolength{\topmargin}{-20pt}
+
+% Cabeçalho
+\fancyhead[L]{%
+  \includegraphics[height=1.2cm]{Universidade_de_Rio_Verde.jpg}
+}
+
+\fancyhead[R]{%
+  \raggedleft
+  \textcolor{forestgreen}{%
+    \small
+    \textbf{Lista de Exercícios 2}\\
+    Me.~Sergio Souza Novak\\
+    \textit{Engenharia da Qualidade e Confiabilidade}
+    }
+    }
+    
+    % Rodapé
+    \fancyfoot[C]{\textcolor{forestgreen}{\thepage}}
+    
+    % =========================
+    \begin{document}
+    % =========================
+    
+    \vspace*{0.2cm}
+% No preâmbulo, adicione este novo comando para caixas de resposta:
+\newtcolorbox{resposta}[1]{%
+  colback=white,
+  colframe=forestgreen!30,
+  arc=1mm,
+  height=#1,
+  width=\textwidth,
+  boxrule=0.8pt
+}
+
+% Substitua o conteúdo da Parte II por este:
+
+
+\begin{center}
+  {\Large \textbf{Parte II: Métricas Quantitativas de Confiabilidade}}\\[0.2cm]
+  \textit{Instruções: Apresente os cálculos e as unidades de medida para justificar suas respostas.}
+\end{center}
+
+\vspace{0.4cm}
+
+\begin{block}{Fórmulas de Referência}
+    \small
+    \begin{itemize}
+        \item $POFOD = \frac{\text{Nº de Falhas}}{\text{Nº de Solicitações}}$ \quad | \quad $ROCOF = \frac{\text{Nº de Falhas}}{\text{Tempo Total}}$
+        \item $MTTF = \frac{1}{ROCOF}$ \quad | \quad $MTTR = \frac{\text{Tempo Total de Reparo}}{\text{Nº de Falhas}}$
+        \item $AVAIL = \frac{MTTF}{MTTF + MTTR}$
+    \end{itemize}
+\end{block}
+
+\vspace{0.4cm}
+
+\textbf{1.} Um sistema de frenagem ferroviária realizou 2.500 testes e falhou em 5 deles. 
+\begin{enumerate}[label=\alph*)]
+    \item Calcule a \textbf{POFOD}.
+    \item Se o requisito exige POFOD $\le 0,001$, o sistema está apto?
+\end{enumerate}
+\begin{resposta}{3.5cm}
+\end{resposta}
+
+\vspace{0.4cm}
+
+\textbf{2.} Um servidor operou 720h com 6 interrupções. Determine a \textbf{ROCOF} e o \textbf{MTTF}.
+\begin{resposta}{3.5cm}
+\end{resposta}
+
+\vspace{0.4cm}
+
+\textbf{3.} Compare a Disponibilidade (\textbf{AVAIL}) dos sistemas abaixo:
+\begin{itemize}
+    \item \textbf{A:} Falha a cada 1.000h, reparo em 10h.
+    \item \textbf{B:} Falha a cada 200h, reparo em 1h.
+\end{itemize}
+\begin{resposta}{4.5cm}
+\end{resposta}
+
+\vspace{0.4cm}
+
+\textbf{4.} Para atingir 99,99\% de disponibilidade com $MTTF = 4.000h$, qual deve ser o \textbf{MTTR} máximo (em minutos)?
+\begin{resposta}{4cm}
+\end{resposta}
+
+
+\textbf{5.} Um sistema de monitoramento ambiental opera 24/7. Em um trimestre (2.160 horas), o sistema apresentou um $MTTF$ de 500 horas. Calcule o número aproximado de falhas que ocorreram neste período.
+\begin{resposta}{3.5cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+\textbf{6.} Durante uma atualização de banco de dados, ocorreram 3 incidentes. O primeiro levou 15 min para resolver, o segundo 45 min e o terceiro 30 min. Calcule o \textbf{MTTR} médio desta operação.
+\begin{resposta}{3.5cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+\textbf{7.} Um e-commerce possui $AVAIL = 0,995$. Em um período de um ano (8.760 horas), quantas horas o sistema ficou, em média, indisponível para os clientes?
+\begin{resposta}{3.5cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+\textbf{8.} Explique a diferença prática entre utilizar \textbf{POFOD} e \textbf{ROCOF}. Em que tipo de sistema cada uma é mais adequada?
+\begin{resposta}{4.5cm}
+\end{resposta}
+
+\vspace{0.8cm}
+\vspace{0.5cm}
+
+\textbf{9.} Na Engenharia de Software, os termos \textbf{Confiabilidade} e \textbf{Disponibilidade} são frequentemente confundidos, mas possuem focos distintos. Explique a diferença entre esses dois conceitos, abordando:
+\begin{itemize}
+    \item O que cada uma prioriza (continuidade vs. prontidão);
+    \item Como um sistema pode ser altamente disponível, mesmo apresentando falhas frequentes.
+\end{itemize}
+
+\begin{resposta}{7cm}
+\end{resposta}
+\begin{center}
+    \textit{“Boa atividade! Att. Me. Prof. Sergio Souza Novak.”}
+\end{center}
+
+% =========================
+\end{document}
+% =========================

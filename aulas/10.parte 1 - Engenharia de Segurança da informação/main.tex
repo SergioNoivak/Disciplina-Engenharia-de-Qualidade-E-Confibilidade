@@ -1,0 +1,852 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\usepackage{eso-pic}
+\usepackage[brazil]{babel}
+\shorthandoff{"}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, shapes.symbols, fit, calc, backgrounds}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{meuazul}{RGB}{0, 79, 151}
+\definecolor{meucinza}{RGB}{80, 80, 80}
+\definecolor{meuvermelhoescuro}{RGB}{180, 30, 30}
+\definecolor{meuverde}{RGB}{30, 130, 60}
+\setbeamercolor{structure}{fg=meuazul}
+
+\title[Engenharia de Segurança]{Engenharia de Segurança da Informação (PARTE 1)}
+\subtitle{Engenharia de Qualidade e Confiabilidade}
+\author{Prof. Me. Sergio Souza Novak — UniRV}
+\titlegraphic{\includegraphics[width=2cm]{logo.png}}
+
+\begin{document}
+ 
+% Slide de Título
+\frame[plain]{\titlepage}
+
+% Slide de Sumário
+\begin{frame}{Sumário}
+    \begin{columns}[t]
+        \begin{column}{.5\textwidth}
+            \tableofcontents[sections={1-3}]
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \tableofcontents[sections={4-5}]
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\section{Fundamentos e Contexto}
+{
+\setbeamercolor{background canvas}{bg=meuazul}
+\begin{frame}[plain]
+    \centering
+    \Huge \color{white} \bfseries Fundamentos e Contexto
+\end{frame}
+}
+
+\AddToShipoutPictureFG{
+    \put(\LenToUnit{.92\paperwidth},\LenToUnit{.185\paperheight})
+    {\vtop{{\null}\makebox{\includegraphics[width=.8cm,keepaspectratio]{logo.png}}}}}
+\subsection{Evolução Histórica}
+% --- Slide 1: Contexto Histórico ---
+
+
+
+\begin{frame}{Contexto Histórico: A Década de 1990}
+    
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Adoção generalizada da Internet.
+                \item Surgimento de um novo desafio para engenheiros de software.
+                \item Transição do processamento isolado para a conectividade global.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \begin{tikzpicture}[node distance=1.5cm, every node/.style={scale=0.8}]
+                \node (pc1) [draw, thick, minimum size=1cm] {PC Isolado};
+                \node (internet) [cloud, draw, fill=meuazul!10, minimum width=2.5cm, minimum height=1.5cm, right=of pc1, xshift=0.5cm] {Internet};
+                \node (pc2) [draw, thick, minimum size=0.8cm, right=of internet, xshift=-0.5cm] {PC 1};
+                \node (pc3) [draw, thick, minimum size=0.8cm, above=of pc2, yshift=-1cm] {PC 2};
+                \node (pc4) [draw, thick, minimum size=0.8cm, below=of pc2, yshift=1cm] {PC 3};
+                
+                \draw[->, thick, dashed] (internet) -- (pc2);
+                \draw[->, thick, dashed] (internet) -- (pc3);
+                \draw[->, thick, dashed] (internet) -- (pc4);
+                
+                \node[below=0.2cm of pc1, font=\tiny] {Anos 80};
+                \node[below=1.2cm of internet, font=\tiny] {Anos 90};
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% --- Slide 2: O Desafio da Segurança ---
+\begin{frame}{O Desafio da Segurança}
+    \begin{block}{Projetar e Implementar Sistemas Seguros}
+        Com a conectividade, a segurança deixou de ser um recurso opcional para se tornar um requisito fundamental da engenharia de software.
+    \end{block}
+    \vspace{0.5cm}
+    \begin{itemize}
+        \item Mudança de foco: Validar não apenas o que o sistema \textbf{deve fazer}, mas também o que ele \textbf{não deve permitir}.
+        \item Impacto direto na confiabilidade do sistema.
+    \end{itemize}
+\end{frame}
+
+\subsection{Cenário de Ameaças}
+% --- Slide 3: Evolução das Ameaças ---
+\begin{frame}{Evolução das Ameaças}
+    \centering
+    \begin{tikzpicture}[scale=0.9, transform shape]
+        \node (sys) [draw, fill=meuazul!20, minimum width=2cm, minimum height=1cm, rounded corners] {SISTEMA};
+        \node (ext) [cloud, draw, fill=gray!10, above=of sys, yshift=1cm, minimum width=4cm] {Ataques Externos};
+        
+        \draw[<-, line width=1.5pt, meuvermelhoescuro] (sys.60) -- (ext.340) node[midway, right] {Invasão};
+        \draw[<-, line width=1.5pt, meuvermelhoescuro] (sys.90) -- (ext.300) node[midway, left] {Exploit};
+        \draw[<-, line width=1.5pt, meuvermelhoescuro] (sys.120) -- (ext.200) node[midway, left] {Malware};
+        
+        \node[below=0.5cm of sys, text width=8cm, align=center] {À medida que sistemas se conectam, a superfície de ataque aumenta exponencialmente.};
+    \end{tikzpicture}
+\end{frame}
+
+% --- Novo Slide: Classificação de Ataques ---
+\begin{frame}{Classificação de Ataques}
+    Os ataques podem ser divididos em duas grandes categorias:
+    \centering
+    \small
+    \begin{tabular}{lp{9cm}}
+        \hline
+        \textbf{Tipo} & \textbf{Descrição} \\
+        \hline
+        \textbf{Passivo} & O atacante observa ou monitora o tráfego sem alterar os dados. O objetivo é a obtenção de informação (quebra de confidencialidade). \\
+        \textbf{Ativo} & O atacante tenta alterar os recursos do sistema ou afetar sua operação. Envolve modificação, fabricação ou interrupção. \\
+        \hline
+    \end{tabular}
+    \vspace{0.4cm}
+    \begin{exampleblock}{Diferença Crucial}
+        Ataques passivos são difíceis de detectar (pois não há alteração), enquanto ataques ativos são difíceis de prevenir (devido à complexidade das vulnerabilidades).
+    \end{exampleblock}
+\end{frame}
+
+\subsection{Malwares e Software Malicioso}
+
+% --- Novo Slide: Malwares: Definição e Tipos ---
+\begin{frame}{Malwares: Definição e Tipos}
+    Programas maliciosos, ou \textbf{malware}, são softwares criados para danificar, roubar dados ou acessar sistemas sem autorização.
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Tipos mais comuns:}
+            \begin{itemize}
+                \item \textbf{Vírus:} Anexa-se a programas legítimos e exige execução humana.
+                \item \textbf{Worms:} Independentes, espalham-se sozinhos pela rede.
+                \item \textbf{Trojans:} "Presentes de Grego" que escondem código malicioso.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item \textbf{Ransomware:} Sequestra dados via criptografia e exige resgate.
+                \item \textbf{Spyware:} Coleta informações do usuário silenciosamente.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% --- Novo Slide: Taxonomia de Malware (Diagrama) ---
+\begin{frame}{Taxonomia de Malware}
+    \centering
+    \begin{tikzpicture}[
+        node distance=1.2cm and 0.5cm,
+        root/.style={draw, fill=meuazul!20, font=\bfseries, minimum width=3cm},
+        level1/.style={draw, fill=meuazul!10, text width=2.5cm, align=center},
+        level2/.style={draw, rounded corners, fill=white, text width=2cm, align=center, font=\tiny}
+    ]
+        \node[root] (mal) {Malware};
+        
+        \node[level1, right=of mal, yshift=1cm] (dep) {Necessitam de Hospedeiro};
+        \node[level1, right=of mal, yshift=-1cm] (ind) {Independentes};
+        
+        \node[level2, right=of dep, yshift=0.5cm] (v) {Vírus};
+        \node[level2, right=of dep, yshift=-0.5cm] (t) {Trojans};
+        
+        \node[level2, right=of ind, yshift=0.5cm] (w) {Worms};
+        \node[level2, right=of ind, yshift=-0.5cm] (b) {Bots};
+        
+        \draw[thick, ->] (mal.east) -- +(0.5,0) |- (dep.west);
+        \draw[thick, ->] (mal.east) -- +(0.5,0) |- (ind.west);
+        \draw[->] (dep.east) -- +(0.3,0) |- (v.west);
+        \draw[->] (dep.east) -- +(0.3,0) |- (t.west);
+        \draw[->] (ind.east) -- +(0.3,0) |- (w.west);
+        \draw[->] (ind.east) -- +(0.3,0) |- (b.west);
+    \end{tikzpicture}
+\end{frame}
+
+
+% --- Novo Slide: Exemplo de Código: Lógica de Worm ---
+\begin{frame}[fragile]{Exemplo de Código: Lógica de Propagação (Worm)}
+    \begin{block}{Simulação Conceitual (Pseudocódigo)}
+    \scriptsize
+\begin{lstlisting}
+INICIO
+
+FUNCAO propagar_worm()
+    arquivo_atual <- ESTE_ARQUIVO
+    
+    PARA CADA pasta EM REDE_COMPARTILHADA
+        destino <- pasta + "/update_system"
+        
+        SE destino NAO EXISTE ENTAO
+            COPIAR arquivo_atual PARA destino
+            EXIBIR "Propagado para: " + destino
+        FIM SE
+    FIM PARA
+FIM FUNCAO
+
+# Execucao automatica (sem interacao do usuario)
+
+FIM
+\end{lstlisting}
+    \end{block}
+
+    \begin{block}{Ideia Principal}
+        O worm se replica automaticamente, explorando recursos de rede ou sistema 
+        para se espalhar sem necessidade de interação do usuário.
+    \end{block}
+\end{frame}
+% --- Novo Slide: Exemplo de Código: Lógica de Ransomware ---
+\begin{frame}[fragile]{Exemplo de Código: Carga Útil (Ransomware)}
+    \begin{block}{Criptografia de Arquivos (Pseudocódigo)}
+    \scriptsize
+\begin{lstlisting}
+INICIO
+
+FUNCAO criptografar_dados(chave)
+    PARA CADA arquivo EM DIRETORIO_USUARIO
+        SE arquivo FOR DO TIPO (docx, pdf, jpg) ENTAO
+            
+            dados <- LER arquivo
+            dados_criptografados <- CRIPTOGRAFAR(dados, chave)
+            ESCREVER dados_criptografados NO arquivo
+            
+        FIM SE
+    FIM PARA
+    EXIBIR "Seus arquivos foram criptografados"
+    EXIBIR "Pague para recuperar o acesso"
+
+FIM FUNCAO
+
+FIM
+\end{lstlisting}
+    \end{block}
+
+    \begin{block}{Ideia Principal}
+        O ransomware bloqueia o acesso aos dados da vítima por meio de criptografia 
+        e exige um pagamento (resgate) para restaurar o acesso.
+    \end{block}
+\end{frame}
+
+% --- Slide 4: Perfil das Ameaças ---
+\begin{frame}{Perfil das Ameaças}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Atacantes Externos:}
+            \begin{itemize}
+                \item Maliciosos.
+                \item Altamente qualificados tecnicamente.
+                \item Motivados (financeiro, político, etc).
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \textbf{Problemas no Desenvolvimento:}
+            \begin{itemize}
+                \item Erros acidentais (bugs).
+                \item Má configuração.
+                \item Falta de diretrizes de segurança no ciclo de vida.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\subsection{Resiliência e Riscos}
+% --- Slide 5: Resiliência de Sistemas ---
+\begin{frame}{Resiliência de Sistemas}
+    \centering
+    \begin{tikzpicture}[node distance=1.5cm, every node/.style={circle, draw, align=center, minimum size=2cm, thick, font=\small}]
+        \node (resist) [fill=meuazul!10] {Resistir a\\Ataques};
+        \node (recover) [fill=meuverde!10, right=of resist, xshift=1cm] {Recuperação\\Eficiente};
+        
+        \draw[->, ultra thick, bend left=25] (resist.north east) to node[above, font=\footnotesize] {Sobrevivência} (recover.north west);
+        \draw[->, ultra thick, bend left=25] (recover.south west) to node[below, font=\footnotesize] {Aprendizado} (resist.south east);
+        
+        \node[draw=none, below=1cm of $(resist)!0.5!(recover)$, font=\normalsize] {\textbf{Essencial:} Sem precauções, o comprometimento é inevitável.};
+    \end{tikzpicture}
+\end{frame}
+
+% --- Slide 6: Riscos e Consequências ---
+\begin{frame}{Riscos e Consequências}
+    \begin{alertblock}{Impacto do Comprometimento}
+        Um atacante bem-sucedido pode causar danos irreversíveis:
+    \end{alertblock}
+    \begin{enumerate}
+        \item \textbf{Mau uso do hardware:} Utilização de recursos para fins ilícitos (ex: botnets).
+        \item \textbf{Roubo de dados:} Vazamento de informações contridenciais e sensíveis.
+        \item \textbf{Perturbação de serviços:} Interrupção da disponibilidade para usuários legítimos.
+    \end{enumerate}
+\end{frame}
+
+\section{Dimensões da Segurança}
+{
+\setbeamercolor{background canvas}{bg=meuazul}
+\begin{frame}[plain]
+    \centering
+    \Huge \color{white} \bfseries Dimensões da Segurança
+\end{frame}
+}
+
+\subsection{A Tríade CIA}
+% --- Slide 7: Dimensões da Segurança (Tríade CIA) ---
+\begin{frame}{Dimensões da Segurança (Tríade CIA)}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item \textbf{Confidencialidade:} Proteção contra acesso não autorizado (ex: roubo de dados).
+                \item \textbf{Integridade:} Garantia de que a informação não foi corrompida (ex: worms).
+                \item \textbf{Disponibilidade:} Garantia de acesso quando necessário (ex: ataques DoS).
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \begin{tikzpicture}[node distance=2.5cm, every node/.style={scale=0.8}]
+                \node (c) [draw, circle, fill=meuazul!10, thick, minimum size=2cm] {Confidencialidade};
+                \node (i) [draw, circle, fill=meuverde!10, thick, minimum size=2cm, below left=of c, xshift=1cm] {Integridade};
+                \node (a) [draw, circle, fill=meuvermelhoescuro!10, thick, minimum size=2cm, below right=of c, xshift=-1cm] {Disponibilidade};
+                
+                \draw[<->, ultra thick] (c) -- (i);
+                \draw[<->, ultra thick] (i) -- (a);
+                \draw[<->, ultra thick] (a) -- (c);
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% --- Slide 8: Inter-relação das Dimensões ---
+\begin{frame}{Inter-relação das Dimensões}
+    As três dimensões estão intimamente ligadas:
+    \begin{itemize}
+        \item \textbf{Indisponibilidade $\rightarrow$ Falta de Integridade:} Se o sistema cai, informações temporais não são atualizadas.
+        \item \textbf{Comprometimento da Integridade $\rightarrow$ Indisponibilidade:} O sistema pode precisar ser desligado para correções após um ataque.
+    \end{itemize}
+    \begin{exampleblock}{Efeito Cascata}
+        A falha em um pilar frequentemente compromete a eficácia dos outros dois.
+    \end{exampleblock}
+\end{frame}
+
+\subsection{Níveis e Camadas}
+% --- Slide 9: Níveis de Segurança Organizacional ---
+\begin{frame}{Níveis de Segurança Organizacional}
+    \begin{enumerate}
+        \item \textbf{Segurança de Infraestrutura:} Sistemas e redes compartilhados.
+        \item \textbf{Segurança de Aplicação:} Focada em cada sistema de aplicação.
+        \item \textbf{Segurança Operacional:} Relacionada ao uso seguro dos sistemas.
+    \end{enumerate}
+    \vspace{0.5cm}
+    \centering
+    \begin{tikzpicture}[node distance=0.5cm]
+        \node (infra) [draw, fill=meuazul!20, minimum width=6cm, minimum height=0.7cm] {Infraestrutura};
+        \node (app) [draw, fill=meuazul!10, minimum width=6cm, minimum height=0.7cm, above=of infra] {Aplicação};
+        \node (op) [draw, fill=gray!10, minimum width=6cm, minimum height=0.7cm, above=of app] {Operacional};
+    \end{tikzpicture}
+\end{frame}
+
+% --- Slide 10: Camadas do Sistema ---
+\begin{frame}{Camadas do Sistema (Pilha de Infraestrutura)}
+    \begin{columns}
+        \begin{column}{0.4\textwidth}
+            A segurança pode ser comprometida em múltiplos níveis, desde o hardware até a aplicação.
+        \end{column}
+        \begin{column}{0.6\textwidth}
+            \centering
+            \begin{tikzpicture}[nodes={draw, fill=meuazul!10, text width=5cm, align=center, minimum height=0.4cm, font=\tiny}, node distance=1pt]
+                \node (app) {Aplicação};
+                \node (lib) [below=of app] {Componentes e Bibliotecas};
+                \node (mid) [below=of lib] {Middleware};
+                \node (db) [below=of mid] {Gerenciamento de Banco de Dados};
+                \node (gen) [below=of db] {Apps Genéricas (Browsers, E-mail)};
+                \node (os) [below=of gen] {Sistema Operacional};
+                \node (net) [below=of os, fill=meuazul!20] {Rede};
+                \node (hw) [below=of net, fill=meuazul!30] {Hardware};
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% --- Slide 11: Foco na Infraestrutura de Software ---
+\begin{frame}{Foco na Infraestrutura de Software}
+    \begin{itemize}
+        \item Atacantes focam na infraestrutura (browsers, SO, DBMS) porque estão disponíveis universalmente.
+        \item Vulnerabilidades descobertas em um componente comum têm ampla aplicabilidade.
+        \item Redes também são alvos, mas exigem equipamentos mais especializados para interceptação.
+    \end{itemize}
+    \begin{alertblock}{Aplicabilidade Ampla}
+        Um exploit em um navegador popular pode atingir milhões de usuários simultaneamente.
+    \end{alertblock}
+\end{frame}
+
+\subsection{Gestão e Fator Humano}
+% --- Slide 12: Gerenciamento da Segurança de Infraestrutura ---
+\begin{frame}{Gerenciamento da Segurança de Infraestrutura}
+    \begin{enumerate}
+        \item \textbf{Usuários e Permissões:} Autenticação rigorosa e princípio do menor privilégio.
+        \item \textbf{Instalação e Manutenção:} Configuração correta e atualização constante (patches).
+        \item \textbf{Monitoramento e Recuperação:} Detecção de intrusão e estratégias de backup.
+    \end{enumerate}
+    \vspace{0.3cm}
+    \centering
+    \begin{tikzpicture}[node distance=1.5cm, every node/.style={draw, rounded corners, fill=meuazul!5, text width=3.5cm, align=center, font=\tiny}]
+        \node (u) {Gestão de Usuários};
+        \node (m) [right=of u] {Manutenção de Software};
+        \node (d) [right=of m] {Detecção e Recuperação};
+        
+        \draw[thick, ->] (u) -- (m);
+        \draw[thick, ->] (m) -- (d);
+        \draw[thick, ->, bend left] (d) to (u);
+    \end{tikzpicture}
+\end{frame}
+
+% --- Slide 13: Segurança Operacional (Fator Humano) ---
+\begin{frame}{Segurança Operacional (Fator Humano)}
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            \begin{itemize}
+                \item Focada no comportamento das pessoas que usam o sistema.
+                \item \textbf{Desafio:} Equilibrar segurança rigorosa com a eficácia no trabalho.
+                \item \textbf{Risco:} Usuários frequentemente ignoram regras de segurança para ganhar tempo.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \node (h) [draw, circle, fill=orange!20, minimum size=2cm] {Usuário};
+                \node (s) [draw, diamond, fill=meuazul!20, below=of h, minimum size=1.5cm] {Segurança};
+                \draw[<->, ultra thick] (h) -- (s) node[midway, right] {Tensão};
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% --- Slide 14: Cibersegurança ---
+\begin{frame}{Cibersegurança}
+    \begin{block}{Definição Abrangente}
+        Proteção de cidadãos, empresas e infraestruturas críticas contra ameaças surgidas do uso da Internet e computadores.
+    \end{block}
+    \vspace{0.5cm}
+    \begin{itemize}
+        \item Escopo: Desde o hardware e redes até dispositivos móveis e aplicações.
+        \item Intimamente ligada à \textbf{Engenharia de Resiliência}.
+    \end{itemize}
+\end{frame}
+
+\section{Dependabilidade e Terminologia}
+{
+\setbeamercolor{background canvas}{bg=meuazul}
+\begin{frame}[plain]
+    \centering
+    \Huge \color{white} \bfseries Dependabilidade e Terminologia
+\end{frame}
+}
+
+\subsection{Conceitos de Dependabilidade}
+% --- Slide 15: Segurança e Dependabilidade ---
+\begin{frame}{Segurança e Dependabilidade}
+    \begin{block}{Definição}
+        Atributo que reflete a capacidade do sistema de se proteger contra ataques maliciosos internos ou externos.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Ataques Externos:} Possíveis devido à conectividade global.
+        \item \textbf{Ataques Internos:} Realizados por usuários autorizados que abusam de privilégios.
+        \item \textbf{Exemplos:} Vírus, Cavalos de Tróia, modificação não autorizada de dados.
+    \end{itemize}
+\end{frame}
+
+% --- Slide 16: O Dilema da Conectividade ---
+\begin{frame}{O Dilema da Conectividade}
+
+    \centering
+    \begin{tikzpicture}[node distance=3cm]
+        \node (safe) [draw, circle, fill=meuverde!10, thick, align=center, minimum size=3cm] 
+        {Segurança Máxima\\(Offline)};
+        
+        \node (prod) [draw, circle, fill=meuazul!10, thick, align=center, minimum size=3cm, right=of safe] 
+        {Benefícios e\\Conectividade};
+        
+        \draw[<->, ultra thick, meuvermelhoescuro] 
+        (safe) -- (prod) node[midway, above] {Trade-off};
+        
+        \node[below=0.5cm of safe, font=\tiny, text width=3cm, align=center] 
+        {Controle de portas USB\\e acesso físico.};
+        
+        \node[below=0.5cm of prod, font=\tiny, text width=3cm, align=center] 
+        {Acesso via rede\\é essencial na prática.};
+    \end{tikzpicture}
+
+    \begin{block}{Interpretação}
+        Quanto maior o isolamento de um sistema (offline), maior tende a ser sua segurança contra ataques externos. 
+        Por outro lado, a conectividade em rede aumenta a produtividade e a integração, mas também amplia a superfície de ataque. 
+        O desafio é encontrar um equilíbrio adequado entre proteção e usabilidade.
+    \end{block}
+
+\end{frame}
+
+% --- Slide 17: Importância da Segurança ---
+\begin{frame}{Importância da Segurança: Exemplos}
+    Nem todos os sistemas sofrem o mesmo impacto com falhas de segurança:
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \textbf{Inconveniente}\\
+            \vspace{0.3cm}
+            \textit{Reserva de Passagens}\\
+            Indisponibilidade causa atrasos e desconforto.
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \textbf{Catastrófico}\\
+            \vspace{0.3cm}
+            \textit{Exclusão de Registros}\\
+            Se um atacante apaga todas as reservas, a operação para.
+        \end{column}
+    \end{columns}
+    \vspace{0.5cm}
+    \begin{exampleblock}{Sistemas Críticos}
+        Sistemas militares, e-commerce e processamento de dados confidenciais exigem níveis máximos de proteção.
+    \end{exampleblock}
+\end{frame}
+
+\subsection{Dicionário de Segurança}
+% --- Slide 18: Terminologia de Segurança ---
+\begin{frame}{Terminologia de Segurança}
+    \centering
+    \scriptsize
+    \begin{tabular}{lp{8cm}}
+        \hline
+        \textbf{Termo} & \textbf{Definição} \\
+        \hline
+        \textbf{Ativo} & Algo de valor que precisa ser protegido (dados ou software). \\
+        \textbf{Ataque} & Aproveitamento de uma vulnerabilidade para causar dano. \\
+        \textbf{Controle} & Medida de proteção que reduz a vulnerabilidade (ex: encriptação). \\
+        \textbf{Exposição} & Possível perda ou dano infligido ao sistema (dados ou tempo). \\
+        \textbf{Ameaça} & Circunstância com potencial para causar perda ou dano. \\
+        \textbf{Vulnerabilidade} & Ponto fraco que pode ser aproveitado por um ataque. \\
+        \hline
+    \end{tabular}
+\end{frame}
+
+% --- Slide 19: Relacionamento entre Conceitos ---
+\begin{frame}{Relacionamento entre Conceitos}
+    \centering
+    \begin{tikzpicture}[node distance=2.5cm, every node/.style={draw, rounded corners, align=center, fill=meuazul!5}]
+        \node (threat) {Ameaça};
+        \node (vulner) [right=of threat] {Vulnerabilidade};
+        \node (attack) [below=of vulner] {Ataque};
+        \node (asset) [left=of attack] {Ativo};
+        
+        \draw[thick, ->] (threat) -- node[above, font=\tiny] {explora} (vulner);
+        \draw[thick, ->] (vulner) -- node[right, font=\tiny] {possibilita} (attack);
+        \draw[thick, ->] (attack) -- node[above, font=\tiny] {danifica} (asset);
+        
+        \node (control) [right=of attack, fill=meuverde!10] {Controle};
+        \draw[thick, ->, dashed] (control) -- node[above, font=\tiny] {mitiga} (vulner);
+    \end{tikzpicture}
+\end{frame}
+
+\subsection{Mentcare: Estudo de Caso}
+% --- Slide 20: Estudo de Caso: Mentcare ---
+\begin{frame}{Estudo de Caso: Mentcare}
+    \begin{block}{História de Segurança: Acesso não Autorizado}
+        Um criminoso tenta acessar dados de um atleta famoso em tratamento na clínica.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Cenário:} Funcionários usam usuário e senha (mínimo 8 caracteres).
+        \item \textbf{Engenharia Social:} O atacante finge ser um parente para obter nomes de funcionários.
+        \item \textbf{Ataque:} Examina crachás para nomes e tenta adivinhar senhas (ex: nomes de filhos).
+    \end{itemize}
+\end{frame}
+
+% --- Slide 21: Terminologia aplicada ao Mentcare ---
+\begin{frame}{Terminologia aplicada ao Mentcare}
+    \begin{itemize}
+        \item \textbf{Ativo:} Registros de saúde mental do atleta (confidencialidade).
+        \item \textbf{Vulnerabilidade:} Senhas fracas e previsíveis escolhidas pelos usuários.
+        \item \textbf{Ameaça:} Chantagem baseada no vazamento de informações.
+        \item \textbf{Ataque:} Adivinhação sistemática de senhas e engenharia social.
+        \item \textbf{Exposição:} Danos à reputação do paciente e da clínica.
+    \end{itemize}
+\end{frame}
+
+\section{Vulnerabilidades e Fatores Humanos}
+{
+\setbeamercolor{background canvas}{bg=meuazul}
+\begin{frame}[plain]
+    \centering
+    \Huge \color{white} \bfseries Vulnerabilidades e Fatores Humanos
+\end{frame}
+}
+
+\subsection{Origem das Falhas}
+% --- Slide 22: Origem das Vulnerabilidades ---
+\begin{frame}{Origem das Vulnerabilidades}
+    Vulnerabilidades não surgem apenas de erros de codificação, mas de múltiplas fontes:
+    \begin{itemize}
+        \item \textbf{Requisitos:} Falhas na definição do que deve ser protegido.
+        \item \textbf{Projeto:} Arquiteturas que permitem exposições desnecessárias.
+        \item \textbf{Implementação:} Bugs de software (ex: buffer overflow).
+        \item \textbf{Fatores Externos:} Falhas humanas, sociais ou organizacionais.
+    \end{itemize}
+    \centering
+    \begin{tikzpicture}[node distance=1.5cm, every node/.style={draw, fill=meuazul!10, rounded corners, font=\tiny}]
+        \node (req) {Requisitos};
+        \node (prj) [right=of req] {Projeto};
+        \node (imp) [right=of prj] {Implementação};
+        \node (hum) [below=of prj] {Fator Humano/Social};
+        
+        \draw[thick, ->] (req) -- (prj);
+        \draw[thick, ->] (prj) -- (imp);
+        \draw[thick, ->] (hum) -- (prj);
+    \end{tikzpicture}
+\end{frame}
+
+% --- Slide 23: Fatores Humanos e Sociais ---
+\begin{frame}{Fatores Humanos e Sociais}
+    As pessoas são frequentemente o "elo mais fraco" na segurança:
+    \begin{itemize}
+        \item Escolha de senhas fáceis de adivinhar.
+        \item Anotacão de senhas em locais visíveis.
+        \item Negligência no uso de softwares de proteção.
+    \end{itemize}
+    \begin{block}{Erro Humano?}
+        Muitas vezes, o que parece ser um erro do usuário é, na verdade, um reflexo de uma decisão de projeto ruim.
+    \end{block}
+\end{frame}
+
+% --- Slide 24: [CS1] Caso de Estudo: O Problema do "Post-it" ---
+\begin{frame}{[CS1] Estudo de Caso: O Problema do "Post-it"}
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            \textbf{Cenário:} Uma empresa exige que os usuários troquem de senha a cada 15 dias e usem caracteres especiais.
+            \vspace{0.3cm}
+            \textbf{Resultado:} Os usuários não conseguem memorizar tantas variações e anatam a senha em um "Post-it" colado no monitor.
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \node (mon) [draw, minimum width=2cm, minimum height=1.5cm, fill=gray!20] {Monitor};
+                \node (post) [draw, fill=yellow, minimum size=0.5cm, below right=of mon, xshift=-1cm, yshift=1cm, font=\tiny] {Senha};
+                \node [below=0.1cm of mon] {Vulnerabilidade Física};
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\subsection{Configuração e Projeto}
+% --- Slide 25: Erros de Configuração e Manutenção ---
+\begin{frame}{Erros de Configuração e Manutenção}
+    Administradores de sistema também cometem erros críticos:
+    \begin{itemize}
+        \item Falhas na configuração do controle de acesso.
+        \item Arquivos de configuração "abertos" demais.
+        \item Não instalação de patches de segurança ou atualizações.
+    \end{itemize}
+    \begin{alertblock}{Complexidade}
+        Mecanismos de configuração complexos aumentam drasticamente a probabilidade de erros administrativos.
+    \end{alertblock}
+\end{frame}
+
+% --- Slide 26: Decisões de Projeto vs. Erro Humano ---
+\begin{frame}{Decisões de Projeto vs. Erro Humano}
+    \centering
+    \begin{tikzpicture}[node distance=2cm]
+        \node (dec) [draw, fill=meuazul!10, text width=4cm, align=center] {Má Decisão de Projeto\\(Ex: Troca frequente de senha)};
+        \node (err) [draw, fill=meuvermelhoescuro!10, right=of dec, text width=4cm, align=center] {Comportamento Inseguro\\(Ex: Anotar senha)};
+        
+        \draw[->, ultra thick] (dec) -- node[above] {Provoca} (err);
+    \end{tikzpicture}
+    \vspace{0.5cm}
+    \begin{itemize}
+        \item Se o sistema exige algo impossível do ser humano, a segurança será burlada por conveniência ou necessidade.
+    \end{itemize}
+\end{frame}
+
+% --- Slide 27: Design para Segurança ---
+\begin{frame}{Design para Segurança}
+    \begin{itemize}
+        \item A segurança deve ser considerada em todos os estágios do ciclo de vida.
+        \item \textbf{Requisitos Iniciais:} Identificar o que proteger.
+        \item \textbf{Operação:} Manter sistemas atualizados e monitorados.
+    \end{itemize}
+    \begin{exampleblock}{Segurança não é um "Adicional"}
+        Não se pode "acrescentar" segurança ao final do desenvolvimento; ela deve estar no DNA do projeto.
+    \end{exampleblock}
+\end{frame}
+
+\section{Ameaças e Estudos de Caso}
+{
+\setbeamercolor{background canvas}{bg=meuazul}
+\begin{frame}[plain]
+    \centering
+    \Huge \color{white} \bfseries Ameaças e Estudos de Caso
+\end{frame}
+}
+
+\subsection{Tipologia de Ameaças}
+% --- Slide 28: Tipos de Ameaça à Segurança ---
+\begin{frame}{Tipos de Ameaça à Segurança}
+    Podemos classificar as ameaças em quatro categorias fundamentais:\\
+    \centering
+    \begin{tikzpicture}[node distance=0.5cm, every node/.style={circle, draw, fill=meuazul!10, text width=1.7cm, align=center, font=\tiny}]
+        \node (intc) {Interceptação};
+        \node (intr) [right=of intc] {Interrupção};
+        \node (alt) [below=of intc] {Alteração};
+        \node (fab) [right=of alt] {Fabricação};
+        
+        \node[draw=none, fill=none, above=0.5cm of $(intc)!0.5!(intr)$] {Ameaças à Segurança da Informação};
+    \end{tikzpicture}
+\end{frame}
+
+\subsection{Confidencialidade e Disponibilidade}
+% --- Slide 29: Ameaça de Interceptação ---
+\begin{frame}{Ameaça de Interceptação}
+    \begin{block}{Definição}
+        Permite que um atacante ganhe acesso não autorizado a um ativo do sistema.
+    \end{block}
+    \begin{itemize}
+        \item Compromete a \textbf{Confidencialidade}.
+        \item Pode ocorrer via escuta de rede (sniffing), acesso físico a arquivos ou engenharia social.
+        \item \textbf{Mentcare:} Um atacante lendo registros de pacientes sem permissão.
+    \end{itemize}
+\end{frame}
+
+% --- Slide 30: [CS2] Mentcare: Interceptação de Dados ---
+\begin{frame}{[CS2] Mentcare: Interceptação de Dados}
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            \textbf{Cenário:} Um hacker intercepta os pacotes de rede transmitidos entre a clínica e o servidor central.
+            \vspace{0.3cm}
+            \textbf{Impacto:} Dados sensíveis de saúde mental são expostos, violando a privacidade do paciente e leis de proteção de dados (como LGPD).
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \node (cli) [draw, fill=meuazul!10] {Clínica};
+                \node (srv) [draw, fill=meuazul!10, right=of cli, xshift=1cm] {Servidor};
+                \node (att) [draw, circle, fill=meuvermelhoescuro!20, above=of $(cli)!0.5!(srv)$] {Atacante};
+                
+                \draw[thick] (cli) -- (srv);
+                \draw[->, thick, dashed, meuvermelhoescuro] (att) -- ($(cli)!0.5!(srv)$);
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% --- Slide 31: Ameaça de Interrupção ---
+\begin{frame}{Ameaça de Interrupção}
+    \begin{block}{Definição}
+        Permite que um atacante torne parte do sistema indisponível para uso legítimo.
+    \end{block}
+    \begin{itemize}
+        \item Compromete a \textbf{Disponibilidade}.
+        \item \textbf{Estratégia:} Sobrecarga de recursos (CPU, Memória, Banda de Rede).
+        \item \textbf{Exemplo:} Ataque de Negação de Serviço (DoS) a um servidor de banco de dados.
+    \end{itemize}
+\end{frame}
+
+% --- Slide 32: [CS3] Caso de Estudo: Ataque DoS ---
+\begin{frame}{[CS3] Caso de Estudo: Ataque DoS}
+    \centering
+    \begin{tikzpicture}
+        \node (srv) [draw, cylinder, shape border rotate=90, fill=meuazul!20, minimum height=2cm] {DB Server};
+        \foreach \i in {1,...,5} {
+            \node (req\i) [draw, fill=meuvermelhoescuro!10, left=of srv, xshift=-2cm, yshift=\i*0.6cm - 1.8cm, font=\tiny] {Falsa Req \i};
+            \draw[->, meuvermelhoescuro] (req\i) -- (srv);
+        }
+    \end{tikzpicture}
+    \vspace{0.5cm}
+    \begin{alertblock}{Consequência}
+        O servidor gasta todos os seus recursos processando requisições falsas, impedindo que médicos e enfermeiros acessem dados reais de pacientes em emergências.
+    \end{alertblock}
+\end{frame}
+
+\subsection{Integridade e Fabricação}
+% --- Slide 33: Ameaça de Alteração (Mentcare) ---
+\begin{frame}{Ameaça de Alteração}
+    \begin{block}{Definição}
+        Permite que um atacante manipule ativos do sistema, alterando ou destruindo informações.
+    \end{block}
+    \begin{itemize}
+        \item Compromete a \textbf{Integridade}.
+        \item \textbf{Risco Crítico:} Decisões clínicas baseadas em dados falsos podem ser fatais.
+        \item \textbf{Mentcare:} Alterar a dosagem de medicamentos no registro do paciente.
+    \end{itemize}
+\end{frame}
+
+% --- Slide 34: [CS4] Caso de Estudo: Alteração de Registros ---
+\begin{frame}{[CS4] Caso de Estudo: Alteração de Registros}
+    \begin{itemize}
+        \item \textbf{Ação:} Um atacante com acesso privilegiado altera o histórico de alergias de um paciente.
+        \item \textbf{Perigo:} O médico prescreve um medicamento ao qual o paciente é alérgico, acreditando que o sistema é confiável.
+    \end{itemize}
+    \centering
+    \begin{tikzpicture}
+        \node (doc) [draw, rectangle, fill=meuazul!10, text width=4cm, align=center] {Registro Original:\\Sem Alergias};
+        \node (fake) [draw, rectangle, fill=meuvermelhoescuro!10, right=of doc, xshift=1cm, text width=4cm, align=center] {Registro Alterado:\\Alergia a Penicilina};
+        \draw[->, ultra thick, meuvermelhoescuro] (doc) -- node[above, font=\tiny] {Manipulação} (fake);
+    \end{tikzpicture}
+\end{frame}
+
+% --- Slide 35: Ameaça de Fabricação ---
+\begin{frame}{Ameaça de Fabricação}
+    \begin{block}{Definição}
+        Permite que um atacante insira informações falsas no sistema.
+    \end{block}
+    \begin{itemize}
+        \item Compromete a \textbf{Integridade} e a \textbf{Autenticidade}.
+        \item Embora menos "crível" no Mentcare, é uma ameaça crítica em sistemas financeiros.
+        \item \textbf{Exemplo:} Adicionar transações bancárias falsas.
+    \end{itemize}
+\end{frame}
+
+% --- Slide 36: [CS5] Caso de Estudo: Fabricação Bancária ---
+\begin{frame}{[CS5] Caso de Estudo: Fabricação Bancária}
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            \textbf{Ação:} Um atacante injeta uma transação de transferência eletrônica no sistema de processamento de um banco.
+            \vspace{0.3cm}
+            \textbf{Resultado:} O sistema reconhece a transação como legítima e transfere fundos para a conta do atacante, sem que tenha havido um depósito real ou transferência de outra conta.
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \node (db) [draw, cylinder, shape border rotate=90, fill=meuazul!10] {Transações};
+                \node (fake) [draw, fill=meuvermelhoescuro!10, above=of db, yshift=0.5cm] {Transação Falsa};
+                \draw[thick, ->, meuvermelhoescuro] (fake) -- (db) node[midway, right, font=\tiny] {Injeção};
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+  \centering
+  \Huge Obrigado!\\
+  \vspace{1cm}
+  \large Dúvidas?
+\end{frame}
+
+% -------------
+\end{document}

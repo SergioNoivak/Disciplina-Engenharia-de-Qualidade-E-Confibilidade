@@ -1,0 +1,35 @@
+\frametitle{19) Arquitetura com Redundância — Diagrama}
+\centering
+  \begin{tikzpicture}[every node/.style={font=\scriptsize}, node distance=1.2cm]
+    \tikzstyle{sw}      = [rectangle, rounded corners, draw=meuazul, fill=blue!10,
+                          minimum width=2.5cm, minimum height=0.75cm, align=center, text width=2.4cm]
+    \tikzstyle{vote}    = [diamond, draw=meuverde, fill=green!10, aspect=2.5,
+                          minimum width=1.5cm, minimum height=0.75cm, align=center, text width=0.9cm]
+    \tikzstyle{outstyle}= [rectangle, rounded corners, draw=meuverde, fill=green!15,
+                          minimum width=2.2cm, minimum height=0.75cm, align=center, text width=2.1cm]
+    \tikzstyle{arr}     = [thick,->,>=Stealth]
+
+    % Entradas
+    \node (in) [sw, fill=gray!10, draw=meucinza] at (0,0) {Entrada\\(sensores)};
+
+    % Canais
+    \node (ch1) [sw] at (3.5, 1.6) {\begin{tabular}{c} Canal A \\ (Software 1) \end{tabular}};
+    \node (ch2) [sw] at (3.5, 0.0) {\begin{tabular}{c} Canal B \\ (Software 2) \end{tabular}};
+    \node (ch3) [sw] at (3.5,-1.6) {\begin{tabular}{c} Canal C \\ (Software 3) \end{tabular}};
+
+    % Votador
+    \node (vot) [vote] at (7.0, 0) {\begin{tabular}{c} Votação \\ 2 de 3 \end{tabular}};
+
+    % Saída
+    \node (saida) [outstyle] at (10.2, 0) {\begin{tabular}{c} Saída \\ Verificada \end{tabular}};
+
+    \draw[arr, meuazul] (in) -- (ch1);
+    \draw[arr, meuazul] (in) -- (ch2);
+    \draw[arr, meuazul] (in) -- (ch3);
+    \draw[arr, meuverde] (ch1) -- (vot);
+    \draw[arr, meuverde] (ch2) -- (vot);
+    \draw[arr, meuverde] (ch3) -- (vot);
+    \draw[arr, meuverde] (vot) -- (saida);
+  \end{tikzpicture}
+  \vspace{0.3em}\\
+  {\small Se um canal produzir resultado diferente, os outros dois vencem na votação $\Rightarrow$ falha tolerada.}

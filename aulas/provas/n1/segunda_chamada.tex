@@ -1,0 +1,485 @@
+\documentclass[12pt,a4paper]{article}
+
+% ------------------------------------------------
+% Pacotes
+% ------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{mathptmx} % Times New Roman
+\usepackage{courier} % Adiciona suporte a negrito na fonte monospace
+\usepackage{enumitem}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}  
+\usepackage{tikz}
+\usetikzlibrary{positioning, shapes.geometric, arrows.meta}
+\usepackage{listings}
+\usepackage{multicol}
+
+\lstset{
+    language=Java,
+    keywordstyle=\bfseries,
+    showstringspaces=false,
+    breaklines=true,
+    frame=none,
+    numbers=none,
+    tabsize=2,
+    commentstyle=\itshape\color{gray},
+    morekeywords={this, class, private, public, String, System, out, println, Solo, Caminhao, Patio, Termometro},
+    extendedchars=true,
+    inputencoding=utf8
+}
+
+% TikZ Styles for ER Diagrams
+\tikzset{
+    block/.style={rectangle, draw, thick, minimum width=2cm, minimum height=1cm, fill=white},
+    diamond_node/.style={diamond, draw, thick, minimum width=2cm, minimum height=1cm, fill=white, aspect=2},
+    attribute/.style={ellipse, draw, thin, minimum width=1.5cm, minimum height=0.6cm, fill=white, font=\scriptsize},
+    line/.style={draw, thick}, 
+}
+
+% ------------------------------------------------ 
+% Configuração de página
+% ------------------------------------------------
+\geometry{
+    a4paper,
+    left=2cm,
+    right=2cm,
+    top=2cm,
+    bottom=2cm,
+    headheight=15pt
+}
+
+% Caixa para resposta discursiva
+\newcommand{\resposta}[1]{
+\noindent
+\framebox[\textwidth]{
+\begin{minipage}{0.98\textwidth}
+\vspace*{#1}\null
+\end{minipage}
+}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+
+\setlength{\parindent}{0pt}
+
+% ------------------------------------------------
+% Comandos auxiliares
+% ------------------------------------------------
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+% ------------------------------------------------
+% Documento
+% ------------------------------------------------
+\begin{document}
+
+% ------------------------------------------------
+% Cabeçalho
+% ------------------------------------------------
+\begin{tabularx}{\textwidth}{@{} L{4cm} X @{}}
+    \raisebox{-0.5cm}{\includegraphics[width=4cm]{Universidade_de_Rio_Verde.jpg}} &
+    \hfill
+    \begin{tabular}{|>{\centering\arraybackslash}m{9.5cm}|>{\raggedright\arraybackslash}p{1.8cm}|}
+        \hline
+        \cellcolor{black}\color{white}\rule{0pt}{1.2cm}\textbf{AVALIAÇÃO 1 RESOLVIDA - 2ª CHAMADA} 
+        & 
+        \scriptsize Nota \tabularnewline
+        \hline
+    \end{tabular} 
+\end{tabularx}
+\vspace{0.3cm}
+
+% ------------------------------------------------  
+% Tabela principal
+% ------------------------------------------------
+\begin{tabularx}{\textwidth}{|X|L{2cm}|}
+\hline
+\textbf{Curso} & \textbf{Campus} \\
+\textit{Engenharia da Qualidade e Confiabilidade} & \textit{Rio Verde} \\
+\hline
+\multicolumn{2}{|l|}{ \textit{}} \\
+\hline
+\textbf{Nome do(a) acadêmico(a)} & \textbf{Valor} \\
+& 7,0 \\
+\hline
+\textbf{Professor} & \textbf{Turma} \\
+\textit{Sergio Souza Novak} & \textit{} \\
+\hline
+\textbf{Data da Avaliação} & \textbf{Código} \\
+\textit{15/10/2026} & \textit{ESW451} \\
+\hline
+\end{tabularx}
+ 
+% ------------------------------------------------
+% Barra de Atenção
+% ------------------------------------------------
+\vspace{0.2cm}
+
+\begin{tabularx}{\textwidth}{|X|}
+\hline
+\cellcolor{black}\color{white}
+\centering \textbf{ATENÇÃO:} Somente serão passíveis de \textbf{REVISÃO} avaliações resolvidas à \textbf{TINTA}. \tabularnewline
+\hline
+\end{tabularx}
+
+\vspace{0.3cm}
+
+\textbf{ORIENTAÇÕES PARA A RESOLUÇÃO}  
+
+\begin{itemize}
+    \item A avaliação é individual, sem consulta;
+    \item A interpretação de texto faz parte da avaliação;
+    \item Nas questões de cálculo/discursivas, apresente o raciocínio completo e as equações utilizadas.
+\end{itemize}
+
+\vspace{0.2cm}
+
+% ------------------------------------------------
+% Formulário de Referência / Equações
+% ------------------------------------------------
+\begin{center}
+\begin{tabularx}{\textwidth}{|X|}
+\hline
+\cellcolor{gray!20}\centering \textbf{FORMULÁRIO DE REFERÊNCIA - MÉTRICAS DE CONFIABILIDADE} \tabularnewline
+\hline
+\vspace{0.1cm}
+\begin{multicols}{2}
+\small
+\begin{itemize}[leftmargin=*,itemsep=3pt]
+    \item $\text{MTTF} = \dfrac{\sum T_{\text{op}}}{N_{\text{falhas}}}$
+    \item $\text{MTTR} = \dfrac{\sum T_{\text{rep}}}{N_{\text{falhas}}}$
+    \item $\text{MTBF} = \text{MTTF} + \text{MTTR}$
+    \item $\text{AVAIL} = \dfrac{\text{MTTF}}{\text{MTTF} + \text{MTTR}} = \dfrac{\sum T_{\text{op}}}{T_{\text{total}}}$
+    \item $\text{POFOD} = \dfrac{N_{\text{falhas em demandas}}}{N_{\text{total de demandas}}}$
+    \item $\text{ROCOF} = \dfrac{N_{\text{falhas}}}{\sum T_{\text{op}}}$
+    \item $R(t) = e^{-\lambda t}, \quad \lambda = \dfrac{1}{\text{MTTF}}$
+    \item $U = 1 - \text{AVAIL} = \dfrac{\text{MTTR}}{\text{MTTF} + \text{MTTR}}$
+\end{itemize}
+\end{multicols}
+\vspace{-0.2cm}
+\tabularnewline
+\hline
+\end{tabularx}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{center}
+    \rule{\textwidth}{0.4pt}
+    \textbf{QUESTÕES}
+\end{center}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 1 - Cálculos de Métricas
+% ------------------------------------------------
+\textbf{Questão 1} -- Um sistema de monitoramento de uma usina solar operou continuamente ao longo de um determinado período. Durante esse intervalo de tempo, o sistema registrou 5 falhas operacionais. Os tempos de operação entre as falhas foram de: \textbf{1200h}, \textbf{950h}, \textbf{1100h}, \textbf{850h} e \textbf{900h}. Após a ocorrência de cada falha, a equipe de manutenção levou, respectivamente, \textbf{25h}, \textbf{15h}, \textbf{30h}, \textbf{10h} e \textbf{20h} para efetuar o reparo e restabelecer a operação normal. Adicionalmente, o sistema recebeu \textbf{500 solicitações (demandas)} de acionamento de emergência durante o período, das quais \textbf{15 falharam} em atender aos requisitos.
+
+\vspace{0.2cm}
+
+Com base nesses dados experimentais:
+
+\begin{enumerate}[label=\textbf{\alph*)}]
+    \item Calcule o \textbf{MTTF} (\textit{Mean Time To Failure}) e o \textbf{MTTR} (\textit{Mean Time To Repair}) do sistema.
+    \item Calcule a disponibilidade do sistema (\textbf{AVAIL}), expressando o resultado em porcentagem.
+    \item Calcule a probabilidade de falha sob demanda (\textbf{POFOD}).
+\end{enumerate}
+
+\vspace{0.2cm}
+\noindent
+\framebox[\textwidth]{
+\begin{minipage}{0.98\textwidth}
+\vspace*{0.2cm}
+\textcolor{blue}{\textbf{Resolução:}\\
+\textbf{a) MTTF e MTTR}\\
+Tempo operacional total: $T_{\text{op}} = 1200 + 950 + 1100 + 850 + 900 = 5000\text{ h}$\\
+Tempo de reparo total: $T_{\text{rep}} = 25 + 15 + 30 + 10 + 20 = 100\text{ h}$\\
+$\text{MTTF} = \dfrac{T_{\text{op}}}{N_{\text{falhas}}} = \dfrac{5000}{5} = \mathbf{1000\text{ horas}}$\\
+$\text{MTTR} = \dfrac{T_{\text{rep}}}{N_{\text{falhas}}} = \dfrac{100}{5} = \mathbf{20\text{ horas}}$\\
+\textbf{b) AVAIL (Disponibilidade)}\\
+$\text{AVAIL} = \dfrac{T_{\text{op}}}{T_{\text{op}} + T_{\text{rep}}} = \dfrac{5000}{5100} \approx 0{,}98039 = \mathbf{98{,}04\%}$\\
+\textbf{c) POFOD (Probabilidade de Falha Sob Demanda)}\\
+$\text{POFOD} = \dfrac{15}{500} = \mathbf{0{,}03 \text{ (ou } 3\%\text{)}}$}
+\vspace*{0.2cm}
+\end{minipage}
+}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 2 - Defeito, Erro, Estado de Erro e Falha
+% ------------------------------------------------
+\textbf{Questão 2} -- Durante a codificação do módulo de controle de uma válvula de alívio de pressão em um gasoduto, um desenvolvedor cometeu um equívoco ao declarar uma variável responsável pela contagem do tempo de resposta como \texttt{unsigned char} (limite máximo de 255 ms) em vez de \texttt{unsigned int}. Durante uma oscilação na rede, o tempo real de resposta atingiu 300 ms. Devido ao estouro da capacidade de armazenamento (\textit{overflow}), a variável gravou em memória o valor 44 ms. A lógica do sistema interpretou que o tempo estava dentro do limite de segurança e não emitiu o sinal para abertura da válvula de emergência. Em decorrência dessa não abertura, a pressão no duto ultrapassou os limites estruturais, causando o rompimento da tubulação.
+
+\vspace{0.2cm}
+
+Assinale a alternativa que associa \textbf{CORRETAMENTE} os fatos narrados aos conceitos fundamentais de confiabilidade:
+
+\vspace{0.3cm}
+
+\begin{enumerate}[label=\textbf{(\Alph*)}]
+    \item[\textcolor{blue}{\textbf{(A)}}] \textcolor{blue}{\textbf{Defeito}: a escolha do tipo \texttt{unsigned char} no código; \textbf{Estado de erro}: o valor 44 ms gravado no registrador de memória; \textbf{Erro}: a decisão lógica do software de considerar o tempo dentro da margem de segurança; \textbf{Falha}: o rompimento físico da tubulação do gasoduto.}
+    
+    \item \textbf{Defeito}: o pico de oscilação de 300 ms da rede; \textbf{Estado de erro}: o tipo de dado \texttt{unsigned char}; \textbf{Erro}: o rompimento da tubulação; \textbf{Falha}: a gravação do valor 44 ms na memória.
+    
+    \item \textbf{Defeito}: o rompimento da tubulação; \textbf{Estado de erro}: o valor 44 ms na memória; \textbf{Erro}: o estouro de capacidade de 300 ms; \textbf{Falha}: a não abertura da válvula de emergência.
+    
+    \item \textbf{Defeito} e \textbf{Falha} são sinônimos e referem-se ao erro humano do programador ao digitar a instrução; \textbf{Estado de erro} é a consequência ambiental da explosão do gasoduto.
+    
+    \item \textbf{Defeito}: a gravação do valor 44 ms; \textbf{Estado de erro}: a escolha de \texttt{unsigned char}; \textbf{Erro}: a pressão excessiva no duto; \textbf{Falha}: a falta de manutenção na rede.
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 3 - Programação N-Versões
+% ------------------------------------------------
+\textbf{Questão 3} -- A técnica de \textbf{Programação N-Versões} é uma estratégia clássica de tolerância a falhas em software desenvolvida para mitigar falhas de projeto e implementação em sistemas críticos.
+
+\vspace{0.2cm}
+
+Discorra 2 parágrafos sobre a técnica de \textbf{Programação N-Versões}. Ressaltando os principais conceitos dessa técnica, suas vantagens e desvantagens, tudo segundo a literatura de Ian Sommerville.
+\vspace{0.2cm}
+\noindent
+\framebox[\textwidth]{
+\begin{minipage}{0.98\textwidth}
+\vspace*{0.2cm}
+\textcolor{blue}{\textbf{Resolução:}\\
+A Programação N-Versões é uma técnica de tolerância a falhas proposta para contornar defeitos de projeto e implementação de software em sistemas críticos. Ela fundamenta-se na premissa de que equipes de desenvolvimento distintas, trabalhando de maneira totalmente independente a partir de uma mesma especificação de requisitos, cometerão erros de implementação em componentes diferentes do código. Em tempo de execução, $N$ versões (onde $N \ge 3$) são executadas simultaneamente em paralelo, e um módulo árbitro (\textit{voting mechanism}) compara as saídas geradas por cada versão, aplicando o princípio de votação por maioria para determinar o resultado final correto e mascarar potenciais falhas individuais.\\[0.3cm]
+Apesar de aumentar consideravelmente a confiabilidade, a literatura de Sommerville destaca que a principal desvantagem dessa abordagem reside no seu elevado custo financeiro e de gestão, já que requer o desenvolvimento e a manutenção de múltiplos códigos-fonte independentes. Além disso, a hipótese de independência de falhas nem sempre se confirma na prática devido à possibilidade de falhas por causa comum (\textit{common-cause failures}), frequentemente derivadas de ambiguidades ou erros na especificação inicial compartilhada por todas as equipes, o que pode levar versões distintas a falharem no mesmo cenário de teste.}
+\vspace*{0.2cm}
+\end{minipage}
+}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 4 - Apache Hadoop
+% ------------------------------------------------
+\textbf{Questão 4} -- O \textbf{Apache Hadoop} é uma estrutura de código aberto amplamente empregada para processamento e armazenamento distribuído de grande volume de dados (\textit{Big Data}).
+
+\vspace{0.2cm}
+
+Sobre a arquitetura e funcionamento do Apache Hadoop, julgue as afirmativas a seguir como \textbf{(V) Verdadeiro} ou \textbf{(F) Falso}:
+
+\vspace{0.3cm}
+
+\begin{enumerate}[label=\textbf{(\hspace{0.6cm})} ,leftmargin=2cm]
+    \item[\textcolor{blue}{\textbf{( V )}}] \textcolor{blue}{O HDFS (\textit{Hadoop Distributed File System}) divide arquivos grandes em blocos de tamanho fixo e os distribui com replicação entre vários nós do cluster, assegurando alta disponibilidade e tolerância a falhas.}
+
+    \item[\textcolor{blue}{\textbf{( V )}}] \textcolor{blue}{O modelo \textit{MapReduce} divide o processamento em duas fases: a fase \textit{Map}, que processa e filtra os dados gerando pares chave-valor intermediários, e a fase \textit{Reduce}, que combina e agrega os resultados parciais.}
+
+    \item[\textcolor{blue}{\textbf{( F )}}] \textcolor{blue}{O Hadoop foi desenhado primariamente como um banco de dados relacional (RDBMS) de alta performance, garantindo transações ACID em tempo real sobre tabelas relacionais normalizadas.}
+
+    \item[\textcolor{blue}{\textbf{( V )}}] \textcolor{blue}{A arquitetura do Hadoop assume que falhas em servidores individuais do cluster são ocorrências normais e esperadas, tratando-as automaticamente via camada de software sem interromper a execução global.}
+
+    \item[\textcolor{blue}{\textbf{( F )}}] \textcolor{blue}{Para otimizar o desempenho, o Hadoop prioriza mover grandes volumes de dados através da rede até onde o código de aplicação está executando, descartando o conceito de localidade de dados (\textit{data locality}).}
+
+    \item[\textcolor{blue}{\textbf{( V )}}] \textcolor{blue}{O Hadoop permite a utilização de hardware de prateleira (\textit{commodity hardware}), reduzindo substancialmente os custos de infraestrutura de processamento distribuído.}
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 5 - Escalonamento Vertical e Horizontal
+% ------------------------------------------------
+\textbf{Questão 5} -- No dimensionamento de infraestruturas de software para alta disponibilidade e capacidade de carga, utilizam-se os conceitos de \textbf{escalonamento vertical} (\textit{scale up}) e \textbf{escalonamento horizontal} (\textit{scale out}).
+
+\vspace{0.2cm}
+
+Assinale a alternativa \textbf{CORRETA} a respeito das características e trade-offs dessas abordagens:
+
+\vspace{0.3cm}
+
+\begin{enumerate}[label=\textbf{(\Alph*)}]
+    \item O escalonamento vertical consiste na adição de novos nós/servidores a um cluster distribuído, exigindo um balanceador de carga para distribuir as requisições.
+
+    \item O escalonamento horizontal apresenta limite físico inflexível imposto pela capacidade máxima de memória e processamento que uma única placa-mãe consegue comportar.
+
+    \item[\textcolor{blue}{\textbf{(C)}}] \textcolor{blue}{O escalonamento horizontal proporciona maior tolerância a falhas por desacoplar o sistema em múltiplas instâncias, porém exige que a aplicação e o armazenamento sejam projetados para lidar com concorrência e particionamento de dados.}
+
+    \item O escalonamento vertical é mais complexo do ponto de vista de arquitetura de software do que o escalonamento horizontal, pois exige reescrever o código da aplicação para suportar computação paralela distribuída.
+
+    \item Em arquiteturas de Big Data como Hadoop, adota-se exclusivamente o escalonamento vertical para evitar a latência de comunicação via rede entre diferentes servidores.
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 6 - Arquitetura de Sistema de Proteção (Sommerville)
+% ------------------------------------------------
+\textbf{Questão 6} -- Considere a arquitetura de um \textbf{sistema de proteção} proposta por Sommerville ilustrada no diagrama a seguir:
+
+\vspace{0.4cm}
+
+\begin{center}
+\begin{tikzpicture}[
+    caixa/.style={rectangle, draw, thick, minimum width=3.4cm, minimum height=0.9cm,
+                  align=center, fill=white, font=\small},
+    seta/.style={-Stealth, thick}
+]
+
+% --- Nós ---
+\node[caixa] (amb)  at ( 0,    0  ) {Ambiente do sistema};
+\node[caixa] (sp)   at (-2.8, -1.9) {Sensores\\de proteção};
+\node[caixa] (se)   at ( 2.8, -1.9) {Sensores};
+\node[caixa] (prot) at (-2.8, -3.8) {Sistema\\de proteção};
+\node[caixa] (ctrl) at ( 2.8, -3.8) {Sistema de controle};
+\node[caixa] (atu)  at ( 0,   -5.7) {Atuadores};
+\node[caixa] (eq)   at ( 0,   -7.6) {Equipamento\\controlado};
+
+% --- Setas principais ---
+\draw[seta] (amb)  -- (sp);
+\draw[seta] (amb)  -- (se);
+\draw[seta] (sp)   -- (prot);
+\draw[seta] (se)   -- (ctrl);
+\draw[seta] (prot) -- (atu);
+\draw[seta] (ctrl) -- (atu);
+\draw[seta] (atu)  -- (eq);
+
+% --- Realimentação (feedback) ---
+\draw[seta] (eq.west) -- ++(-3.2, 0) -- ++(0, 5.7) -- (sp.west);
+
+% --- Regiões de agrupamento ---
+\draw[dashed, rounded corners=6pt, draw=black!50]
+    (-5.3, -4.7) rectangle (-0.1, -0.6);
+
+\draw[dashed, rounded corners=6pt, draw=black!50]
+    ( 0.1, -4.7) rectangle ( 5.3, -0.6);
+
+% Rótulos das regiões
+\node[font=\scriptsize\itshape, text=black!60] at (-4.6, -4.4) {Sistema de proteção};
+\node[font=\scriptsize\itshape, text=black!60] at ( 4.3, -4.4) {Sistema de controle};
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+
+Com base no diagrama e nos conceitos de arquitetura de sistemas críticos de segurança segundo Sommerville, julgue a afirmativa a seguir em \textbf{(C) Correto} ou \textbf{(E) Errado}:
+
+\vspace{0.3cm}
+
+\begin{enumerate}[label=\textbf{(\hspace{0.6cm})} ,leftmargin=2cm]
+
+    \item[\textcolor{blue}{\textbf{( E )}}] \textcolor{blue}{Na arquitetura apresentada, o sistema de controle possui autoridade hierárquica superior ao sistema de proteção, podendo cancelar comandos de emergência enviados aos atuadores.}
+
+\end{enumerate}
+
+\vspace{0.2cm}
+\noindent\textcolor{blue}{\small\textbf{Justificativa:} Em sistemas críticos de segurança, o sistema de proteção possui autonomia e sobreposição (\textit{override}) em relação ao sistema de controle principal. O sistema de controle \textbf{não} possui autoridade para cancelar comandos de emergência acionados nos atuadores.}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 7 - Programação Distribuída e Redundância
+% ------------------------------------------------
+\textbf{Questão 7} -- Em ambientes de programação e sistemas distribuídos, a ocorrência de falhas parciais em nós de processamento e enlaces de comunicação é uma característica inerente à infraestrutura.
+
+\vspace{0.2cm}
+
+Discorra, em \textbf{1 parágrafo}, sobre a importância da \textbf{redundância} em sistemas distribuídos e de que maneira essa estratégia contribui para a confiabilidade e tolerância a falhas do sistema.
+
+\vspace{0.2cm}
+
+\noindent
+\framebox[\textwidth]{
+\begin{minipage}{0.98\textwidth}
+\vspace*{0.2cm}
+\textcolor{blue}{\textbf{Resolução:}\\
+A redundância é indispensável em ambientes de programação distribuída para garantir a continuidade operacional frente a falhas parciais inevitáveis em nós de processamento ou enlaces de rede, eliminando pontos únicos de falha (\textit{single points of failure}). Por meio do espelhamento de dados (replicação) e da duplicação de processos ou componentes de hardware, o sistema assegura a tolerância a falhas, permitindo que a indisponibilidade ou avaria de uma instância individual seja mascarada e absorvida pelas réplicas ativas, preservando a confiabilidade, a integridade dos dados e a alta disponibilidade do serviço.}
+\vspace*{0.2cm}
+\end{minipage}
+}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 8 - Diferença entre Confiabilidade e Disponibilidade
+% ------------------------------------------------
+\textbf{Questão 8} -- Nos estudos de engenharia e confiabilidade de sistemas, os conceitos de \textbf{Confiabilidade} (\textit{Reliability}) e \textbf{Disponibilidade} (\textit{Availability}) são frequentemente correlacionados, porém expressam propriedades operacionais distintas.
+
+\vspace{0.2cm}
+
+Assinale a alternativa que descreve de forma \textbf{CORRETA} a diferença conceitual e prática entre essas duas métricas:
+
+\vspace{0.3cm}
+
+\begin{enumerate}[label=\textbf{(\Alph*)}]
+    \item[\textcolor{blue}{\textbf{(A)}}] \textcolor{blue}{A Confiabilidade mede a probabilidade de um sistema operar sem falhas durante um intervalo de tempo contínuo $t$, enquanto a Disponibilidade mede a proporção do tempo em que o sistema está operacional para uso, levando em consideração tanto o tempo de operação (MTTF) quanto o tempo de reparo (MTTR).}
+
+    \item A Disponibilidade exige estritamente a ausência total de falhas durante a execução, enquanto a Confiabilidade tolera falhas frequentes desde que o tempo de recuperação seja extremamente rápido.
+
+    \item A Confiabilidade depende diretamente da agilidade da equipe de manutenção no tempo de reparo (MTTR), enquanto a Disponibilidade depende exclusivamente da taxa de ocorrência de erros no código-fonte.
+
+    \item Confiabilidade e Disponibilidade medem exatamente o mesmo fenômeno, sendo representadas de forma idêntica pela equação $R(t) = 1 - \text{POFOD}$, diferindo apenas no ambiente de implantação.
+
+    \item Um sistema com alto MTTR (longo tempo de reparo) apresenta maior Disponibilidade do que um sistema com alto MTTF (longo tempo médio até a falha).
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 9 - Noves de Disponibilidade (SLA e 99,99%)
+% ------------------------------------------------
+\textbf{Questão 9} -- Na indústria de tecnologia e serviços em nuvem, o nível de serviço é comumente expresso pela quantidade de "noves de disponibilidade" (\textit{nines of availability}). Um contrato de SLA (\textit{Service Level Agreement}) de um data center estabelece uma meta de disponibilidade anual de \textbf{"quatro noves"} (\textbf{99,99\%}).
+
+\vspace{0.2cm}
+
+Considerando um ano comercial padrão de 365 dias (8.760 horas), qual é o tempo máximo de indisponibilidade (\textit{downtime}) acumulado que o sistema pode sofrer ao longo de um ano inteiro sem violar o contrato de SLA?
+
+\vspace{0.3cm}
+
+\begin{enumerate}[label=\textbf{(\Alph*)}]
+    \item[\textcolor{blue}{\textbf{(A)}}] \textcolor{blue}{Aproximadamente 52,56 minutos por ano (menos de 1 hora de paralisação total no ano).}
+
+    \item Aproximadamente 8,76 horas por ano (equivalente a 99,9\% ou "três noves").
+
+    \item Aproximadamente 5,26 minutos por ano (equivalente a 99,999\% ou "cinco noves").
+
+    \item Exatamente 24,00 horas por ano (equivalente a 1 dia completo de manutenção).
+
+    \item Aproximadamente 525,60 minutos por ano (equivalente a cerca de 8,76 horas).
+\end{enumerate}
+
+\vspace{0.2cm}
+\noindent\textcolor{blue}{\small\textbf{Cálculo:} $U = 100\% - 99{,}99\% = 0{,}0001$; $H_{\text{downtime}} = 8760 \times 0{,}0001 = 0{,}876\text{ h} = 52{,}56\text{ min}$.}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 10 - Comitê de N-Versões e Lei dos Grandes Números
+% ------------------------------------------------
+\textbf{Questão 10} -- Em sistemas de altíssima confiabilidade e tolerância a falhas, adota-se o conceito de \textbf{comitê de N-Versões} (ou redundância por votação), no qual $N$ versões independentes de software ($N \ge 3$, ímpar) executam em paralelo e um mecanismo de decisão adota o resultado da maioria simples. Suponha que a confiabilidade individual de cada versão seja $p > 0,5$ e que as falhas ocorram de forma estatisticamente independente entre as versões.
+
+\vspace{0.2cm}
+
+Com base na Lei dos Grandes Números e nos fundamentos de probabilidade aplicados a sistemas redundantes por comitê, assinale a alternativa \textbf{CORRETA}:
+
+\vspace{0.3cm}
+
+\begin{enumerate}[label=\textbf{(\Alph*)}]
+    
+    \item A confiabilidade do comitê é obrigatoriamente limitada à média aritmética das confiabilidades individuais, sendo teoricamente impossível superar o desempenho da melhor versão isolada.
+    \item O uso do comitê reduz a confiabilidade do sistema, pois a inclusão de mais componentes aumenta a probabilidade acumulada de ocorrência de falhas no ambiente de execução.
+    \item A Lei dos Grandes Números garante o ganho de confiabilidade no comitê apenas se todas as versões possuírem uma taxa de erro exatamente nula ($p = 1,0$).
+    \item A taxa de erro do comitê é dada pela soma direta das probabilidades de falha individuais, exigindo que $N$ seja o menor possível para evitar degradação do sistema.
+    \item[\textcolor{blue}{\textbf{(E)}}] \textcolor{blue}{A confiabilidade global resultante do comitê é estritamente superior à confiabilidade da melhor versão individual do grupo, tendendo a 100\% à medida que o número $N$ de versões independentes aumenta.}
+\end{enumerate}
+
+\vspace{0.2cm}
+\noindent\textcolor{blue}{\small\textbf{Justificativa:} Pelo Teorema do Júri de Condorcet (fundamentado na Lei dos Grandes Números), se $p > 0{,}5$ e as falhas forem independentes, a probabilidade de acerto da maioria é estritamente maior que a de qualquer versão isolada, tendendo a 100\% quando $N \to \infty$.}
+
+\end{document}

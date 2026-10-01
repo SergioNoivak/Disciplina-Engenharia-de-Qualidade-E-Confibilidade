@@ -1,0 +1,64 @@
+digraph ACO_FeatureSelection {
+
+    rankdir=LR
+    splines=true
+    node [shape=box, style="rounded,filled", fillcolor="#f8fbff", fontname="Helvetica"]
+
+    // ===== Dataset =====
+    Dataset [label="Dataset\n(planilha original)", fillcolor="#e3f2fd"]
+
+    // ===== Feature Graph =====
+    subgraph cluster_graph {
+        label="Grafo de Features (completo)"
+        style=rounded
+
+        f1 [label="Feature 1"]
+        f2 [label="Feature 2"]
+        f3 [label="Feature 3"]
+        f4 [label="Feature 4"]
+        f5 [label="Feature 5"]
+
+        f1 -> f2
+        f1 -> f3
+        f1 -> f4
+        f1 -> f5
+        f2 -> f3
+        f2 -> f4
+        f2 -> f5
+        f3 -> f4
+        f3 -> f5
+        f4 -> f5
+    }
+
+    // ===== Ant =====
+    Ant [label="Formiga constrói\nsubconjunto", fillcolor="#fff3cd"]
+
+    Subset [label="Subconjunto de Features\nex: {F1, F3, F5}", fillcolor="#ffeeba"]
+
+    // ===== Classifier =====
+    Train [label="Treinar Classificador\n(KNN / SVM / RF)", fillcolor="#e2f0d9"]
+    Metric [label="Calcular Métrica\n(Acurácia / F1 / AUC)", fillcolor="#e2f0d9"]
+
+    // ===== Pheromone =====
+    Pheromone [label="Atualizar Feromônio\nnas arestas visitadas", fillcolor="#f8d7da"]
+
+    Evap [label="Evaporação Global", fillcolor="#f5c6cb"]
+
+    Repeat [label="Próxima Iteração\nnovas formigas", fillcolor="#d1ecf1"]
+
+    Best [label="Melhor subconjunto final", fillcolor="#c3e6cb"]
+
+    // ===== Flow =====
+    Dataset -> f1
+    f5 -> Ant
+
+    Ant -> Subset
+    Subset -> Train
+    Train -> Metric
+    Metric -> Pheromone
+    Pheromone -> Evap
+    Evap -> Repeat
+    Repeat -> Ant
+
+    Repeat -> Best
+}

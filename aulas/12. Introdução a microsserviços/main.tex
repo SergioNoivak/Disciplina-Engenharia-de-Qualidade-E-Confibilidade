@@ -1,0 +1,1316 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\usepackage{eso-pic}
+\usepackage[brazil]{babel}
+\shorthandoff{"}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, shapes.symbols, fit, calc, backgrounds}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{meuazul}{RGB}{0, 79, 151}
+\definecolor{meucinza}{RGB}{80, 80, 80}
+\definecolor{meuvermelhoescuro}{RGB}{180, 30, 30}
+\definecolor{meuverde}{RGB}{30, 130, 60}
+\setbeamercolor{structure}{fg=meuazul}
+
+\title[Introdução a arquitetura de Microsserviços]{Introdução a arquitetura de Microsserviços}
+\subtitle{Engenharia de Qualidade e Confiabilidade}
+\author{Prof. Me. Sergio Souza Novak — UniRV}
+\titlegraphic{\includegraphics[width=2cm]{logo.png}}
+
+\begin{document}
+
+% Slide de Título
+\frame[plain]{\titlepage}
+
+% Slide de Sumário
+\begin{frame}{Sumário}
+    \begin{columns}[t]
+        \begin{column}{.5\textwidth}
+            \tableofcontents[sections={1-2}]
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \tableofcontents[sections={3-4}]
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\section{O que são Microsserviços?}
+
+\begin{frame}{O que são Microsserviços?}
+    \begin{itemize}
+        \item Arquitetura onde uma aplicação é composta por serviços pequenos e independentes
+        \item Cada serviço executa uma única funcionalidade de negócio
+        \item Serviços se comunicam via APIs leves (ex.: HTTP/REST, mensageria)
+        \item Cada microsserviço pode ser desenvolvido, implantado e escalado de forma independente
+    \end{itemize}
+    \vspace{0.5cm}
+    \centering
+    \begin{tikzpicture}[
+        box/.style={rectangle, rounded corners, minimum width=2.2cm, minimum height=0.8cm, text centered, font=\small}
+    ]
+        \node[box, fill=blue!20, draw=meuazul] (s1) {Auth};
+        \node[box, fill=green!20, draw=meuverde, right=0.3cm of s1] (s2) {Catálogo};
+        \node[box, fill=red!20, draw=meuvermelhoescuro, right=0.3cm of s2] (s3) {Pedidos};
+        \node[box, fill=orange!20, draw=orange!80!black, right=0.3cm of s3] (s4) {Pagamento};
+        \node[box, fill=purple!20, draw=purple, right=0.3cm of s4] (s5) {Notif.};
+        \node[above=0.2cm of s3, font=\bfseries\small] {Aplicação};
+        \draw[->, thick, meucinza] ([yshift=-0.5cm] s1.south) -- node[below, font=\tiny] {API Gateway} ([yshift=-0.5cm] s5.south);
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Arquitetura Monolítica}
+    \centering
+    \begin{tikzpicture}[
+        module/.style={rectangle, draw=meucinza, fill=white, rounded corners, minimum width=3.5cm, minimum height=1cm, text centered, font=\small},
+        db/.style={cylinder, draw=meuazul, fill=blue!10, shape border rotate=90, minimum width=1.5cm, minimum height=1.5cm, text centered, aspect=0.25, align=center, font=\small}
+    ]
+        % Monolith box
+        \node[rectangle, draw=meuvermelhoescuro, fill=red!5, rounded corners, minimum width=4.5cm, minimum height=5.5cm] (monolith) {};
+        \node[above=0.1cm of monolith.south, font=\bfseries\small, text=meuvermelhoescuro] {Monólito};
+        
+        \node[module] (business) at (monolith.center) {Lógica de Negócio};
+        \node[module, above=0.3cm of business] (ui) {Interface de Usuário};
+        \node[module, below=0.3cm of business] (data) {Acesso a Dados};
+        
+        \node[db, right=2cm of monolith] (database) {Banco de\\Dados Único};
+        
+        \draw[<->, thick, meucinza] (data) -- (database);
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Sistema de Microsserviços (Node.js)}
+    \centering
+    \begin{tikzpicture}[
+        ms/.style={rectangle, draw=meuverde, fill=green!10, rounded corners, minimum width=3cm, minimum height=1.2cm, text centered, align=center, font=\small},
+        db/.style={cylinder, draw=meuazul, fill=blue!10, shape border rotate=90, minimum width=1.5cm, minimum height=1.5cm, text centered, aspect=0.25, font=\footnotesize, align=center},
+        gateway/.style={rectangle, draw=meuvermelhoescuro, fill=red!10, rounded corners, minimum width=10cm, minimum height=0.8cm, text centered, font=\bfseries}
+    ]
+        
+        % API Gateway
+        \node[gateway] (api) {API Gateway};
+        
+        % Microservices
+        \node[ms, below=1.5cm of api] (ms2) {Serviço de Pedidos\\(Express)};
+        \node[ms, left=0.5cm of ms2] (ms1) {Serviço de Usuários\\(Express)};
+        \node[ms, right=0.5cm of ms2] (ms3) {Serviço de Pagamentos\\(Fastify)};
+        
+        % Databases
+        \node[db, below=0.6cm of ms1] (db1) {DB\\Usuários};
+        \node[db, below=0.6cm of ms2] (db2) {DB\\Pedidos};
+        \node[db, below=0.6cm of ms3] (db3) {DB\\Pagamentos};
+        
+        % Connections
+        \draw[->, thick, meucinza] (api.south) -| (ms1.north);
+        \draw[->, thick, meucinza] (api.south) -- (ms2.north);
+        \draw[->, thick, meucinza] (api.south) -| (ms3.north);
+        
+        \draw[<->, thick, meucinza] (ms1.south) -- (db1.north);
+        \draw[<->, thick, meucinza] (ms2.south) -- (db2.north);
+        \draw[<->, thick, meucinza] (ms3.south) -- (db3.north);
+        
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}[fragile]{Exemplo Inicial: Serviço de Usuários com Express}
+    Um microsserviço de usuários funcional extremamente simples em \textbf{Node.js / Express}.
+    \vspace{0.2cm}
+    \begin{lstlisting}[language=Java, basicstyle=\ttfamily\scriptsize, keywordstyle=\color{meuazul}\bfseries, stringstyle=\color{meuvermelhoescuro}, commentstyle=\color{meuverde}\itshape, showstringspaces=false, frame=single, rulecolor=\color{lightgray}]
+const express = require('express');
+const app = express();
+app.use(express.json());
+
+// Banco de dados em memoria para simplificar
+const users = [{ id: 1, name: 'Alice' }, { id: 2, name: 'Bob' }];
+
+app.get('/api/users', (req, res) => {
+    res.json(users);
+});
+
+app.get('/api/users/:id', (req, res) => {
+    const user = users.find(u => u.id === parseInt(req.params.id));
+    if (!user) return res.status(404).send('Usuario nao encontrado.');
+    res.json(user);
+});
+
+app.listen(3001, () => console.log('Servico de Usuarios na porta 3001'));
+    \end{lstlisting}
+\end{frame}
+
+
+\section{Por que adotar Microsserviços?}
+
+\begin{frame}{Por que adotar Microsserviços?}
+    \textbf{Gigantes da indústria} (Netflix, Twitter, Amazon, eBay, Uber) migraram de monolíticos para microsserviços devido a:
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item \textbf{Dificuldade de escalabilidade} -- escalar o sistema inteiro quando apenas uma parte precisa de mais recursos
+        \item \textbf{Falta de eficiência} -- recursos ociosos em partes não-demandadas
+        \item \textbf{Velocidade lenta de desenvolvimento} -- equipes pisam umas nas outras no mesmo código
+        \item \textbf{Dificuldade em adotar novas tecnologias} -- preso a uma stack única
+    \end{itemize}
+    \vspace{0.3cm}
+    \centering
+    \textcolor{meuazul}{\textbf{Monólito $\rightarrow$ Microsserviços: um passo natural no processo de escalar uma aplicação.}}
+\end{frame}
+
+\section{Vantagens dos Microsserviços}
+
+\begin{frame}{Vantagens: Escalabilidade}
+    Escala horizontal e vertical de forma independente por serviço.
+    \vspace{0.5cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        ms/.style={rectangle, draw=meuverde, fill=green!10, rounded corners, minimum width=2.5cm, minimum height=1cm, text centered, font=\footnotesize},
+        msScaled/.style={rectangle, draw=meuazul, fill=blue!10, rounded corners, minimum width=2.5cm, minimum height=1cm, text centered, font=\footnotesize}
+    ]
+        % Gateway
+        \node[rectangle, draw=meuvermelhoescuro, fill=red!10, rounded corners, minimum width=8cm, minimum height=0.6cm, font=\bfseries\footnotesize] (api) {API Gateway};
+        
+        \node[ms, below left=1.2cm and -0.5cm of api] (ms1) {Catálogo (x1)};
+        \node[msScaled, below=1.2cm of api] (ms2_1) {Busca (x3)};
+        \node[ms, below right=1.2cm and -0.5cm of api] (ms3) {Pagamento (x1)};
+        
+        \node[msScaled, below=0.1cm of ms2_1] (ms2_2) {Busca};
+        \node[msScaled, below=0.1cm of ms2_2] (ms2_3) {Busca};
+        
+        \draw[->, thick, meucinza] (api.south) -| (ms1.north);
+        \draw[->, thick, meucinza] (api.south) -- (ms2_1.north);
+        \draw[->, thick, meucinza] (api.south) -| (ms3.north);
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Vantagens: Produtividade}
+
+\begin{block}{Autonomia das Equipes}
+Em arquiteturas de microsserviços, equipes pequenas e multidisciplinares podem desenvolver, testar e implantar serviços de forma independente.
+\end{block}
+
+\vspace{0.4cm}
+
+\begin{center}
+\begin{tikzpicture}[
+    node distance=2.5cm and 2.5cm,
+    team/.style={rectangle, rounded corners=6pt, draw=meucinza, fill=gray!15,
+        minimum width=2.7cm, minimum height=1cm, align=center, font=\footnotesize\bfseries},
+    ms/.style={rectangle, rounded corners=6pt, draw=meuverde, fill=green!12,
+        minimum width=3cm, minimum height=1.1cm, align=center, font=\footnotesize},
+    deploy/.style={->, thick, draw=meuazul}
+]
+    % Equipes
+    \node[team] (t1) {Equipe A};
+    \node[team, right=of t1] (t2) {Equipe B};
+    \node[team, right=of t2] (t3) {Equipe C};
+    % Serviços
+    \node[ms, below=1.8cm of t1] (s1) {Serviço de Busca};
+    \node[ms, below=1.8cm of t2] (s2) {Serviço de Pedidos};
+    \node[ms, below=1.8cm of t3] (s3) {Serviço de Frete};
+    % Ligações
+    \draw[deploy] (t1) -- node[midway, right, font=\scriptsize] {Deploy indep.} (s1);
+    \draw[deploy] (t2) -- node[midway, right, font=\scriptsize] {Deploy indep.} (s2);
+    \draw[deploy] (t3) -- node[midway, right, font=\scriptsize] {Deploy indep.} (s3);
+    % Linha inferior
+    \draw[dashed, thick, gray!60] ([yshift=-0.8cm]s1.south west) -- ([yshift=-0.8cm]s3.south east);
+    \node[font=\scriptsize\itshape, gray!70] at ($(s2.south)+(0,-1.2)$)
+        {Maior agilidade e produtividade no desenvolvimento};
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Vantagens: Inovação Tecnológica}
+    Cada serviço pode usar a tecnologia mais adequada; trocas graduais sem impacto.
+    \vspace{0.5cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        ms/.style={rectangle, rounded corners, minimum width=3cm, minimum height=1.5cm, text centered, align=center, font=\footnotesize}
+    ]
+        \node[ms, draw=meuazul, fill=blue!10] (s1) {Serviço de IA\\ \textbf{Python} \\(TensorFlow)};
+        \node[ms, right=1cm of s1, draw=meuverde, fill=green!10] (s2) {Serviço Web\\ \textbf{Node.js} \\(Express)};
+        \node[ms, right=1cm of s2, draw=meuvermelhoescuro, fill=red!10] (s3) {Serviço Core\\ \textbf{Go} \\(Alta Perf.)};
+        
+        \draw[<->, thick, dashed, meucinza] (s1) -- (s2);
+        \draw[<->, thick, dashed, meucinza] (s2) -- (s3);
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Vantagens: Resiliência}
+    Falha em um serviço não derruba toda a aplicação.
+    \vspace{0.5cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        ms/.style={rectangle, draw=meuverde, fill=green!10, rounded corners, minimum width=2.5cm, minimum height=1.2cm, text centered, font=\footnotesize},
+        msFail/.style={rectangle, draw=meuvermelhoescuro, fill=red!20, rounded corners, minimum width=2.5cm, minimum height=1.2cm, text centered, font=\footnotesize}
+    ]
+        \node[ms] (s1) {Catálogo};
+        \node[msFail, right=1.5cm of s1] (s2) {Recomendações};
+        \node[ms, right=1.5cm of s2] (s3) {Carrinho};
+        
+        % Draw cross on failed service
+        \draw[meuvermelhoescuro, ultra thick] (s2.south west) -- (s2.north east);
+        \draw[meuvermelhoescuro, ultra thick] (s2.south east) -- (s2.north west);
+        
+        \node[above=0.2cm of s1, font=\footnotesize\bfseries, text=meuverde] {Funcionando};
+        \node[above=0.2cm of s2, font=\footnotesize\bfseries, text=meuvermelhoescuro] {Indisponível};
+        \node[above=0.2cm of s3, font=\footnotesize\bfseries, text=meuverde] {Funcionando};
+        
+        \draw[<->, thick, dashed, meucinza] (s1) -- (s2);
+        \draw[<->, thick, dashed, meucinza] (s2) -- (s3);
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\section{Desafios dos Microsserviços}
+
+\begin{frame}{Desafios dos Microsserviços}
+    A migração para microsserviços traz desafios significativos:
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item \textbf{Infraestrutura sofisticada} -- orquestração (Kubernetes), service discovery, monitoramento, logging centralizado
+        \item \textbf{Mudança organizacional} -- estrutura de equipes precisa ser alterada para acompanhar a arquitetura
+        \item \textbf{Risco de segregação} -- equipes isoladas podem levar à dispersão de conhecimento
+        \item \textbf{Padronização} -- necessidade de definir contratos de API, padrões de comunicação e governança
+        \item \textbf{Confiança e disponibilidade} -- garantir que cada serviço seja confiável e esteja disponível
+    \end{itemize}
+\end{frame}
+
+\section{Monólito vs Microsserviços}
+
+\begin{frame}{Monólito vs Microsserviços}
+    \centering
+    \begin{tabular}{p{3.5cm}|p{3.5cm}|p{3.5cm}}
+        \textbf{Característica} & \textbf{Monólito} & \textbf{Microsserviços} \\ \hline
+        Implantação & Única & Independente por serviço \\
+        Escalabilidade & Vertical (tudo) & Horizontal (por serviço) \\
+        Stack tecnológica & Única & Heterogênea \\
+        Acoplamento & Alto & Baixo \\
+        Tamanho da equipe & Grande & Pequenas equipes \\
+        Complexidade operacional & Baixa & Alta (orquestração) \\
+        Resiliência & Baixa (falha total) & Alta (falha isolada) \\
+    \end{tabular}
+    \vspace{0.4cm}
+    \begin{alertblock}{Atenção}
+        Microsserviços não são uma bala de prata. A decisão deve considerar o tamanho, a maturidade e as necessidades do negócio.
+    \end{alertblock}
+\end{frame}
+
+\section{Dimensionando uma Aplicação}
+
+% Slide 1 – Objetivo
+\begin{frame}{Dimensionando uma Aplicação}
+    \begin{block}{Objetivo de qualquer aplicação}
+        Processar tarefas de alguma natureza de forma \textbf{eficiente}.
+    \end{block}
+    \vspace{0.4cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        box/.style={rectangle, rounded corners, draw=meuazul, fill=blue!10, minimum width=3cm, minimum height=1cm, text centered, font=\small}
+    ]
+        \node[box] (app) {Aplicação};
+        \node[left=2cm of app, font=\small] (in) {Tarefas};
+        \node[right=2cm of app, font=\small] (out) {Resultados};
+        \draw[->, thick, meucinza] (in) -- (app);
+        \draw[->, thick, meucinza] (app) -- (out);
+    \end{tikzpicture}
+    \end{center}
+    \vspace{0.3cm}
+    \centering
+    \textcolor{meuazul}{\textbf{Como garantir que isso aconteça de forma eficiente?}}
+\end{frame}
+
+% Slide 2 – Problema do processo único
+\begin{frame}{O Problema do Processo Único}
+    \begin{alertblock}{Processo sequencial}
+        Um único processo escolhe uma tarefa por vez, conclui todas as etapas (ou falha!) e então passa para a próxima. Isso \textbf{não é eficiente!}
+    \end{alertblock}
+    \vspace{0.3cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        task/.style={rectangle, rounded corners, draw=meucinza, fill=gray!15, minimum width=1.8cm, minimum height=0.8cm, text centered, font=\footnotesize},
+        proc/.style={rectangle, rounded corners, draw=meuvermelhoescuro, fill=red!10, minimum width=2cm, minimum height=1cm, text centered, font=\small\bfseries}
+    ]
+        \node[proc] (p) {Processo};
+        \node[task, left=1.5cm of p] (t1) {Tarefa 1};
+        \node[task, above left=0.8cm and 1.5cm of p] (t2) {Tarefa 2};
+        \node[task, below left=0.8cm and 1.5cm of p] (t3) {Tarefa 3};
+        \draw[->, thick, meuverde] (t1) -- (p);
+        \draw[->, thick, meucinza, dashed] (t2) -- node[above, font=\tiny, sloped] {aguarda} (p);
+        \draw[->, thick, meucinza, dashed] (t3) -- node[below, font=\tiny, sloped] {aguarda} (p);
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 3 – Simultaneidade
+\begin{frame}{Introduzindo Simultaneidade}
+    Para tornar a aplicação eficiente, introduzimos \textbf{simultaneidade}: cada tarefa pode ser dividida em partes menores.
+    \vspace{0.4cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        task/.style={rectangle, rounded corners, draw=meuazul, fill=blue!10, minimum width=1.5cm, minimum height=0.7cm, text centered, font=\footnotesize},
+        sub/.style={rectangle, rounded corners, draw=meuverde, fill=green!10, minimum width=1.2cm, minimum height=0.6cm, text centered, font=\scriptsize}
+    ]
+        \node[task] (t) {Tarefa};
+        \node[sub, below left=1cm and 0.5cm of t] (s1) {Parte A};
+        \node[sub, below=1cm of t] (s2) {Parte B};
+        \node[sub, below right=1cm and 0.5cm of t] (s3) {Parte C};
+        \draw[->, thick, meucinza] (t) -- (s1);
+        \draw[->, thick, meucinza] (t) -- (s2);
+        \draw[->, thick, meucinza] (t) -- (s3);
+        \node[below=0.5cm of s2, font=\footnotesize\itshape, text=meucinza] {Processamento concorrente};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 4 – Segmentação
+\begin{frame}{Dividir e Conquistar: Segmentação}
+    Além da simultaneidade, a \textbf{segmentação} permite que várias tarefas sejam processadas \textbf{em paralelo}.
+    \vspace{0.4cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        task/.style={rectangle, rounded corners, draw=meuazul, fill=blue!10, minimum width=1.5cm, minimum height=0.7cm, text centered, font=\footnotesize},
+        worker/.style={rectangle, rounded corners, draw=meuverde, fill=green!10, minimum width=2cm, minimum height=0.8cm, text centered, font=\footnotesize}
+    ]
+        \node[task] (t1) {Tarefa 1};
+        \node[task, below=0.2cm of t1] (t2) {Tarefa 2};
+        \node[task, below=0.2cm of t2] (t3) {Tarefa 3};
+        \node[worker, right=2.5cm of t1] (w1) {Worker 1};
+        \node[worker, right=2.5cm of t2] (w2) {Worker 2};
+        \node[worker, right=2.5cm of t3] (w3) {Worker 3};
+        \draw[->, thick, meuazul] (t1) -- (w1);
+        \draw[->, thick, meuazul] (t2) -- (w2);
+        \draw[->, thick, meuazul] (t3) -- (w3);
+        \node[below=0.5cm of w3, font=\footnotesize\itshape, text=meucinza] {Cada tarefa em um worker dedicado};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 5 – Pool de Workers
+\begin{frame}{Pool de Workers}
+    Se tivermos várias tarefas, podemos processá-las \textbf{todas ao mesmo tempo} enviando-as para um grupo de workers.
+    \vspace{0.3cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        task/.style={rectangle, rounded corners, draw=meuazul, fill=blue!10, minimum width=1.2cm, minimum height=0.6cm, text centered, font=\scriptsize},
+        worker/.style={rectangle, rounded corners, draw=meuverde, fill=green!10, minimum width=1.5cm, minimum height=0.7cm, text centered, font=\scriptsize},
+        queue/.style={rectangle, rounded corners, draw=orange!80!black, fill=orange!10, minimum width=1.8cm, minimum height=2.5cm, text centered, font=\small\bfseries}
+    ]
+        \node[task] (t1) {T1};
+        \node[task, below=0.15cm of t1] (t2) {T2};
+        \node[task, below=0.15cm of t2] (t3) {T3};
+        \node[task, below=0.15cm of t3] (t4) {T4};
+        \node[queue, right=1.5cm of t2] (q) {Fila};
+        \node[worker, right=1.5cm of q, yshift=0.8cm] (w1) {Worker 1};
+        \node[worker, right=1.5cm of q] (w2) {Worker 2};
+        \node[worker, right=1.5cm of q, yshift=-0.8cm] (w3) {Worker 3};
+        \draw[->, thick, meucinza] (t1.east) -- (q.west |- t1);
+        \draw[->, thick, meucinza] (t2.east) -- (q.west |- t2);
+        \draw[->, thick, meucinza] (t3.east) -- (q.west |- t3);
+        \draw[->, thick, meucinza] (t4.east) -- (q.west |- t4);
+        \draw[->, thick, meuverde] (q.east |- w1) -- (w1);
+        \draw[->, thick, meuverde] (q.east |- w2) -- (w2);
+        \draw[->, thick, meuverde] (q.east |- w3) -- (w3);
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 6 – Escala sob demanda
+\begin{frame}{Escalando sob Demanda}
+    Precisa processar \textbf{mais tarefas}? Basta acrescentar \textbf{workers adicionais} sem afetar a eficiência do sistema.
+    \vspace{0.3cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        worker/.style={rectangle, rounded corners, draw=meuverde, fill=green!10, minimum width=1.5cm, minimum height=0.7cm, text centered, font=\scriptsize},
+        neww/.style={rectangle, rounded corners, draw=meuazul, fill=blue!10, minimum width=1.5cm, minimum height=0.7cm, text centered, font=\scriptsize},
+        queue/.style={rectangle, rounded corners, draw=orange!80!black, fill=orange!10, minimum width=1.8cm, minimum height=2cm, text centered, font=\small\bfseries}
+    ]
+        \node[queue] (q) {Fila};
+        \node[worker, right=1.5cm of q, yshift=1.2cm] (w1) {Worker 1};
+        \node[worker, right=1.5cm of q, yshift=0.4cm] (w2) {Worker 2};
+        \node[worker, right=1.5cm of q, yshift=-0.4cm] (w3) {Worker 3};
+        \node[neww, right=1.5cm of q, yshift=-1.2cm] (w4) {Worker 4};
+        \node[neww, right=1.5cm of q, yshift=-2.0cm] (w5) {Worker 5};
+        \draw[->, thick, meuverde] (q.east |- w1) -- (w1);
+        \draw[->, thick, meuverde] (q.east |- w2) -- (w2);
+        \draw[->, thick, meuverde] (q.east |- w3) -- (w3);
+        \draw[->, thick, meuazul] (q.east |- w4) -- (w4);
+        \draw[->, thick, meuazul] (q.east |- w5) -- (w5);
+        \node[right=0.3cm of w4, font=\scriptsize\bfseries, text=meuazul] {+ Novos!};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 7 – Limitação do monólito
+\begin{frame}{Limitação do Monólito}
+    Simultaneidade e segmentação são \textbf{difíceis de suportar} em uma aplicação grande que precisa:
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item Ser implantada em \textbf{todos os servidores}
+        \item Processar \textbf{qualquer tipo de tarefa}
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{alertblock}{Escalar = Mais hardware}
+        A única maneira de dimensioná-la é \textbf{aumentar o hardware} no qual a aplicação é implantada (escala vertical).
+    \end{alertblock}
+    \vspace{0.2cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        server/.style={rectangle, draw=meucinza, fill=gray!10, text centered, font=\scriptsize, align=center}
+    ]
+        \node[server, minimum width=1.5cm, minimum height=1cm] (s1) {Servidor\\Pequeno};
+        \node[font=\Large, right=0.5cm of s1] (arr) {$\rightarrow$};
+        \node[server, right=0.5cm of arr, minimum width=2cm, minimum height=1.3cm] (s2) {Servidor\\Médio};
+        \node[font=\Large, right=0.5cm of s2] (arr2) {$\rightarrow$};
+        \node[server, right=0.5cm of arr2, minimum width=2.5cm, minimum height=1.6cm, fill=red!10, draw=meuvermelhoescuro] (s3) {Servidor\\Grande \$\$\$};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 8 – A solução: dividir
+\begin{frame}{A Solução: Dividir a Aplicação}
+    A melhor maneira de dimensionar é \textbf{dividir a aplicação em muitas aplicações independentes pequenas}, cada uma executando um tipo de tarefa.
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item Precisa acrescentar uma nova etapa? \textcolor{meuverde}{\textbf{Crie uma nova aplicação!}}
+        \item Precisa lidar com mais tráfego? \textcolor{meuverde}{\textbf{Acrescente mais workers!}}
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        app/.style={rectangle, rounded corners, draw=meuverde, fill=green!10, minimum width=2cm, minimum height=0.8cm, text centered, font=\scriptsize}
+    ]
+        \node[app] (a1) {App Tarefa A};
+        \node[app, right=0.5cm of a1] (a2) {App Tarefa B};
+        \node[app, right=0.5cm of a2] (a3) {App Tarefa C};
+        \node[app, right=0.5cm of a3, draw=meuazul, fill=blue!10] (a4) {App Tarefa D};
+        \node[above=0.1cm of a4, font=\scriptsize\bfseries, text=meuazul] {Nova!};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 9 – Padrão da indústria
+\begin{frame}{Padrão Observado na Indústria}
+    \begin{block}{Empresas que migraram}
+        Amazon, Twitter, Netflix, eBay e Uber executam aplicações em \textbf{milhares} (até centenas de milhares) de servidores.
+    \end{block}
+    \vspace{0.3cm}
+    Suas aplicações tornaram-se \textbf{monólitos} e passaram a enfrentar desafios de escalabilidade.
+    \vspace{0.3cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        box/.style={rectangle, rounded corners, minimum width=3.5cm, minimum height=1.2cm, text centered, font=\small\bfseries}
+    ]
+        \node[box, draw=meuvermelhoescuro, fill=red!10] (mono) {Monólito};
+        \node[font=\Large, right=1cm of mono] (arr) {$\Longrightarrow$};
+        \node[box, right=1cm of arr, draw=meuverde, fill=green!10] (micro) {Microsserviços};
+        \node[below=0.1cm of arr, font=\scriptsize\itshape, text=meucinza] {migração};
+    \end{tikzpicture}
+    \end{center}
+    \vspace{0.2cm}
+    \centering
+    \textcolor{meuazul}{\textbf{Superaram os desafios adotando microsserviços.}}
+\end{frame}
+
+% Slide 10 – O que é um microsserviço
+\begin{frame}{O Conceito de Microsserviço}
+    \begin{block}{Definição}
+        Um microsserviço é uma \textbf{pequena aplicação} que executa uma \textbf{única tarefa} e o faz com eficiência.
+    \end{block}
+    \vspace{0.3cm}
+    Características:
+    \begin{itemize}
+        \item Pode ser facilmente \textbf{substituído}
+        \item É desenvolvido e implantado de forma \textbf{independente}
+        \item Não sobrevive sozinho --- \textit{nenhum microsserviço é uma ilha}
+        \item Faz parte de um \textbf{sistema maior}, funcionando junto a outros microsserviços
+    \end{itemize}
+\end{frame}
+
+% Slide 11 – Monólito detalhado (Figura 1.4)
+\begin{frame}{Arquitetura Monolítica Detalhada}
+    \begin{center}
+    \begin{tikzpicture}[
+        layer/.style={rectangle, draw=meucinza, fill=blue!8, minimum height=0.7cm, text centered, font=\footnotesize},
+        server/.style={rectangle, draw=meucinza, fill=gray!10, minimum width=1.3cm, minimum height=1.3cm, text centered, font=\tiny, align=center},
+        res/.style={rectangle, draw=meucinza, fill=white, minimum width=2cm, minimum height=0.5cm, text centered, font=\scriptsize}
+    ]
+        \node[font=\footnotesize] (req) {Solicitações de entrada};
+        \node[layer, below=0.4cm of req, minimum width=8cm] (front) {Camada frontend};
+        \node[layer, below=0.3cm of front, minimum width=8cm] (lb) {Camada de balanceamento de carga};
+        \draw[->, thick, meucinza] (req) -- (front);
+        \draw[->, thick, meucinza] (front) -- (lb);
+        \node[below=0.5cm of lb, font=\scriptsize, text width=8cm, align=center] (label) {Servidores de backend -- cada um com cópia completa};
+        \node[server, below=0.4cm of label, xshift=-2.5cm] (sv1) {A\quad B\\C};
+        \node[server, below=0.4cm of label, xshift=-0.8cm] (sv2) {A\quad B\\C};
+        \node[server, below=0.4cm of label, xshift=0.9cm] (sv3) {A\quad B\\C};
+        \node[server, below=0.4cm of label, xshift=2.6cm] (sv4) {A\quad B\\C};
+        \draw[->, thick, meucinza] (lb.south) -- (label.north);
+        \node[res, left=1cm of sv1, yshift=-0.3cm] (rA) {Recurso A};
+        \node[res, below=0.1cm of rA] (rB) {Recurso B};
+        \node[res, below=0.1cm of rB] (rC) {Recurso C};
+        \draw[->, thick, meucinza] (rB.east) -- (sv1.west);
+        \node[below=0.2cm of rC, font=\tiny\itshape, text width=2.5cm, align=center, text=meucinza] {Todos os recursos em uma única aplicação};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 12 – Ecossistema de microsserviços (Figura 1.5)
+\begin{frame}{Ecossistema de Microsserviços}
+    \begin{block}{Objetivo}
+        Construir um conjunto de pequenas aplicações, cada uma responsável por \textbf{uma função}, autônomas e independentes.
+    \end{block}
+    \vspace{0.3cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        ms/.style={rectangle, rounded corners, draw=meuverde, fill=green!10, minimum width=2cm, minimum height=0.9cm, text centered, font=\scriptsize},
+        gw/.style={rectangle, rounded corners, draw=meuvermelhoescuro, fill=red!10, minimum width=9cm, minimum height=0.7cm, text centered, font=\small\bfseries},
+        db/.style={cylinder, draw=meuazul, fill=blue!10, shape border rotate=90, minimum width=0.8cm, minimum height=0.8cm, aspect=0.25, font=\tiny, align=center}
+    ]
+        \node[gw] (gw) {API Gateway};
+        \node[ms, below left=1cm and 0cm of gw] (m1) {Serviço A};
+        \node[ms, below left=1cm and -4cm of gw] (m2) {Serviço B};
+        \node[ms, below right=1cm and -4cm of gw] (m3) {Serviço C};
+        \node[ms, below right=1cm and 0cm of gw] (m4) {Serviço D};
+        \node[db, below=0.5cm of m1] (d1) {DB};
+        \node[db, below=0.5cm of m2] (d2) {DB};
+        \node[db, below=0.5cm of m3] (d3) {DB};
+        \node[db, below=0.5cm of m4] (d4) {DB};
+        \draw[->, thick, meucinza] (gw.south) -| (m1.north);
+        \draw[->, thick, meucinza] (gw.south) -| (m2.north);
+        \draw[->, thick, meucinza] (gw.south) -| (m3.north);
+        \draw[->, thick, meucinza] (gw.south) -| (m4.north);
+        \draw[<->, meucinza] (m1) -- (d1);
+        \draw[<->, meucinza] (m2) -- (d2);
+        \draw[<->, meucinza] (m3) -- (d3);
+        \draw[<->, meucinza] (m4) -- (d4);
+        \node[below=0.2cm of d2, font=\tiny\itshape, text=meucinza, xshift=1cm] {Cada serviço: autônomo, independente, autossuficiente};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\section{Adotando Microsserviços}
+
+% Slide – Vantagens da adoção
+\begin{frame}{Vantagens de Adotar Microsserviços}
+    \begin{itemize}
+        \item Menor \textbf{defasagem técnica}
+        \item Melhor \textbf{produtividade} e velocidade do desenvolvedor
+        \item Melhor \textbf{eficiência de teste}
+        \item Maior \textbf{escalabilidade}
+        \item Facilidade de \textbf{implantação}
+    \end{itemize}
+    \vspace{0.4cm}
+    \begin{block}{Caminho natural}
+        Empresas geralmente adotam microsserviços \textbf{depois} de construir uma aplicação monolítica e encontrar desafios organizacionais e de escalabilidade.
+    \end{block}
+    \begin{center}
+    \begin{tikzpicture}[
+        box/.style={rectangle, rounded corners, minimum width=2.5cm, minimum height=0.9cm, text centered, font=\small\bfseries}
+    ]
+        \node[box, draw=meuvermelhoescuro, fill=red!10] (mono) {Monólito};
+        \node[font=\large, right=0.5cm of mono] {$\rightarrow$};
+        \node[box, right=2cm of mono, draw=orange!80!black, fill=orange!10] (desafio) {Desafios};
+        \node[font=\large, right=0.5cm of desafio] {$\rightarrow$};
+        \node[box, right=2cm of desafio, draw=meuverde, fill=green!10] (micro) {Microsserviços};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide – Dificuldades da divisão
+\begin{frame}{Dificuldades em Dividir o Monólito}
+    As dificuldades dependem totalmente da \textbf{complexidade da aplicação monolítica}.
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item Aplicação com muitos recursos $\rightarrow$ muito esforço de arquitetura
+        \item Necessidade de \textbf{reorganizar e reestruturar equipes}
+        \item A decisão deve ser um \textbf{esforço que envolva toda a empresa}
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{alertblock}{Atenção}
+        Complexidade adicional é introduzida pela necessidade de reestruturação organizacional.
+    \end{alertblock}
+\end{frame}
+
+% Slide – Etapa 1: Identificar componentes
+\begin{frame}{Etapa 1: Identificar os Componentes}
+    \begin{block}{A etapa mais difícil}
+        Localizar com precisão as principais funcionalidades do monólito e dividi-las em pequenos componentes independentes.
+    \end{block}
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item Existem muitas maneiras \textcolor{meuverde}{\textbf{corretas}} de dividir
+        \item Existem \textbf{muito mais} maneiras \textcolor{meuvermelhoescuro}{\textbf{erradas}} de fazê-lo
+        \item Microsserviços devem ser \textbf{tão simples quanto possível}
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        mono/.style={rectangle, draw=meuvermelhoescuro, fill=red!10, rounded corners, minimum width=3cm, minimum height=2cm, text centered, font=\small\bfseries},
+        ms/.style={rectangle, draw=meuverde, fill=green!10, rounded corners, minimum width=1.5cm, minimum height=0.7cm, text centered, font=\scriptsize}
+    ]
+        \node[mono] (m) {Monólito};
+        \node[font=\Large, right=0.8cm of m] {$\Longrightarrow$};
+        \node[ms, right=2.5cm of m, yshift=0.8cm] (s1) {Func. A};
+        \node[ms, right=2.5cm of m] (s2) {Func. B};
+        \node[ms, right=2.5cm of m, yshift=-0.8cm] (s3) {Func. C};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide – Etapa 2: Reestruturar equipes
+\begin{frame}{Etapa 2: Reestruturar as Equipes}
+    Cada microsserviço deve ter sua própria equipe de engenharia.
+    \vspace{0.3cm}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Método 1: Equipe por serviço}
+                Uma equipe dedicada para cada microsserviço. Tamanho determinado pela complexidade do serviço.
+            \end{block}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Método 2: Equipe por domínio}
+                Vários serviços atribuídos a uma equipe organizada em torno de produtos ou domínios de negócio.
+            \end{block}
+        \end{column}
+    \end{columns}
+    \vspace{0.3cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        team/.style={rectangle, rounded corners, draw=meuazul, fill=blue!10, minimum width=2cm, minimum height=0.7cm, text centered, font=\scriptsize\bfseries},
+        ms/.style={rectangle, rounded corners, draw=meuverde, fill=green!10, minimum width=1.5cm, minimum height=0.6cm, text centered, font=\scriptsize}
+    ]
+        \node[team] (t1) {Equipe X};
+        \node[ms, below left=0.8cm and -0.3cm of t1] (s1) {Serviço 1};
+        \node[ms, below right=0.8cm and -0.3cm of t1] (s2) {Serviço 2};
+        \draw[->, thick, meuazul] (t1) -- (s1);
+        \draw[->, thick, meuazul] (t1) -- (s2);
+        %
+        \node[team, right=3cm of t1] (t2) {Equipe Y};
+        \node[ms, below=0.8cm of t2] (s3) {Serviço 3};
+        \draw[->, thick, meuazul] (t2) -- (s3);
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide – Cuidado com sobrecarga
+\begin{frame}{Cuidado com a Sobrecarga das Equipes}
+    \begin{alertblock}{Risco do Método 2}
+        Ao atribuir vários serviços a uma equipe, é preciso garantir que os desenvolvedores \textbf{não sejam sobrecarregados}.
+    \end{alertblock}
+    \vspace{0.4cm}
+    Riscos:
+    \begin{itemize}
+        \item \textbf{Fadiga operacional} -- excesso de tarefas de manutenção
+        \item \textbf{Fadiga de interrupções} -- alertas e incidentes constantes
+        \item \textbf{Queda de qualidade} -- pressa para entregar pode gerar bugs
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{center}
+    \textcolor{meuazul}{\textbf{Equipes saudáveis = Microsserviços saudáveis}}
+    \end{center}
+\end{frame}
+
+% Slide – Etapa 3: Ecossistema de infraestrutura
+\begin{frame}{Etapa 3: Criar o Ecossistema de Infraestrutura}
+    As equipes de infraestrutura devem fornecer uma \textbf{plataforma estável} que abstraia as complexidades das interações entre microsserviços.
+    \vspace{0.3cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        infra/.style={rectangle, rounded corners, draw=meuazul, fill=blue!10, minimum width=10cm, minimum height=0.8cm, text centered, font=\small\bfseries},
+        ms/.style={rectangle, rounded corners, draw=meuverde, fill=green!10, minimum width=2cm, minimum height=0.8cm, text centered, font=\scriptsize}
+    ]
+        \node[infra] (plat) {Plataforma de Infraestrutura};
+        \node[ms, below left=1.2cm and 0cm of plat] (s1) {Serviço A};
+        \node[ms, below=1.2cm of plat] (s2) {Serviço B};
+        \node[ms, below right=1.2cm and 0cm of plat] (s3) {Serviço C};
+        \draw[->, thick, meucinza] (plat.south) -| (s1.north);
+        \draw[->, thick, meucinza] (plat.south) -- (s2.north);
+        \draw[->, thick, meucinza] (plat.south) -| (s3.north);
+        \draw[<->, thick, dashed, meucinza] (s1) -- (s2);
+        \draw[<->, thick, dashed, meucinza] (s2) -- (s3);
+        \node[below=0.3cm of s2, font=\scriptsize\itshape, text=meucinza] {Comunicação abstraída pela plataforma};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide – Resumo das 3 etapas
+\begin{frame}{As Três Etapas da Migração}
+    \begin{enumerate}
+        \item \textbf{Dividir} a aplicação em componentes de serviço
+        \item \textbf{Reestruturar} as equipes de engenharia
+        \item \textbf{Desenvolver} a infraestrutura organizacional
+    \end{enumerate}
+    \vspace{0.3cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        etapa/.style={rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text centered, font=\small\bfseries, align=center}
+    ]
+        \node[etapa, draw=meuazul, fill=blue!10] (e1) {1. Dividir\\componentes};
+        \node[etapa, draw=meuverde, fill=green!10, right=0.5cm of e1] (e2) {2. Reestruturar\\equipes};
+        \node[etapa, draw=orange!80!black, fill=orange!10, right=0.5cm of e2] (e3) {3. Infraestrutura\\organizacional};
+        \draw[->, ultra thick, meucinza] (e1) -- (e2);
+        \draw[->, ultra thick, meucinza] (e2) -- (e3);
+    \end{tikzpicture}
+    \end{center}
+    \vspace{0.2cm}
+    \centering
+    \textcolor{meuazul}{\textbf{Somente após essas etapas a migração pode começar.}}
+\end{frame}
+
+% Slide – Estratégias de migração
+\begin{frame}{Estratégias de Migração}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Estratégia 1: Extrair do monólito}
+                Extrair o código relevante diretamente do monólito para um serviço separado e \textbf{replicar o tráfego} até validar.
+            \end{block}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Estratégia 2: Construir do zero}
+                Construir o serviço a partir do zero e redirecionar o tráfego após \textbf{testes adequados}.
+            \end{block}
+        \end{column}
+    \end{columns}
+    \vspace{0.4cm}
+    \begin{alertblock}{Essencial}
+        Uma migração bem-sucedida exige execução e planejamento \textbf{minuciosos, cuidadosos e meticulosamente documentados}. Uma migração completa de um grande monólito pode levar \textbf{muitos anos}.
+    \end{alertblock}
+\end{frame}
+
+% Slide – Começar direto com microsserviços?
+\begin{frame}{Começar Direto com Microsserviços?}
+    \begin{alertblock}{Cuidado!}
+        Pode parecer melhor começar já com microsserviços, mas:
+    \end{alertblock}
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item Empresas pequenas \textbf{não têm a infraestrutura} necessária
+        \item Uma boa arquitetura requer infraestrutura \textbf{estável e complexa}
+        \item Manter essa infraestrutura exige uma \textbf{equipe grande e dedicada}
+        \item Empresas novas não têm áreas de funcionalidade suficientes para dividir em microsserviços
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        box/.style={rectangle, rounded corners, minimum width=3.5cm, minimum height=1cm, text centered, font=\small\bfseries}
+    ]
+        \node[box, draw=meuverde, fill=green!10] (small) {Empresa Pequena};
+        \node[font=\Large, right=0.5cm of small] {$\rightarrow$};
+        \node[box, right=2.5cm of small, draw=meuazul, fill=blue!10] (mono) {Monólito};
+        \node[below=0.2cm of mono, font=\scriptsize\itshape, text=meucinza] {comece simples!};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide – Quando migrar?
+\begin{frame}{Quando Migrar para Microsserviços?}
+    \begin{block}{Momento certo}
+        A migração se justifica quando os \textbf{desafios de escalabilidade} superam o custo de manter o ecossistema de microsserviços.
+    \end{block}
+    \vspace{0.3cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        phase/.style={rectangle, rounded corners, minimum width=2.8cm, minimum height=1.2cm, text centered, font=\scriptsize\bfseries, align=center}
+    ]
+        \node[phase, draw=meuverde, fill=green!10] (p1) {Início\\Monólito\\simples};
+        \node[phase, draw=orange!80!black, fill=orange!10, right=0.3cm of p1] (p2) {Crescimento\\Desafios de\\escalabilidade};
+        \node[phase, draw=meuazul, fill=blue!10, right=0.3cm of p2] (p3) {Maturidade\\Infraestrutura\\estável};
+        \node[phase, draw=meuverde, fill=green!10, right=0.3cm of p3] (p4) {Migração\\Microsserviços\\gradual};
+        \draw[->, ultra thick, meucinza] (p1) -- (p2);
+        \draw[->, ultra thick, meucinza] (p2) -- (p3);
+        \draw[->, ultra thick, meucinza] (p3) -- (p4);
+    \end{tikzpicture}
+    \end{center}
+    \vspace{0.2cm}
+    \centering
+    \textcolor{meuvermelhoescuro}{\textbf{Não force microsserviços prematuramente!}}
+\end{frame}
+
+\section{Arquitetura de Microsserviços}
+
+% Slide 1
+\begin{frame}{Componentes da Arquitetura}
+    Todo microsserviço terá \textbf{três componentes} principais:
+    \vspace{0.4cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        comp/.style={rectangle, rounded corners, draw=meuazul, fill=blue!10, minimum width=3cm, minimum height=1cm, align=center, font=\small\bfseries}
+    ]
+        \node[comp] (front) {Frontend\\(API / Cliente)};
+        \node[comp, right=0.8cm of front, draw=meuverde, fill=green!10] (back) {Backend\\(Lógica)};
+        \node[comp, right=0.8cm of back, draw=orange!80!black, fill=orange!10] (data) {Armazenamento\\(Dados)};
+        \draw[<->, thick, meucinza] (front) -- (back);
+        \draw[<->, thick, meucinza] (back) -- (data);
+    \end{tikzpicture}
+    \end{center}
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item Esta estrutura não é muito diferente da arquitetura padrão de uma aplicação monolítica, mas aplicada em \textbf{microescala}.
+    \end{itemize}
+\end{frame}
+
+% Slide Extra - Figura 1.6
+\begin{frame}{Arquitetura Detalhada de um Microsserviço}
+    \begin{center}
+    \begin{tikzpicture}[
+        ms/.style={rectangle, draw=black, thick, fill=blue!20, minimum width=3cm, minimum height=1.5cm, font=\small},
+        db/.style={cylinder, draw=black, thick, fill=meuazul, text=white, shape border rotate=90, minimum width=2.2cm, minimum height=1.6cm, aspect=0.25, font=\small}
+    ]
+        \node[ms] (micro) {Microsserviço};
+        \node[db, right=4cm of micro] (database) {Database};
+        
+        % Arrow in
+        \draw[->, thick, >=latex] ([xshift=-4cm]micro.west) -- (micro.west);
+        
+        % Text over arrow in
+        \node[align=center, font=\scriptsize, text width=4cm] at ([xshift=-2cm, yshift=1.3cm]micro.west) {Cada recurso é extraído\\do monólito em uma\\aplicação separada e isolada\\chamada microsserviço};
+        
+        % Arrows to database
+        \draw[->, thick, >=latex] ([yshift=0.25cm]micro.east) -- ([yshift=0.25cm]database.west);
+        \draw[<-, thick, >=latex] ([yshift=-0.25cm]micro.east) -- ([yshift=-0.25cm]database.west);
+        
+        % Text over arrows to db
+        \node[align=center, font=\scriptsize, text width=5cm] at ([xshift=2cm, yshift=1.3cm]micro.east) {Solicitações de leitura e/ou escrita\\para uma base de dados\\compartilhada ou dedicada\\através da rede};
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% Slide 2
+\begin{frame}{O Elemento Frontend (API)}
+    O frontend de um microsserviço não é uma interface de usuário, mas uma \textbf{API (Interface de Programação de Aplicação)} com \textbf{endpoints estáticos}.
+    \vspace{0.3cm}
+    \begin{block}{Exemplo de Endpoints (Serviço de Cliente)}
+        \begin{itemize}
+            \item \texttt{get\_customer\_information}
+            \item \texttt{update\_customer\_information}
+            \item \texttt{delete\_customer\_information}
+        \end{itemize}
+    \end{block}
+    \vspace{0.3cm}
+    Na prática, todos esses endpoints convivem lado a lado como parte do \textbf{código de backend} que processa as solicitações.
+\end{frame}
+
+% Slide 3
+\begin{frame}{Armazenamento de Dados}
+    A maioria dos microsserviços armazena dados de duas formas principais:
+    \vspace{0.4cm}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Na Memória (Cache)}
+                \begin{itemize}
+                    \item Retorno imediato
+                    \item Sem chamadas de rede extras
+                    \item Alta velocidade
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Em Database Externo}
+                \begin{itemize}
+                    \item Requer solicitação de rede externa
+                    \item Aguarda resposta do banco
+                    \item Maior persistência
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 4
+\begin{frame}{Padronização na Organização}
+    Para que um conjunto de microsserviços funcione bem, certos elementos da arquitetura precisam ser \textbf{padronizados em toda a organização}.
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item O \textbf{tipo de endpoint} deve ser o mesmo (ex: \textbf{REST} ou \textbf{Apache Thrift}).
+        \item Misturar tipos (ex: REST e Thrift no mesmo serviço) é \textbf{raro} e torna o \textbf{monitoramento complicado}.
+        \item A escolha dita a arquitetura. Ex: É difícil construir um serviço assíncrono comunicando-se via HTTP usando apenas REST puro.
+    \end{itemize}
+\end{frame}
+
+% Slide 5
+\begin{frame}{Comunicação: Remote Procedure Calls (RPC)}
+    Os microsserviços interagem entre si via \textbf{RPCs}.
+    \vspace{0.3cm}
+    \begin{block}{O que são RPCs?}
+        Chamadas através da rede projetadas para se comportarem \textbf{exatamente como chamadas locais de procedimentos}.
+    \end{block}
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item Microsserviços com endpoints \textbf{REST} geralmente interagem via \textbf{HTTP}.
+        \item Microsserviços com \textbf{Thrift} podem usar HTTP ou soluções internas personalizadas.
+        \item O protocolo depende de \textbf{escolhas arquiteturais corporativas}.
+    \end{itemize}
+\end{frame}
+
+% Slide 6
+\begin{frame}{Antipadrão: Versionamento}
+    \begin{alertblock}{Evite versionar microsserviços e endpoints!}
+        Um microsserviço \textbf{não é uma biblioteca estática}, é uma \textbf{aplicação de software independente}.
+    \end{alertblock}
+    \vspace{0.3cm}
+    Por que não versionar?
+    \begin{itemize}
+        \item Torna-se um \textbf{pesadelo organizacional} rapidamente.
+        \item Clientes podem se prender a versões obsoletas e sem manutenção.
+        \item Microsserviços devem ser tratados como \textbf{coisas vivas e em constante mutação}.
+    \end{itemize}
+\end{frame}
+
+% Slide 7
+\begin{frame}{Liberdade do Desenvolvedor}
+    \begin{block}{Decisões de Comunicação}
+        Protocolos e endpoints são definidos pelo \textbf{projeto global} da empresa.
+    \end{block}
+    \vspace{0.2cm}
+    \begin{block}{Lógica Interna}
+        O desenvolvedor tem total liberdade para a lógica interna, incluindo a \textbf{escolha da linguagem} de programação (Java, Go, Erlang, Haskell...).
+    \end{block}
+    \vspace{0.2cm}
+    \centering
+    \textcolor{meuvermelhoescuro}{\textbf{Ressalva:}} A liberdade extrema de linguagens tem um \textbf{custo elevado} para a organização de engenharia (manutenção, contratação, etc).
+\end{frame}
+
+% Slide 8
+\begin{frame}{O Paradigma da Caixa-Preta}
+    Devido à padronização das APIs e à liberdade interna, os microsserviços são tratados como \textbf{caixas-pretas}.
+    \vspace{0.4cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        io/.style={rectangle, rounded corners, draw=meucinza, fill=gray!10, minimum width=2cm, minimum height=0.8cm, align=center, font=\small},
+        bb/.style={rectangle, draw=black, fill=black, text=white, minimum width=3cm, minimum height=1.5cm, align=center, font=\small\bfseries}
+    ]
+        \node[io] (in) {Solicitação\\(Endpoint)};
+        \node[bb, right=1.5cm of in] (ms) {Microsserviço\\(Caixa-Preta)};
+        \node[io, right=1.5cm of ms] (out) {Saída\\(Resultado)};
+        \draw[->, ultra thick, meuverde] (in) -- (ms);
+        \draw[->, ultra thick, meuazul] (ms) -- (out);
+    \end{tikzpicture}
+    \end{center}
+    \vspace{0.3cm}
+    \centering
+    \textit{"Se você insere uma informação, obtém o que deseja em tempo razoável e sem erros, o serviço cumpriu o seu papel."}
+\end{frame}
+
+\section{Ecossistema de Microsserviços}
+
+% Slide 1
+\begin{frame}{O Ecossistema de Microsserviços}
+    Microsserviços \textbf{não vivem isolados}. O ambiente em que operam e interagem é o seu ecossistema.
+    \vspace{0.4cm}
+    \begin{alertblock}{Complexidade do Ambiente}
+        As complexidades de um ambiente de microsserviços em grande escala são comparáveis às \textbf{complexidades ecológicas} de uma floresta tropical, um deserto ou um oceano.
+    \end{alertblock}
+    \vspace{0.4cm}
+    \begin{itemize}
+        \item Considerar este ambiente como um \textbf{ecossistema} é altamente benéfico ao adotar a arquitetura.
+    \end{itemize}
+\end{frame}
+
+% Slide 2
+\begin{frame}{Separação da Infraestrutura}
+    Em ecossistemas sustentáveis e bem projetados, os microsserviços são \textbf{separados de toda a infraestrutura}.
+    \vspace{0.3cm}
+    Eles são abstraídos de preocupações como:
+    \begin{itemize}
+        \item \textbf{Hardware} e servidores
+        \item \textbf{Redes} e conectividade
+        \item Pipeline de \textbf{build e deployment}
+        \item \textbf{Descoberta de serviço} (Service Discovery)
+        \item \textbf{Balanceamento de carga}
+    \end{itemize}
+    \vspace{0.3cm}
+    \centering
+    \textcolor{meuazul}{\textbf{Tudo isso compõe a infraestrutura do ecossistema.}}
+\end{frame}
+
+% Slide 3
+\begin{frame}{O Papel da Infraestrutura}
+    A infraestrutura precisa \textbf{sustentar} o ecossistema de microsserviços de forma estável, escalável e tolerante a falhas.
+    \vspace{0.3cm}
+    \begin{block}{Objetivo da Engenharia de Infraestrutura}
+        Remover as questões operacionais de \textbf{baixo nível} das mãos dos desenvolvedores de microsserviços.
+    \end{block}
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item Desenvolver um microsserviço deve parecer com desenvolver uma \textbf{aplicação autônoma pequena}.
+        \item A infraestrutura subjacente deve ser muito \textbf{sofisticada} e de \textbf{alta qualidade}.
+    \end{itemize}
+\end{frame}
+
+% Slide 4 - Figura 1.7
+\begin{frame}{As Quatro Camadas do Ecossistema}
+    O ecossistema pode ser dividido em quatro camadas (embora as fronteiras nem sempre sejam perfeitamente claras).
+    \vspace{0.4cm}
+    \begin{center}
+    \begin{tikzpicture}[
+        layer/.style={rectangle, draw=black, thick, fill=blue!15, minimum width=7cm, minimum height=1cm, font=\small, align=center}
+    ]
+        \node[layer] (l4) {Camada 4: Microsserviços};
+        \node[layer, below=0cm of l4] (l3) {Camada 3: Plataforma de aplicação};
+        \node[layer, below=0cm of l3] (l2) {Camada 2: Comunicação};
+        \node[layer, below=0cm of l2] (l1) {Camada 1: Hardware};
+        
+        \node[left=0.5cm of l4, font=\footnotesize\bfseries, text=meuvermelhoescuro, align=right] (lbl4) {Aplicação};
+        \node[left=0.5cm of l2, font=\footnotesize\bfseries, text=meuazul, align=right] (lblinfra) {Camadas de\\Infraestrutura};
+        
+        \draw[-, ultra thick, meuazul] ([xshift=-0.2cm]l3.north west) -- ([xshift=-0.2cm]l1.south west);
+    \end{tikzpicture}
+    \end{center}
+    \vspace{0.2cm}
+    \centering
+    \textit{Figura 1.7. Modelo de quatro camadas do ecossistema de microsserviços.}
+\end{frame}
+
+\section{Camada 1: Hardware}
+
+% Slide 1
+\begin{frame}{A Camada de Hardware}
+    Na base do ecossistema de microsserviços temos a \textbf{camada de hardware}.
+    \vspace{0.4cm}
+    \begin{block}{O que é?}
+        Trata-se das máquinas propriamente ditas, os \textbf{computadores físicos reais} nos quais as ferramentas e os microsserviços são executados.
+    \end{block}
+    \vspace{0.3cm}
+    Características:
+    \begin{itemize}
+        \item Localizados em racks dentro de \textbf{datacenters}.
+        \item Refrigerados por sistemas HVAC e alimentados por eletricidade.
+        \item Podem ter diferentes especializações (ex: otimizados para banco de dados ou para processamento de CPU).
+    \end{itemize}
+\end{frame}
+
+% Slide 2
+\begin{frame}{Propriedade e Nuvem}
+    Os servidores podem ser físicos (próprios) ou alugados (nuvem).
+    \vspace{0.4cm}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Datacenters Próprios}
+                \begin{itemize}
+                    \item Controle total
+                    \item Escolha otimizada de hardware
+                    \item Alto custo inicial e manutenção
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{Provedores de Nuvem}
+                \begin{itemize}
+                    \item Cenário mais comum
+                    \item AWS (EC2), GCP, Azure
+                    \item Hardware limitado ao oferecido
+                \end{itemize}
+            \end{block}
+        \end{column}
+    \end{columns}
+    \vspace{0.4cm}
+    \centering
+    \textcolor{meuazul}{\textbf{A decisão envolve: Custo, Disponibilidade, Confiabilidade e Despesas Operacionais.}}
+\end{frame}
+
+% Slide 3
+\begin{frame}{Gerenciamento e Sistema Operacional}
+    Gerenciar os servidores é papel fundamental desta camada.
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item Cada servidor precisa de um \textbf{Sistema Operacional (OS) padronizado}.
+        \item \textbf{A escolha do OS} depende das aplicações, linguagens e ferramentas.
+        \item \textbf{Cenário comum:} Variantes de Linux (CentOS, Debian, Ubuntu).
+        \item \textbf{Exceções:} Ambientes corporativos específicos (ex: .NET tradicional).
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{alertblock}{Provisionamento e Configuração}
+        Após a instalação do OS, ferramentas de \textbf{gerenciamento de configuração} (Ansible, Chef, Puppet) garantem a padronização e automação na instalação de pacotes.
+    \end{alertblock}
+\end{frame}
+
+% Slide 4
+\begin{frame}{Abstração, Monitoramento e Logging}
+    Sobre o hardware e o OS, outras abstrações são construídas:
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item \textbf{Isolamento e abstração de recursos:} Tecnologias como Docker e Apache Mesos pertencem a esta camada.
+        \item \textbf{Databases:} Bancos de dados dedicados ou compartilhados também operam aqui.
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{block}{Monitoramento e Logging (em nível de servidor)}
+        \begin{itemize}
+            \item Uso de ferramentas como \textbf{Nagios}.
+            \item Essencial para diagnosticar, mitigar e resolver: falhas de disco, picos de CPU, quedas de rede.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% Slide 5
+\begin{frame}{Resumo: A Camada de Hardware}
+    Em resumo, a Camada 1 do ecossistema de microsserviços contém:
+    \vspace{0.3cm}
+    \begin{enumerate}
+        \item Servidores \textbf{físicos} (próprios ou na nuvem)
+        \item \textbf{Databases} (dedicados e/ou compartilhados)
+        \item \textbf{Sistema operacional} padronizado
+        \item Ferramentas de \textbf{isolamento e abstração de recursos}
+        \item \textbf{Gerenciamento de configuração}
+        \item \textbf{Monitoramento} em nível de servidor
+        \item \textbf{Logging} em nível de servidor
+    \end{enumerate}
+\end{frame}
+
+% ===== SLIDE FINAL =====
+\section{Camada 2: Comunicação}
+
+% Slide 1
+\begin{frame}{A Camada de Comunicação}
+    A \textbf{camada de comunicação} trata de toda a interação entre os microsserviços.
+    \vspace{0.3cm}
+    \begin{alertblock}{Fronteiras Difusas}
+        Esta camada se espalha por todas as outras camadas do ecossistema. As fronteiras entre a comunicação e a plataforma ou os serviços são pouco definidas.
+    \end{alertblock}
+    \vspace{0.3cm}
+    \textbf{Elementos contidos nesta camada:}
+    \begin{itemize}
+        \item Rede e DNS (infraestrutura de base)
+        \item RPCs (Remote Procedure Calls) e Endpoints de API
+        \item Descoberta de Serviço (Service Discovery) e Registro
+        \item Balanceamento de Carga
+    \end{itemize}
+\end{frame}
+
+% Slide 2
+\begin{frame}{Como os Microsserviços Interagem?}
+    A interação ocorre através da rede enviando dados em um \textbf{formato padronizado} (ex: JSON, Protocol Buffers).
+    \vspace{0.4cm}
+    Existem dois paradigmas principais de comunicação:
+    \vspace{0.3cm}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{1. HTTP + REST / Thrift}
+                Comunicação direta baseada em solicitações e respostas síncronas.
+            \end{block}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{2. Troca de Mensagens (Messaging)}
+                Comunicação indireta assíncrona usando um \textit{Broker} (intermediário).
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide 3
+\begin{frame}{Paradigma 1: HTTP + REST / Thrift}
+    É o modelo \textbf{mais comum} e mais conveniente.
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item Os serviços se comunicam via rede usando \textbf{HTTP}.
+        \item Enviam solicitações (GET, POST, etc.) a endpoints REST ou Thrift.
+        \item Dados formatados geralmente como JSON.
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{block}{Vantagens e Desvantagens}
+        \textcolor{meuverde}{\textbf{+}} Fácil de configurar, estável, previsível e difícil de implementar incorretamente.\\
+        \vspace{0.1cm}
+        \textcolor{meuvermelhoescuro}{\textbf{-}} Por necessidade, é \textbf{síncrono (bloqueante)}. O serviço que chama fica aguardando a resposta.
+    \end{block}
+\end{frame}
+
+% Slide Exemplo 1 - Express
+\begin{frame}[fragile]{Exemplo Prático: Endpoint REST (Express/Node.js)}
+    O código abaixo ilustra a criação de um endpoint \textbf{REST síncrono} usando a biblioteca Express em JavaScript.
+    \vspace{0.2cm}
+    \begin{lstlisting}[language=Java, basicstyle=\ttfamily\scriptsize, keywordstyle=\color{meuazul}\bfseries, stringstyle=\color{meuvermelhoescuro}, commentstyle=\color{meuverde}\itshape, showstringspaces=false, frame=single, rulecolor=\color{lightgray}]
+const express = require('express');
+const app = express();
+app.use(express.json());
+
+// Endpoint de Consulta de Cliente
+app.get('/api/customers/:id', (req, res) => {
+    const customerId = req.params.id;
+    // Logica para obter cliente do banco de dados (abstraida)
+    const customer = { id: customerId, name: "Maria Silva", status: "Ativo" };
+    
+    if(customer) {
+        res.status(200).json(customer); // Retorna dados em JSON
+    } else {
+        res.status(404).json({ error: "Cliente nao encontrado" });
+    }
+});
+
+app.listen(3000, () => console.log('Servico Cliente na porta 3000'));
+    \end{lstlisting}
+\end{frame}
+
+% Slide Exemplo 2 - Axios
+\begin{frame}[fragile]{Exemplo Prático: Consumindo o Serviço}
+    Outro microsserviço precisa das informações do cliente. Ele fará uma \textbf{chamada síncrona} pela rede para o endpoint.
+    \vspace{0.2cm}
+    \begin{lstlisting}[language=Java, basicstyle=\ttfamily\scriptsize, keywordstyle=\color{meuazul}\bfseries, stringstyle=\color{meuvermelhoescuro}, commentstyle=\color{meuverde}\itshape, showstringspaces=false, frame=single, rulecolor=\color{lightgray}]
+const axios = require('axios');
+
+async function checkCustomerStatus(customerId) {
+    try {
+        // Faz a chamada HTTP GET para o Microsservico de Clientes
+        const response = await axios.get(
+            `http://servico-cliente:3000/api/customers/${customerId}`
+        );
+        
+        console.log("Status do Cliente:", response.data.status);
+        // Continua o processamento com a resposta recebida...
+        
+    } catch (error) {
+        console.error("Falha ao se comunicar com o servico de clientes");
+    }
+}
+
+checkCustomerStatus(12345);
+    \end{lstlisting}
+\end{frame}
+
+% Slide 4
+\begin{frame}{Paradigma 2: Troca de Mensagens (Messaging)}
+    É um modelo \textbf{assíncrono (não bloqueante)}, porém mais complicado.
+    \vspace{0.3cm}
+    \textbf{Como funciona?}
+    Um microsserviço envia dados para um \textbf{Broker de Mensagem}, que roteará a comunicação para outros microsserviços.
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item \textbf{Publish-Subscribe (Pub/Sub):} Assinatura de tópicos. Editores publicam, assinantes recebem.
+        \item \textbf{Solicitação-Resposta:} Cliente envia pedido ao broker, que devolve a resposta.
+    \end{itemize}
+    \vspace{0.2cm}
+    \textit{Exemplos de Tecnologias:} Apache Kafka, RabbitMQ, Redis.
+\end{frame}
+
+% Slide 5
+\begin{frame}{Desafios da Troca de Mensagens}
+    Embora seja altamente escalável (se bem projetada desde o início), apresenta desafios significativos:
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item \textbf{Complexidade:} Não é tão fácil alterar e atualizar.
+        \item \textbf{Ponto Único de Falha:} A natureza centralizada do broker pode comprometer todo o ecossistema se ele falhar.
+        \item \textbf{Problemas de Concorrência:} A natureza assíncrona pode gerar \textit{condições de corrida} e \textit{loops infinitos} se a lógica não for muito bem elaborada.
+    \end{itemize}
+    \vspace{0.3cm}
+    \begin{alertblock}{Mitigação}
+        Se implementado com proteções contra esses problemas, torna-se tão estável e eficiente quanto soluções síncronas.
+    \end{alertblock}
+\end{frame}
+
+% ===== SLIDE FINAL =====
+\begin{frame}
+  \centering
+  \Huge Obrigado!\\
+  \vspace{1cm}
+  \large Dúvidas?
+\end{frame}
+
+% -------------
+\end{document}

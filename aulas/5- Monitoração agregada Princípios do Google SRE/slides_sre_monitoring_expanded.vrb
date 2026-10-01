@@ -1,0 +1,25 @@
+\frametitle{Cálculo dos Percentis em Python}
+
+\begin{block}{Exemplo de cálculo}
+\end{block}
+
+\begin{lstlisting}[language=Python]
+
+import numpy as np
+
+# latencias simuladas em ms
+latencias = np.random.normal(200, 40, 1000)
+
+# calculo dos percentis
+p98 = np.percentile(latencias, 98)
+p99 = np.percentile(latencias, 99)
+
+print("Latencia P98:", p98)
+print("Latencia P99:", p99)
+
+\end{lstlisting}
+
+\begin{block}{Interpretação}
+Se P99 = 420 ms, então 99% das requisições são respondidas em menos de 420 ms.
+\end{block}
+

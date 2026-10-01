@@ -1,0 +1,170 @@
+\documentclass[12pt]{article}
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usetikzlibrary{positioning,arrows.meta,calc}
+
+% Definições de Cores (Azul institucional baseado no slide)
+\definecolor{meuazul}{RGB}{0, 79, 151}
+\definecolor{meuvermelhoescuro}{RGB}{180, 30, 30}
+
+\geometry{margin=2.0cm}
+\pagestyle{fancy}
+\fancyhf{}
+
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\footrulewidth}{2pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{meuazul}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrule}{\hbox to\headwidth{\color{meuazul}\leaders\hrule height \footrulewidth\hfill}}
+
+\setlength{\headheight}{45pt}
+\fancyhead[L]{\includegraphics[height=1.2cm]{logo.png}}
+\fancyhead[R]{\raggedleft \textcolor{meuazul}{\small \textbf{Engenharia da Qualidade e Confiabilidade}\\ \textbf{Assunto: Engenharia de Segurança da Informação}\\ Prof. Me. Sergio Souza Novak}}
+\fancyfoot[C]{\textcolor{meuazul}{\thepage}}
+
+\begin{document}
+
+\begin{center}
+    \textcolor{meuazul}{\Large \textbf{Lista de Exercícios 02: Segurança da Informação (Parte 2)}}
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{enumerate}[label=\textbf{Questão \arabic*:}, leftmargin=1.5cm, labelsep=0.5cm]
+
+    \item \textbf{Definição e Objetivos da Criptografia} \\
+    A criptografia é uma ferramenta fundamental na engenharia de segurança. Explique, com suas palavras, o que é o processo de criptografia e quais são seus principais objetivos no contexto da proteção de dados.
+
+    \item \textbf{Componentes do Processo Criptográfico} \\
+    Diferencie os seguintes termos fundamentais:
+    \begin{enumerate}[label=\alph*)]
+        \item Texto Simples (\textit{Plaintext});
+        \item Algoritmo Criptográfico;
+        \item Texto Cifrado (\textit{Ciphertext});
+        \item Chave (\textit{Key}).
+    \end{enumerate}
+
+    \item \textbf{Criptografia Simétrica} \\
+    A criptografia simétrica, ou de chave privada, é amplamente utilizada devido à sua eficiência.
+    \begin{enumerate}[label=\alph*)]
+        \item Qual é a principal característica do uso de chaves nesse método?
+        \item Cite uma vantagem e a principal desvantagem (desafio) da criptografia simétrica.
+    \end{enumerate}
+
+    \item \textbf{Criptografia Assimétrica} \\
+    Diferente da simétrica, a criptografia assimétrica utiliza um par de chaves (pública e privada).
+    \begin{enumerate}[label=\alph*)]
+        \item Explique a função de cada uma das chaves no processo de envio de uma mensagem segura.
+        \item Por que a criptografia assimétrica costuma ser combinada com a simétrica em aplicações reais (como no protocolo HTTPS)?
+    \end{enumerate}
+
+    \item \textbf{Algoritmos e Eficiência} \\
+    Considere os algoritmos AES, RSA e ECC (Criptografia de Curva Elíptica).
+    \begin{enumerate}[label=\alph*)]
+        \item Qual desses é o padrão mundial atual para criptografia simétrica?
+        \item Por que a ECC é frequentemente preferida em relação ao RSA em dispositivos de hardware limitado, como sensores de IoT ou smartphones?
+    \end{enumerate}
+
+    \item \textbf{As 4 Funções da Criptografia} \\
+    A criptografia moderna vai além do simples sigilo. Defina brevemente as quatro funções básicas:
+    \begin{itemize}
+        \item Confidencialidade;
+        \item Integridade;
+        \item Autenticação;
+        \item Não Repúdio.
+    \end{itemize}
+
+    \item \textbf{Controles de Segurança e o Ciclo de Defesa} \\
+    O ciclo de defesa em segurança da informação baseia-se em três pilares: Prevenção, Detecção e Recuperação. Descreva o objetivo de cada um desses pilares e dê um exemplo de tecnologia ou processo aplicado a cada fase.
+
+    \item \textbf{Segurança e Atributos de Dependabilidade} \\
+    A segurança não existe isoladamente. Como a falta de segurança (uma violação ou ataque) pode impactar diretamente os seguintes atributos de um sistema:
+    \begin{enumerate}[label=\alph*)]
+        \item Confiabilidade (\textit{Reliability});
+        \item Disponibilidade (\textit{Availability});
+        \item Segurança Física (\textit{Safety}).
+    \end{enumerate}
+
+    \item \textbf{Gerenciamento de Risco e Decisão de Negócio} \\
+    Explique por que a segurança da informação é considerada, acima de tudo, uma "decisão de negócio" e não apenas um problema técnico. O que é o \textit{trade-off} entre o custo da tecnologia e a perda potencial por fraude/ataque?
+
+    \item \textbf{Requisitos de Segurança de Firesmith} \\
+    Firesmith (2003) identificou 10 tipos fundamentais de requisitos de segurança. Escolha três dos tipos abaixo e explique sua importância para a segurança de um sistema de software:
+    \begin{itemize}
+        \item Identificação e Autenticação;
+        \item Autorização;
+        \item Privacidade;
+        \item Auditoria;
+        \item Detecção de Intrusão.
+    \end{itemize}
+
+\end{enumerate}
+
+\vspace{0.5cm}
+\begin{center}
+    \textcolor{meuazul}{\Large \textbf{Parte Prática: Implementação de Algoritmos}}
+\end{center}
+\vspace{0.3cm}
+
+\begin{enumerate}[label=\textbf{Questão \arabic*:}, leftmargin=1.5cm, labelsep=0.5cm, resume]
+
+    \item \textbf{Implementação Simétrica I: AES-256} \\
+    Utilizando a biblioteca \texttt{PyCryptodome} ou \texttt{cryptography}, desenvolva um script em Python que:
+    \begin{itemize}
+        \item Gere uma chave aleatória de 256 bits;
+        \item Criptografe uma frase utilizando o modo CBC (ou GCM);
+        \item Realize a decifragem e exiba o texto original, garantindo o tratamento correto do IV (\textit{Initialization Vector}).
+    \end{itemize}
+
+    \item \textbf{Implementação Simétrica II: Fernet (High-level)} \\
+    A biblioteca \texttt{cryptography.fernet} oferece uma implementação "receita pronta" que garante boas práticas. Crie um script que:
+    \begin{itemize}
+        \item Gere uma chave Fernet e a salve em um arquivo;
+        \item Cifre uma mensagem confidencial;
+        \item Explique por que essa implementação é considerada mais segura para desenvolvedores não especialistas em criptografia.
+    \end{itemize}
+
+    \item \textbf{Implementação Assimétrica I: RSA (Cifragem de Chaves)} \\
+    Usando uma biblioteca de sua escolha, implemente um fluxo de troca de informações:
+    \begin{itemize}
+        \item Gere um par de chaves RSA (Pública e Privada);
+        \item Cifre uma "Chave de Sessão" (simétrica) usando a chave pública;
+        \item Decifre a chave de sessão usando a chave privada e verifique se o valor coincide.
+    \end{itemize}
+
+    \item \textbf{Implementação Assimétrica II: Assinaturas Digitais} \\
+    Demonstre a função de Autenticação e Integridade através de assinaturas digitais:
+    \begin{itemize}
+        \item Crie um documento (string) e gere sua assinatura usando uma chave privada (RSA ou ECDSA);
+        \item Verifique a validade da assinatura usando a chave pública correspondente;
+        \item Simule uma alteração no documento e mostre que a verificação falha após a modificação.
+    \end{itemize}
+
+
+\end{enumerate}
+
+
+\vspace{1cm}
+
+\begin{center}
+    \begin{tikzpicture}
+        \draw[meuazul, thick] (0,0) -- (12,0);
+        \node[below, meuazul, font=\tiny] at (6,-0.1) {Engenharia da Qualidade e Confiabilidade --- UniRV --- Prof. Sergio Novak --- \today};
+    \end{tikzpicture}
+\end{center}
+
+\end{document}

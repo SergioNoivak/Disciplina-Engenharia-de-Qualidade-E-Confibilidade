@@ -1,0 +1,22 @@
+\frametitle{Exemplo — Prolog no Paradigma Lógico}
+No paradigma lógico, o programa é composto por \textbf{fatos} e
+\textbf{regras}, e a execução ocorre por meio de \textbf{consultas}.
+
+\begin{verbatim}
+% Fatos
+pai(joao, maria).
+pai(joao, jose).
+mae(ana, maria).
+mae(ana, jose).
+
+% Regra
+progenitor(X, Y) :-
+    pai(X, Y);
+    mae(X, Y).
+
+% Consulta (exemplo)
+% ?- progenitor(joao, maria).
+\end{verbatim}
+
+\small
+O sistema utiliza inferência lógica para responder às consultas.

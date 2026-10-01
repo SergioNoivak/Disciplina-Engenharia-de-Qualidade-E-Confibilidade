@@ -1,0 +1,58 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}{}
+\usepackage{eso-pic}
+\usepackage[brazil]{babel}
+\shorthandoff{"}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+ 
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, fit, calc, backgrounds}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{meuazul}{RGB}{0, 79, 151}
+\setbeamercolor{structure}{fg=meuazul}
+
+\title[Resposta a Emergências]{Resposta a Emergências}
+\subtitle{Engenharia da Qualidade e Confiabilidade}
+\author{Sergio — UniRV}
+\titlegraphic{\includegraphics[width=2cm]{logo.png}}
+
+\begin{document}
+
+% Slide de Título
+\frame[plain]{\titlepage}
+
+\AddToShipoutPictureFG{
+    \put(\LenToUnit{.92\paperwidth},\LenToUnit{.185\paperheight})
+    {\vtop{{\null}\makebox{\includegraphics[width=.8cm,keepaspectratio]{logo.png}}}}}
+
+\begin{frame}{Resposta a emergências}
+  A confiabilidade é uma função do MTTF (Mean Time To Failure, ou Tempo Médio para Falhas) e do MTTR (Mean Time To Repair, ou Tempo Médio para Correção) [Sch15]. A métrica mais relevante na avaliação da eficiência da resposta a emergências é a rapidez com que a equipe de resposta é capaz de deixar o sistema novamente saudável, isto é, o MTTR.
+\end{frame}
+
+\begin{frame}{Resposta a emergências}
+  Seres humanos acrescentam latência. Mesmo que um dado sistema tenha mais falhas propriamente ditas, um sistema capaz de evitar emergências que exijam intervenção humana terá mais disponibilidade que um sistema que exija uma intervenção manual.
+\end{frame}
+
+\begin{frame}{Resposta a emergências}
+  Quando há necessidade da intervenção de seres humanos, percebemos que pensar nas melhores práticas e registrá-las com antecedência em um ``manual de regras'' resulta em uma melhoria de aproximadamente três vezes no MTTR se comparada à estratégia de ``improvisar''. O engenheiro herói de plantão, ``pau pra toda obra'', faz o serviço, porém o engenheiro de plantão treinado, de posse de um manual de regras, faz um trabalho bem melhor.
+\end{frame}
+
+\begin{frame}{Resposta a emergências}
+  Embora nenhum manual de regras, independentemente de sua abrangência, seja um substituto para engenheiros inteligentes, capazes de raciocinar diante da situação, passos e dicas claros e completos para resolver problemas são valiosos para responder a uma chamada de importância crítica ou em que o tempo seja crucial. Desse modo, a SRE do Google conta com manuais de regras para os que estão de plantão, além de exercícios como ``Wheel of Misfortune'' (Roda do Azar) 3 para preparar os engenheiros a reagirem a eventos quando estiverem de plantão.
+\end{frame}
+
+\begin{frame}
+  \centering
+  \Huge Obrigado!\\
+  \vspace{1cm}
+  \large Dúvidas?
+\end{frame}
+
+\end{document}

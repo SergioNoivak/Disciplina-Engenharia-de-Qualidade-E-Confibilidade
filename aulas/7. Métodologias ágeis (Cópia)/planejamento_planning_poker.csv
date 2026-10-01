@@ -1,0 +1,5 @@
+ID da HU;Título da HU;Funcionalidade;Voto Membro 1;Voto Membro 2;Voto Membro 3;Voto Membro 4;Voto Membro 5;Consenso Final (Story Points);Justificativa/Observações
+HU001;Gestão de Vacas;Cadastrar Vaca;;;;;;;
+HU001;Gestão de Vacas;Visualizar Lista;;;;;;;
+HU001;Gestão de Vacas;Atualizar Dados;;;;;;;
+HU001;Gestão de Vacas;Excluir Registro;;;;;;;

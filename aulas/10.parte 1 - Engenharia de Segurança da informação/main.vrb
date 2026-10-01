@@ -1,0 +1,29 @@
+\frametitle{Exemplo de Código: Carga Útil (Ransomware)}
+\begin{block}{Criptografia de Arquivos (Pseudocódigo)}
+    \scriptsize
+\begin{lstlisting}
+INICIO
+
+FUNCAO criptografar_dados(chave)
+    PARA CADA arquivo EM DIRETORIO_USUARIO
+        SE arquivo FOR DO TIPO (docx, pdf, jpg) ENTAO
+
+            dados <- LER arquivo
+            dados_criptografados <- CRIPTOGRAFAR(dados, chave)
+            ESCREVER dados_criptografados NO arquivo
+
+        FIM SE
+    FIM PARA
+    EXIBIR "Seus arquivos foram criptografados"
+    EXIBIR "Pague para recuperar o acesso"
+
+FIM FUNCAO
+
+FIM
+\end{lstlisting}
+    \end{block}
+
+    \begin{block}{Ideia Principal}
+        O ransomware bloqueia o acesso aos dados da vítima por meio de criptografia
+        e exige um pagamento (resgate) para restaurar o acesso.
+    \end{block}

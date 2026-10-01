@@ -1,0 +1,20 @@
+\frametitle{Operações Básicas no HDFS}
+
+\begin{verbatim}
+hdfs dfs -ls /
+\end{verbatim}
+\begin{verbatim}
+hdfs dfs -mkdir /dados
+
+\begin{verbatim}
+hdfs dfs -put arquivo.txt /dados
+\end{verbatim}
+
+\begin{verbatim}
+hdfs dfs -cat /dados/arquivo.txt
+\end{verbatim}
+
+\begin{verbatim}
+hdfs dfs -get /dados/arquivo.txt
+\end{verbatim}
+

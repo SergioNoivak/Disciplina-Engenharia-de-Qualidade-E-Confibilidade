@@ -1,0 +1,178 @@
+\documentclass[12pt]{article}
+
+% Idioma e codificação
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Matemática e listas
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+
+% Layout e cores
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+% Cores institucionais
+\definecolor{maincolor}{RGB}{0,100,50}
+\definecolor{forestgreen}{RGB}{0,100,50}
+
+% Cabeçalho e rodapé
+\usepackage{fancyhdr}
+
+% Blocos
+\usepackage[most]{tcolorbox}
+\newtcolorbox{block}[1]{%
+  colback=green!5,
+  colframe=maincolor,
+  coltitle=white,
+  title=#1,
+  fonttitle=\bfseries,
+  boxrule=1.5pt,
+  arc=3mm,
+  left=6pt,
+  right=6pt,
+  top=6pt,
+  bottom=6pt
+}
+
+% Margens
+\geometry{margin=2.5cm}
+
+% Fancyhdr
+\pagestyle{fancy}
+\fancyhf{}
+
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\footrulewidth}{2pt}
+
+\renewcommand{\headrule}{\hbox to\headwidth{%
+  \color{forestgreen}\leaders\hrule height \headrulewidth\hfill}}
+
+\renewcommand{\footrule}{\hbox to\headwidth{%
+  \color{forestgreen}\leaders\hrule height \footrulewidth\hfill}}
+
+% Altura do cabeçalho
+\setlength{\headheight}{52pt}
+\addtolength{\topmargin}{-20pt}
+
+% Cabeçalho
+\fancyhead[L]{%
+  % Substitua pelo caminho correto da imagem ou mantenha o texto se não houver arquivo
+  \textbf{UniRV} \\ \small Universidade de Rio Verde
+}
+
+\fancyhead[R]{%
+  \raggedleft
+  \textcolor{forestgreen}{%
+    \small
+    \textbf{Lista de Exercícios: Métricas Google SRE}\\
+    Me.~Sergio Souza Novak\\
+    \textit{Engenharia da Qualidade e Confiabilidade}
+    }
+}
+    
+% Rodapé
+\fancyfoot[C]{\textcolor{forestgreen}{\thepage}}
+
+% Comando para caixas de resposta
+\newtcolorbox{resposta}[1]{%
+  colback=white,
+  colframe=forestgreen!30,
+  arc=1mm,
+  height=#1,
+  width=\textwidth,
+  boxrule=0.8pt,
+  breakable
+}
+
+% =========================
+\begin{document}
+% =========================
+
+\begin{center}
+  {\Large \textbf{Lista de Exercícios: Métricas Google SRE}}\\[0.2cm]
+  \textit{Engenharia de Software / Engenharia da Qualidade}
+\end{center}
+
+\vspace{0.4cm}
+
+\section*{Parte 6 — Métricas de Requisição e Confiabilidade em APIs}
+
+\textbf{16.} Explique a diferença entre disponibilidade baseada em tempo e disponibilidade baseada em requisições.
+\begin{resposta}{3.5cm}
+\end{resposta}
+
+\textbf{17.} Em uma API REST, por que erros 4xx normalmente não são contabilizados como falhas do sistema para cálculo de disponibilidade?
+\begin{resposta}{3.5cm}
+\end{resposta}
+
+\textbf{18.} Um sistema recebeu 1.200.000 requisições em um dia. 
+Foram registrados:
+\begin{itemize}
+    \item 1.199.400 respostas 2xx
+    \item 400 respostas 4xx
+    \item 200 respostas 5xx
+\end{itemize}
+
+\begin{enumerate}[label=\alph*)]
+    \item Calcule a disponibilidade considerando apenas 2xx como sucesso.
+    \item Calcule a disponibilidade considerando apenas 5xx como falha real do sistema.
+\end{enumerate}
+
+\begin{resposta}{5cm}
+\end{resposta}
+
+\textbf{19.} Um serviço possui meta de disponibilidade de $99,9\%$ ao dia. 
+Em um total de 2.500.000 requisições diárias:
+\begin{enumerate}[label=\alph*)]
+    \item Quantas falhas são permitidas por dia?
+    \item Se ocorrerem 1.200 erros 5xx, a meta foi cumprida?
+\end{enumerate}
+
+\begin{resposta}{5cm}
+\end{resposta}
+
+\textbf{20.} Durante um teste manual de QA foram realizadas 6 requisições:
+\begin{itemize}
+    \item 3 retornaram 2xx
+    \item 2 retornaram 4xx
+    \item 1 retornou 5xx
+\end{itemize}
+
+\begin{enumerate}[label=\alph*)]
+    \item Calcule a disponibilidade considerando apenas 2xx.
+    \item Calcule considerando apenas 5xx como falha do sistema.
+    \item Explique qual abordagem é mais adequada em ambientes de produção.
+\end{enumerate}
+
+\begin{resposta}{6cm}
+\end{resposta}
+
+\textbf{21.} Defina POFOD aplicado a uma API HTTP. 
+Se um serviço apresenta 350 falhas 5xx em 700.000 requisições, calcule o POFOD.
+\begin{resposta}{3.5cm}
+\end{resposta}
+
+\textbf{22.} Um sistema apresenta ROCOF = 0,002 falhas por hora.
+\begin{enumerate}[label=\alph*)]
+    \item Calcule o MTTF.
+    \item Se o MTTR médio é 30 minutos, calcule a disponibilidade.
+\end{enumerate}
+
+\begin{resposta}{5cm}
+\end{resposta}
+
+\textbf{23.} Explique o conceito de Error Budget e sua relação com metas de 99,9\%, 99,99\% e 99,999\%.
+\begin{resposta}{4cm}
+\end{resposta}
+
+\textbf{24.} Em um sistema de monitoramento industrial, o que é mais crítico:
+Disponibilidade ou Confiabilidade? Justifique considerando riscos operacionais.
+\begin{resposta}{4cm}
+\end{resposta}
+
+% =========================
+\end{document}
+% =========================

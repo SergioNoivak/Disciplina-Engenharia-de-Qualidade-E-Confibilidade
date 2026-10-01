@@ -1,0 +1,275 @@
+\documentclass[12pt,a4paper]{article}
+
+% ------------------------------------------------
+% Pacotes
+% ------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{mathptmx} % Times New Roman
+\usepackage{courier}
+\usepackage{enumitem}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{positioning, shapes.geometric, arrows.meta}
+\usepackage{listings}
+\usepackage{multicol}
+
+% ------------------------------------------------ 
+% Configuração de página
+% ------------------------------------------------
+\geometry{
+    a4paper,
+    left=2cm,
+    right=2cm,
+    top=2cm,
+    bottom=2cm,
+    headheight=15pt
+}
+
+% Caixa para resposta discursiva
+\newcommand{\resposta}[1]{
+\noindent
+\framebox[\textwidth]{
+\begin{minipage}{0.98\textwidth}
+\vspace*{#1}\null
+\end{minipage}
+}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+
+\setlength{\parindent}{0pt}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\begin{document}
+
+% ------------------------------------------------
+% Cabeçalho
+% ------------------------------------------------
+\begin{tabularx}{\textwidth}{@{} L{4cm} X @{}}
+    \raisebox{-0.5cm}{\includegraphics[width=4cm]{Universidade_de_Rio_Verde.jpg}} &
+    \hfill
+    \begin{tabular}{|>{\centering\arraybackslash}m{9.5cm}|>{\raggedright\arraybackslash}p{1.8cm}|}
+        \hline
+        \cellcolor{black}\color{white}\rule{0pt}{1.2cm}\textbf{GABARITO - 2ª CHAMADA} 
+        & 
+        \scriptsize Nota \tabularnewline
+        \hline
+    \end{tabular} 
+\end{tabularx}
+\vspace{0.3cm}
+
+\begin{tabularx}{\textwidth}{|X|L{2cm}|}
+\hline
+\textbf{Curso} & \textbf{Campus} \\
+\textit{Engenharia da Qualidade e Confiabilidade} & \textit{Rio Verde} \\
+\hline
+\textbf{Professor}: \textit{Sergio Souza Novak} & \textbf{Valor}: 7,0 \\
+\hline
+\textbf{Data da Avaliação}: \textit{15/10/2026} & \textbf{Código}: \textit{ESW451} \\
+\hline
+\end{tabularx}
+
+\vspace{0.3cm}
+
+% ------------------------------------------------
+% Formulário de Referência / Equações
+% ------------------------------------------------
+\begin{center}
+\begin{tabularx}{\textwidth}{|X|}
+\hline
+\cellcolor{gray!20}\centering \textbf{FORMULÁRIO DE REFERÊNCIA - MÉTRICAS DE CONFIABILIDADE} \tabularnewline
+\hline
+\vspace{0.1cm}
+\begin{multicols}{2}
+\small
+\begin{itemize}[leftmargin=*,itemsep=3pt]
+    \item $\text{MTTF} = \dfrac{\sum T_{\text{op}}}{N_{\text{falhas}}}$
+    \item $\text{MTTR} = \dfrac{\sum T_{\text{rep}}}{N_{\text{falhas}}}$
+    \item $\text{MTBF} = \text{MTTF} + \text{MTTR}$
+    \item $\text{AVAIL} = \dfrac{\text{MTTF}}{\text{MTTF} + \text{MTTR}} = \dfrac{\sum T_{\text{op}}}{T_{\text{total}}}$
+    \item $\text{POFOD} = \dfrac{N_{\text{falhas em demandas}}}{N_{\text{total de demandas}}}$
+    \item $\text{ROCOF} = \dfrac{N_{\text{falhas}}}{\sum T_{\text{op}}}$
+    \item $R(t) = e^{-\lambda t}, \quad \lambda = \dfrac{1}{\text{MTTF}}$
+    \item $U = 1 - \text{AVAIL} = \dfrac{\text{MTTR}}{\text{MTTF} + \text{MTTR}}$
+\end{itemize}
+\end{multicols}
+\vspace{-0.2cm}
+\tabularnewline
+\hline
+\end{tabularx}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{center}
+    \rule{\textwidth}{0.4pt}
+    \textbf{GABARITO COMENTADO DA PROVA DE 2ª CHAMADA}
+\end{center}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 1 - Gabarito
+% ------------------------------------------------
+\textbf{Questão 1 (Cálculos de Métricas de Confiabilidade)}
+
+\textbf{Resolução e Respostas Expectadas:}
+\begin{enumerate}[label=\textbf{\alph*)}]
+    \item \textbf{MTTF e MTTR}:
+    \begin{itemize}
+        \item Tempo Operacional Total = $1200 + 950 + 1100 + 850 + 900 = 5000\text{ horas}$.
+        \item Tempo de Reparo Total = $25 + 15 + 30 + 10 + 20 = 100\text{ horas}$.
+        \item $\text{MTTF} = \frac{\text{Tempo Operacional Total}}{\text{Número de Falhas}} = \frac{5000}{5} = \mathbf{1000\text{ horas}}$.
+        \item $\text{MTTR} = \frac{\text{Tempo de Reparo Total}}{\text{Número de Falhas}} = \frac{100}{5} = \mathbf{20\text{ horas}}$.
+    \end{itemize}
+
+    \item \textbf{AVAIL (Disponibilidade)}:
+    \begin{itemize}
+        \item $\text{AVAIL} = \frac{\text{Tempo Operacional}}{\text{Tempo Total}} = \frac{\text{MTTF}}{\text{MTTF} + \text{MTTR}} = \frac{5000}{5000 + 100} = \frac{5000}{5100} \approx 0,98039 = \mathbf{98,04\%}$.
+    \end{itemize}
+
+    \item \textbf{POFOD (Probabilidade de Falha Sob Demanda)}:
+    \begin{itemize}
+        \item $\text{POFOD} = \frac{\text{Número de Falhas em Demandas}}{\text{Número Total de Demandas}} = \frac{15}{500} = \mathbf{0,03\text{ (ou } 3\%\text{)}}$.
+    \end{itemize}
+\end{enumerate}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 2 - Gabarito
+% ------------------------------------------------
+\textbf{Questão 2 (Cadeia Causal de Falha em Software)}
+
+\textbf{Gabarito: Alternativa (A)}
+
+\textbf{Comentário:}
+\begin{itemize}
+    \item \textbf{Defeito (Bug/Fault)}: A imperfeição no código-fonte, ou seja, a declaração da variável com o tipo inadequado \texttt{unsigned char}.
+    \item \textbf{Estado de Erro (Error State)}: A condição interna incorreta do sistema, manifestada pelo valor 44 ms gravado na RAM após o estouro de capacidade.
+    \item \textbf{Erro (Error)}: A discrepância de julgamento ou cálculo lógico que leva o sistema a concluir erroneamente que a situação estava segura.
+    \item \textbf{Falha (Failure)}: O desvio comportamental externo e perceptível, concretizado no rompimento físico da tubulação.
+\end{itemize}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 3 - Gabarito
+% ------------------------------------------------
+\textbf{Questão 3 (Programação N-Versões)}
+
+\textbf{Resolução Expectada (2 Parágrafos conforme Sommerville):}
+\begin{quote}
+A Programação N-Versões é uma técnica de tolerância a falhas proposta para contornar defeitos de projeto e implementação de software em sistemas críticos. Ela fundamenta-se na premissa de que equipes de desenvolvimento distintas, trabalhando de maneira totalmente independente a partir de uma mesma especificação de requisitos, cometerão erros de implementação em componentes diferentes do código. Em tempo de execução, $N$ versões (onde $N \ge 3$) são executadas simultaneamente em paralelo, e um módulo árbitro (\textit{voting mechanism}) compara as saídas geradas por cada versão, aplicando o princípio de votação por maioria para determinar o resultado final correto e mascarar potenciais falhas individuais.
+
+Apesar de aumentar consideravelmente a confiabilidade, a literatura de Sommerville destaca que a principal desvantagem dessa abordagem reside no seu elevado custo financeiro e de gestão, já que requer o desenvolvimento e a manutenção de múltiplos códigos-fonte independentes. Além disso, a hipótese de independência de falhas nem sempre se confirma na prática devido à possibilidade de falhas por causa comum (\textit{common-cause failures}), frequentemente derivadas de ambiguidades ou erros na especificação inicial compartilhada por todas as equipes, o que pode levar versões distintas a falharem no mesmo cenário de teste.
+\end{quote}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 4 - Gabarito
+% ------------------------------------------------
+\textbf{Questão 4 (Apache Hadoop)}
+
+\textbf{Gabarito: ( V ) ( V ) ( F ) ( V ) ( F ) ( V )}
+
+\textbf{Justificativa das Afirmativas Falsas:}
+\begin{itemize}
+    \item Item 3 (F): O Hadoop não é um banco de dados relacional e não foi construído para transações ACID em tempo real.
+    \item Item 5 (F): O Hadoop adota o princípio de \textit{data locality} (mover o código de processamento até o nó onde os dados residem), evitando o tráfego maciço de dados pela rede.
+\end{itemize}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 5 - Gabarito
+% ------------------------------------------------
+\textbf{Questão 5 (Escalonamento Vertical vs. Horizontal)}
+
+\textbf{Gabarito: Alternativa (C)}
+
+\textbf{Comentário:} O escalonamento horizontal (\textit{scale out}) permite expansão quase ilimitada adicionando novos nós e aumenta a tolerância a falhas. Em contrapartida, exige complexidade arquitetural no software para lidar com distribuição, sincronização e consistência.
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 6 - Gabarito
+% ------------------------------------------------
+\textbf{Questão 6 (Arquitetura de Sistema de Proteção)}
+
+\textbf{Gabarito: ( E ) Errado}
+
+\textbf{Justificativa:} Em sistemas críticos de segurança, o sistema de proteção possui autonomia e sobreposição (\textit{override}) em relação ao sistema de controle principal. O sistema de controle não possui autoridade para cancelar comandos de emergência ou desativar ações de proteção acionadas nos atuadores.
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 7 - Gabarito
+% ------------------------------------------------
+\textbf{Questão 7 (Programação Distribuída e Redundância)}
+
+\textbf{Resolução Expectada (1 Parágrafo):}
+\begin{quote}
+A redundância é indispensável em ambientes de programação distribuída para garantir a continuidade operacional frente a falhas parciais inevitáveis em nós de processamento ou enlaces de rede, eliminando pontos únicos de falha (\textit{single points of failure}). Por meio do espelhamento de dados (replicação) e da duplicação de processos ou componentes de hardware, o sistema assegura a tolerância a falhas, permitindo que a indisponibilidade ou avaria de uma instância individual seja mascarada e absorvida pelas réplicas ativas, preservando a confiabilidade, a integridade dos dados e a alta disponibilidade do serviço.
+\end{quote}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 8 - Gabarito
+% ------------------------------------------------
+\textbf{Questão 8 (Diferença entre Confiabilidade e Disponibilidade)}
+
+\textbf{Gabarito: Alternativa (A)}
+
+\textbf{Comentário:} 
+\begin{itemize}
+    \item \textbf{Confiabilidade ($R(t)$)}: Mede a continuidade do serviço sem qualquer interrupção ao longo do tempo $t$. Não depende do tempo de reparo ($\text{MTTR}$), pois qualquer falha zera a confiabilidade do intervalo.
+    \item \textbf{Disponibilidade ($\text{AVAIL}$)}: Mede a fração do tempo total em que o sistema está operacional para uso. Depende tanto do tempo entre falhas ($\text{MTTF}$) quanto do tempo que a equipe/sistema leva para restabelecer a operação ($\text{MTTR}$). Um sistema pode ter baixa confiabilidade (falhar com frequência) e ainda assim alta disponibilidade se o seu $\text{MTTR}$ for extremamente baixo.
+\end{itemize}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 9 - Gabarito
+% ------------------------------------------------
+\textbf{Questão 9 (Noves de Disponibilidade - SLA e 99,99\%)}
+
+\textbf{Gabarito: Alternativa (A)}
+
+\textbf{Cálculo Passo a Passo:}
+\begin{itemize}
+    \item Tempo total do ano em horas: $T_{\text{total}} = 365\text{ dias} \times 24\text{ horas/dia} = 8.760\text{ horas}$.
+    \item Taxa de indisponibilidade máxima permitida ($U$): $U = 100\% - 99,99\% = 0,01\% = 0,0001$.
+    \item Tempo máximo de indisponibilidade em horas: $H_{\text{downtime}} = 8.760\text{ h} \times 0,0001 = 0,876\text{ horas}$.
+    \item Conversão para minutos: $M_{\text{downtime}} = 0,876\text{ h} \times 60\text{ min/h} = \mathbf{52,56\text{ minutos/ano}}$ (aprox. 52 min e 33,6 seg).
+\end{itemize}
+
+\vspace{0.5cm}
+
+% ------------------------------------------------
+% Questão 10 - Gabarito
+% ------------------------------------------------
+\textbf{Questão 10 (Comitê de N-Versões e Lei dos Grandes Números)}
+
+\textbf{Gabarito: Alternativa (A)}
+
+\textbf{Comentário e Fundamentação Teórica:}
+Pelo Teorema do Júri de Condorcet (fundamentado na Lei dos Grandes Números aplicada a decisões por votação), se cada membro de um comitê possui probabilidade individual de acertar $p > 0,5$ e se as decisões/falhas forem estatisticamente independentes, a probabilidade de a maioria do comitê decidir corretamente é estritamente \textbf{maior} do que a probabilidade individual de qualquer um de seus membros isolados. Matematicamente, conforme o tamanho $N$ do comitê de componentes independentes tende ao infinito ($N \to \infty$), a confiabilidade da votação por maioria aproxima-se assintoticamente de $100\%$ ($R_{\text{comitê}} \to 1$).
+
+\end{document}
