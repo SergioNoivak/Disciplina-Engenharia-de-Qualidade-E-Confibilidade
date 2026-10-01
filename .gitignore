@@ -1,0 +1,40 @@
+# ==========================================
+# Gitignore - Engenharia da Qualidade e Confiabilidade
+# ==========================================
+
+# Pasta de notas e dados sensíveis dos alunos
+notas/
+**/notas/
+*.xlsx
+*.xls
+
+# Artefatos temporários e de compilação do LaTeX
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+*.toc
+*.nav
+*.snm
+*.out
+*.bbl
+*.blg
+*.run.xml
+__latexindent_temp_*.tex
+indent.log
+
+# Ambientes Virtuais Python e Jupyter
+.venv/
+venv/
+ENV/
+.ipynb_checkpoints/
+
+# Arquivos do Sistema Operacional e IDES
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+~$*.doc
+~$*.docx
+~$*.xlsx
